@@ -1,34 +1,39 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../styles/ProjectManagementPage.css';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectManagementPage = () => {
     const navigate = useNavigate();
 
     const handleSeeMore = (projectName) => {
         console.log(`See more details for project: ${projectName}`);
-        // 导航到项目详情页
-        navigate(`/project/${projectName}`);
+        // 这里可以添加导航到项目详情页的逻辑
+        alert(`See more details for project: ${projectName}`);
+        // navigate(`/project/${projectName}`); // 导航到项目详情页
     };
 
     const handleComplete = (projectName) => {
         console.log(`Complete project: ${projectName}`);
         // 这里可以添加完成项目的逻辑，例如显示模态对话框
+        alert(`Complete project: ${projectName}`);
     };
 
     const handleWithdraw = (projectName) => {
         console.log(`Withdraw application for project: ${projectName}`);
         // 这里可以添加撤回申请的逻辑
+        alert(`Withdraw application for project: ${projectName}`);
     };
 
     const handleAccept = (projectName) => {
         console.log(`Accept offer for project: ${projectName}`);
         // 这里可以添加接受项目的逻辑
+        alert(`Accept offer for project: ${projectName}`);
     };
 
     const handleReject = (projectName) => {
         console.log(`Reject offer for project: ${projectName}`);
         // 这里可以添加拒绝项目的逻辑
+        alert(`Reject offer for project: ${projectName}`);
     };
 
     return (
@@ -67,7 +72,7 @@ const ProjectManagementPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="projects">
+                <div className="projects-grid">
                     <div className="project-section in-progress">
                         <h2>In Progress</h2>
                         <div className="project">

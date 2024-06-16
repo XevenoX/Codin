@@ -100,23 +100,27 @@ main {
     color: red;
 }
 
-.projects {
-    display: flex;
-    flex-direction: column;
+.projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
 }
 
 .project-section {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
     margin-bottom: 20px;
 }
 
 .project-section h2 {
-    margin-bottom: 10px;
+    margin-top: 0;
 }
 
 .project {
-    background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ccc;
     margin-bottom: 10px;
 }
 
