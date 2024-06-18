@@ -4,17 +4,21 @@ import Homepage from './pages/Homepage';
 import Layout from './components/Layout';
 import MarketPlace from './pages/Marketplace';
 import SignUp from './pages/SignUp';
+import ClippedDrawer from './components/ClippedDrawer';
+import Test from './pages/Test';
 
 function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Homepage/>} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/marketplace" element={<MarketPlace />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Homepage />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route path="marketplace" element={<MarketPlace />} />
+          <Route path="clipped-drawer" element={<ClippedDrawer />} />
+        </Route>
+        <Route path="/test" element={<Test />} />
+      </Routes>
     </Router>
   );
 }
