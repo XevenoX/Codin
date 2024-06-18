@@ -4,6 +4,9 @@ import Homepage from './pages/Homepage';
 import Layout from './components/Layout';
 import MarketPlace from './pages/Marketplace';
 import SignUp from './pages/SignUp';
+import PublisherHomepage from './pages/PublisherHomepage';
+import DeveloperHomepage from './pages/DeveloperHomepage';
+
 
 function App() {
   return (
@@ -13,6 +16,8 @@ function App() {
           <Route path="/" element={<Homepage/>} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/marketplace" element={<MarketPlace />} />
+          <Route path="/publisherhomepage" element={<PublisherHomepage />} />
+          <Route path="/developerhomepage" element={<DeveloperHomepage />} />
         </Routes>
       </Layout>
     </Router>
