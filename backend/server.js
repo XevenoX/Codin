@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import registration from "./routes/register.js";
+import signUp from "./routes/signUp.js";
 import createProject from "./routes/createProject.js";
 
 // add import& app.use in this file and write the api in /routes/<yourAPI>.js
@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/register", registration);
+app.use("/signUp", signUp);
 app.use("/createProject", createProject);
 
 // start the Express server
