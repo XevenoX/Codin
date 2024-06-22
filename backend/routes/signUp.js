@@ -1,4 +1,6 @@
 import express from "express";
+import mongoose from "mongoose";
+import User from "../models/userModel.js";
 
 // This will help us connect to the database
 import db from "../db/connection.js";
@@ -12,21 +14,38 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
-    let newDocument = {
-      first_name: req.body.firstName,
-      last_name: req.body.lastName,
-      email: req.body.email,
-      role: req.body.role,
-      password: req.body.password,
+    // res.status(201).json({ message: "new user created" });
+    const { first_name, last_name, email, role, password } = req.body;
+    // TODO: error handling for missing values
+
+    // test if the user already exists (no need to register again)
+    const userAlreadyExists = await User.findOne({ email: email });
+    if (userAlreadyExists) {
+      throw new Error("User already exists");
+    }
+
+    // add user
+    const newUser = {
+      first_name,
+      last_name,
+      email,
+      role,
+      password,
     };
     let collection = await db.collection("users");
-    let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    let result = await collection.insertOne(newUser);
+    res.status(201).json({
+      _id: newUser._id,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name,
+      email: newUser.email,
+      password: newUser.password,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding record");
+    res.status(500).json({ error: err.message });
   }
 });
 
