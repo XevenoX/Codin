@@ -1,9 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import User from "../models/userModel.js";
-
-// This will help us connect to the database
-import db from "../db/connection.js";
+import { getDB } from "../db/connection.js";
 
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
@@ -15,13 +13,18 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   // console.log(req.body);
+
   try {
+    const db = getDB(); // use getDB() to ensure database is connected
+
     // res.status(201).json({ message: "new user created" });
     const { first_name, last_name, email, role, password } = req.body;
-    // TODO: error handling for missing values
+    // TODO: error handling for missing value
 
     // test if the user already exists (no need to register again)
-    const userAlreadyExists = await User.findOne({ email: email });
+    console.log("Checking if user already exists...");
+    const userAlreadyExists = await User.findOne({ email });
+    console.log("User exists:", userAlreadyExists);
     if (userAlreadyExists) {
       throw new Error("User already exists");
     }

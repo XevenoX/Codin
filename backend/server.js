@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import db from "./db/connection.js";
+import { connectDB, getDB } from "./db/connection.js";
 import cookieParser from "cookie-parser";
 
 // Load environment variables from .env file
@@ -17,31 +17,47 @@ dotenv.config({ path: "./.env" });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// add import& app.use in this file and write the api in /routes/<yourAPI>.js
 const PORT = process.env.PORT || 5050;
 const app = express();
 
+// Supply static file
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
 app.use(cors());
-// to receive and send out json properly
 app.use(express.json());
-// 使用中间件解析 URL 编码的请求体
 app.use(express.urlencoded({ extended: true }));
-// 使用中间件解析 cookie
 app.use(cookieParser());
+
+// Ensure database connection before handling routes
+app.use(async (req, res, next) => {
+  try {
+    if (!getDB()) {
+      await connectDB();
+    }
+    next();
+  } catch (err) {
+    console.error("Database connection error:", err);
+    res.status(500).json({ error: "Database connection error" });
+  }
+});
 
 app.use("/", homepage);
 app.use("/signUp", signUp);
 app.use("/createProject", createProject);
-
-// supply static file
-app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 // 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
 
-// start the Express server
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+// Connect to MongoDB and start the server
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

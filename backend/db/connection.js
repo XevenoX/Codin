@@ -1,29 +1,30 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-// load enviromental variables
+// Load environmental variables
 dotenv.config();
 
-//use node >=20 if error code on --env-file
 const uri = process.env.ATLAS_URI || "";
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
 
-try {
-  // Connect the client to the server
-  await client.connect();
-  // Send a ping to confirm a successful connection
-  await client.db("admin").command({ ping: 1 });
-  console.log("Pinged your deployment. You successfully connected to MongoDB!");
-} catch (err) {
-  console.error(err);
-}
+const connectDB = async () => {
+  try {
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // 设置连接超时时间为5秒
+    });
+    console.log("Successfully connected to MongoDB using mongoose!");
+  } catch (err) {
+    console.error("Failed to connect to MongoDB", err);
+    throw new Error("Failed to connect to MongoDB");
+  }
+};
 
-let db = client.db("test_database");
+const getDB = () => {
+  if (mongoose.connection.readyState !== 1) {
+    throw new Error("Database not connected. Call connectDB first.");
+  }
+  return mongoose.connection.db;
+};
 
-export default db;
+export { connectDB, getDB };
