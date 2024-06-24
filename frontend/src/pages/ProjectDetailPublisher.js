@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import ApplicationList from "../components/ApplicationList";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -31,8 +32,9 @@ import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 export default function ProjectDetailPublisher() {
+  //Todo: replace by session subscription
 
-  const testCandidates = [
+  const [testCandidates, setCandidates] = useState([
     {
       id: "Candidate 1",
       rating: 4,
@@ -57,7 +59,7 @@ export default function ProjectDetailPublisher() {
       review: 20,
       motivation: "motivation 4",
     },
-  ];
+  ]);
 
   const testProjectDetails = [
     {
@@ -65,6 +67,7 @@ export default function ProjectDetailPublisher() {
       duration: 4,
       deadline: "12.07.2024",
       budget: 100,
+      labels: { "Java": 0, "JavaScript": 1, "react":1 },
     },
   ];
 
@@ -142,67 +145,7 @@ export default function ProjectDetailPublisher() {
           </Stack>
         </Grid>
       </Grid>
-
-      <Grid>
-        <Grid>
-          <Typography noWrap variant="h5">
-            Applications
-          </Typography>
-        </Grid>
-        <Stack direction="row" spacing={1}>
-          <Typography>Sorted by:</Typography>
-
-          <FormControl>
-            <InputLabel id="demo-simple-select-label">Sorting</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="candidate-sorting"
-            >
-              <MenuItem value={10}>First Applied</MenuItem>
-              <MenuItem value={20}>Rating </MenuItem>
-              <MenuItem value={30}>Reviews</MenuItem>
-            </Select>
-          </FormControl>
-        </Stack>
-      </Grid>
-
-      <Box>
-        <ImageList sx={{ width: "75%", height: 450 }}>
-          {testCandidates.map((item) => (
-            <ImageListItem key={item.id}>
-              <Card sx={{ minWidth: 180 }}>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {item.id}
-                  </Typography>
-                  <Rating name="read-only" value={item.rating} readOnly />
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {item.review} Reviews
-                  </Typography>
-                  <Typography variant="body2">
-                    {item.motivation}
-                    <br />
-                    {'"a benevolent smile"'}
-                  </Typography>
-                  <FormControlLabel control={<Checkbox />} />
-                </CardContent>
-                <CardActions>
-                  <Button size="contained">See More</Button>
-                </CardActions>
-              </Card>
-            </ImageListItem>
-          ))}
-        </ImageList>
-        <Grid>
-          <Button variant="contained">Compare</Button>
-          <Button variant="contained">Offer</Button>
-        </Grid>
-      </Box>
+      <ApplicationList data={testCandidates}/>
 
       <Grid>
         <Stack direction="column" spacing={2}>

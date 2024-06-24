@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectDetailPublisher from './pages/ProjectDetailPublisher';
 import ProjectDetailDeveloper from './pages/ProjectDetailDeveloper';
+import Subscription from './pages/Subscription';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/marketplace" element={<MarketPlace />} />
           <Route path="/project" element={<ProjectCreate />} />
+          <Route path="/subscription" element={<Subscription />} />
           <Route path="/projectdetail/publisher" element={<ProjectDetailPublisher />} />
           <Route path="/projectdetail/developer" element={<ProjectDetailDeveloper />} />
 

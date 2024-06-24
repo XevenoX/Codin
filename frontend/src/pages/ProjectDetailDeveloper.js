@@ -22,8 +22,12 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import { Paper } from "@mui/material";
 import Chip from "@mui/material/Chip";
+import { Link } from "react-router-dom";
 
 export default function ProjectDetailDeveloper() {
+  const subscription = 1;
+  // const subscription = 0;
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -36,8 +40,6 @@ export default function ProjectDetailDeveloper() {
   };
 
   return (
-    // <Container component="main" maxWidth="xs">
-    // <CssBaseline />
     // /* replace <AssignmentIcon /> with avatar later */
     <Box
       component="form"
@@ -54,9 +56,7 @@ export default function ProjectDetailDeveloper() {
           </IconButton>
         </Grid>
         <Grid container spacing={2}>
-            <Stack>
-                
-            </Stack>
+          <Stack></Stack>
         </Grid>
 
         <Stack direction="row" spacing={2}>
@@ -107,11 +107,20 @@ export default function ProjectDetailDeveloper() {
             <Typography noWrap variant="h5">
               Budget
             </Typography>
+
             <Typography noWrap variant="caption" color="grey">
               3 people have applied for the task
             </Typography>
             <Button variant="contained">Apply Now</Button>
             <Button variant="contained">Contact</Button>
+            <Typography noWrap variant="h4" color="black">
+                only members! please 
+              </Typography>
+            <Link to={"/subscription"}>
+              <Typography noWrap variant="h4" color="RED">
+                subscribe
+              </Typography>
+            </Link>
           </Stack>
         </Grid>
         <Grid>
@@ -144,7 +153,5 @@ export default function ProjectDetailDeveloper() {
         </Grid>
       </Grid>
     </Box>
-
-    // /* </Container> */
   );
 }

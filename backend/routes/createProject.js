@@ -13,11 +13,17 @@ const router = express.Router();
 // This section will help you create a new record.
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
     try {
       let newDocument = {
         project_name: req.body.projectName,
-        position: req.body.projectDescription,
-        level: req.body.projectSkills,
+        project_description: req.body.projectDescription,
+        project_skills: req.body.projectSkills,
+        project_budget: req.body.projectBudget, 
+        project_deadline: req.body.projectApplicationDeadline,
+        project_duration: req.body.projectDuration,
+        project_publisher:req.body.projectPublisher,
+        project_labels:req.body.projectLabels
       };
       let collection = await db.collection("projects");
       let result = await collection.insertOne(newDocument);
@@ -30,7 +36,7 @@ router.post("/", async (req, res) => {
   
 // This section will help you get a list of all the records.
 router.get("/", async (req, res) => {
-  let collection = await db.collection("records");
+  let collection = await db.collection("projects");
   let results = await collection.find({}).toArray();
   res.send(results).status(200);
 });
