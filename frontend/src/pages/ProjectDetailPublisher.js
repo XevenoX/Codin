@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ApplicationList from "../components/ApplicationList";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -30,6 +30,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
+import { CircularProgress } from "@mui/material";
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
@@ -61,15 +62,45 @@ export default function ProjectDetailPublisher() {
     },
   ]);
 
-  const testProjectDetails = [
-    {
-      id: "Project Name 1",
-      duration: 4,
-      deadline: "12.07.2024",
-      budget: 100,
-      labels: { "Java": 0, "JavaScript": 1, "react":1 },
-    },
-  ];
+  // const projectDetails = [
+  //   {
+  //     id: "Project Name 1",
+  //     duration: 4,
+  //     deadline: "12.07.2024",
+  //     budget: 100,
+  //     labels: { "Java": 0, "JavaScript": 1, "react":1 },
+  //   },
+  // ];
+
+  const [projectDetails, setProjectDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await fetch("http://localhost:5050/getProject"); // Adjust the URL according to your API endpoint
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setProjectDetails(data);
+      } catch (error) {
+        console.error("Failed to fetch project details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjectDetails();
+  }, []);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (!projectDetails) {
+    return <Typography>No project details found</Typography>;
+  }
 
   return (
     <Box
@@ -91,7 +122,7 @@ export default function ProjectDetailPublisher() {
                 <BusinessIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                {testProjectDetails[0].id}
+                {projectDetails.project_name}
               </Typography>
             </Stack>
 
@@ -103,7 +134,7 @@ export default function ProjectDetailPublisher() {
                 <BusinessIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Duration: {testProjectDetails[0].duration} Days
+                Duration: {projectDetails.project_duration} Days
               </Typography>
             </Stack>
 
@@ -115,7 +146,7 @@ export default function ProjectDetailPublisher() {
                 <BusinessIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Appliable before: {testProjectDetails[0].deadline}
+                Appliable before: {projectDetails.project_deadline}
               </Typography>
             </Stack>
 
@@ -127,7 +158,7 @@ export default function ProjectDetailPublisher() {
                 <BusinessIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Budget: ${testProjectDetails[0].budget}
+                Budget: ${projectDetails.project_budget}
               </Typography>
             </Stack>
 
@@ -141,11 +172,14 @@ export default function ProjectDetailPublisher() {
               <Typography noWrap variant="h5">
                 Labels:
               </Typography>
+              <Typography noWrap variant="h5">
+                {Object.keys(projectDetails.project_labels).join(", ")}
+              </Typography>
             </Stack>
           </Stack>
         </Grid>
       </Grid>
-      <ApplicationList data={testCandidates}/>
+      <ApplicationList data={testCandidates} />
 
       <Grid>
         <Stack direction="column" spacing={2}>
@@ -157,7 +191,7 @@ export default function ProjectDetailPublisher() {
               Description
             </Typography>
           </Stack>
-          <Typography>Description</Typography>
+          <Typography>{projectDetails.project_description}</Typography>
 
           <Stack direction="row" spacing={2}>
             <ButtonBase>
@@ -167,7 +201,7 @@ export default function ProjectDetailPublisher() {
               Skills
             </Typography>
           </Stack>
-          <Typography>Skills</Typography>
+          <Typography>{projectDetails.project_skills}</Typography>
         </Stack>
       </Grid>
     </Box>
