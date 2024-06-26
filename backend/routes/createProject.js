@@ -11,7 +11,7 @@ import db from "../db/connection.js";
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 // This section will help you create a new record.
-
+// const project_posttime =  new Date();
 router.post("/", async (req, res) => {
   console.log(req.body);
     try {
@@ -23,7 +23,9 @@ router.post("/", async (req, res) => {
         project_deadline: req.body.projectApplicationDeadline,
         project_duration: req.body.projectDuration,
         project_publisher:req.body.projectPublisher,
-        project_labels:req.body.projectLabels
+        project_labels:req.body.projectLabels,
+        project_status: 1, 
+        project_posttime: new Date(),
       };
       let collection = await db.collection("projects");
       let result = await collection.insertOne(newDocument);

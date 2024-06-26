@@ -50,60 +50,56 @@ export default function ProjectDetailDeveloper() {
       autoComplete="off"
     >
       <Grid>
-        <Grid>
-          <IconButton aria-label="arrow-back">
-            <ArrowBackIcon />
-          </IconButton>
-        </Grid>
-        <Grid container spacing={2}>
-          <Stack></Stack>
-        </Grid>
+        <IconButton aria-label="arrow-back">
+          <ArrowBackIcon />
+        </IconButton>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Stack direction="row" spacing={2} alignItems="center" mt={2}>
+            <Avatar sx={{ width: 100, height: 100 }} variant="rounded">
+              <AssignmentIcon />
+            </Avatar>
+            <Typography noWrap variant="h2">
+              Project Name
+            </Typography>
+          </Stack>
 
-        <Stack direction="row" spacing={2}>
-          <Avatar sx={{ width: 100, height: 100 }} variant="rounded">
-            <AssignmentIcon />
-          </Avatar>
-          <Typography noWrap variant="h2">
-            Project Name
-          </Typography>
-        </Stack>
-
-        <Grid>
-          <Stack direction="row" spacing={2}>
-            <Grid item xs={8}>
+          <Stack spacing={2} mt={2}>
+            <Stack direction="row" spacing={1} alignItems="center">
               <BusinessIcon color="primary" />
-            </Grid>
-            <Typography noWrap variant="h5">
-              Umbrella Corporation
-            </Typography>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Grid item xs={8}>
+              <Typography noWrap variant="h5">
+                Umbrella Corporation
+              </Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
               <AccessTimeIcon color="primary" />
-            </Grid>
-            <Typography noWrap variant="h5">
-              Duration: 5 Days
-            </Typography>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Grid item xs={8}>
+
+              <Typography noWrap variant="h5">
+                Duration: 5 Days
+              </Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
               <HourglassTopIcon color="primary" />
-            </Grid>
-            <Typography noWrap variant="h5">
-              Applicable before: 20/05/2024
-            </Typography>
+
+              <Typography noWrap variant="h5">
+                Applicable before: 20/05/2024
+              </Typography>
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <Chip label="label 1" />
+              <Chip label="label 2" />
+              <Chip label="label 3" />
+            </Stack>
           </Stack>
         </Grid>
 
-        <Grid>
-          <Stack direction="row" spacing={1}>
-            <Chip label="label 1" />
-            <Chip label="label 2" />
-            <Chip label="label 3" />
-          </Stack>
-        </Grid>
-        <Grid>
-          <Stack direction="column" spacing={1}>
+        <Grid item xs={12} md={6}>
+          <Stack direction="column" spacing={2}
+          mt={2} 
+          alignItems="center" 
+          justifyContent="center" 
+          sx={{ height: '100%' }} >
             <Typography noWrap variant="h5">
               Budget
             </Typography>
@@ -113,11 +109,11 @@ export default function ProjectDetailDeveloper() {
             </Typography>
             <Button variant="contained">Apply Now</Button>
             <Button variant="contained">Contact</Button>
-            <Typography noWrap variant="h4" color="black">
-                only members! please 
-              </Typography>
+            <Typography noWrap variant="h5" color="black">
+              only members! please
+            </Typography>
             <Link to={"/subscription"}>
-              <Typography noWrap variant="h4" color="RED">
+              <Typography noWrap variant="h5" color="red">
                 subscribe
               </Typography>
             </Link>
