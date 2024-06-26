@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Grid, IconButton } from '@mui/material';
+import { Box, TextField, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import axios from "axios";
 
-const Overview = ({ userInfo, setUserInfo }) => {
+const OverviewTab = ({ userInfo, setUserInfo }) => {
     const attributesToDisplay = { industry: 'Industry', website: 'Website', organization_size: 'Organization Size', specialities: 'Specialities' };
 
     const [isEditing, setIsEditing] = useState(false);
@@ -51,9 +51,13 @@ const Overview = ({ userInfo, setUserInfo }) => {
                 alignItems: 'center',
                 width: '100%'
             }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                {/* <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                     About us
-                </Typography>
+                </Typography> */}
+                <Box sx={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.35em' }}>
+                    About us
+                </Box>
+
                 {isEditing ? (
                     <Grid item>
                         <IconButton onClick={handleSave}>
@@ -86,18 +90,18 @@ const Overview = ({ userInfo, setUserInfo }) => {
                         }))}
                     />
                 ) : (
-                    <Typography variant="body1" sx={{ cursor: 'text', whiteSpace: 'pre-wrap', color: 'blue' }}>
+                    <Box sx={{ cursor: 'text', whiteSpace: 'pre-wrap', color: 'blue' }}>
                         {userInfo.about_us}
-                    </Typography>
+                    </Box>
                 )}
             </Grid>
 
             {Object.entries(attributesToDisplay).map(([key, value]) => (
-                <Grid container alignItems="center" spacing={3}>
+                <Grid container alignItems="center" spacing={3} key={key}>
                     <Grid item xs={4} md={3} >
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                        <Box sx={{ fontWeight: 'bold' }}>
                             {value}
-                        </Typography>
+                        </Box>
                     </Grid>
                     <Grid item xs={12} md={9} mb={'10px'}>
                         {isEditing ? (
@@ -114,9 +118,9 @@ const Overview = ({ userInfo, setUserInfo }) => {
                             />
 
                         ) : (
-                            <Typography variant="body1" sx={{ cursor: 'text', whiteSpace: 'pre-wrap' }}>
+                            <Box sx={{ cursor: 'text', whiteSpace: 'pre-wrap' }}>
                                 {tempUserInfo[key]}
-                            </Typography>
+                            </Box>
                         )}
                     </Grid>
                 </Grid>
@@ -126,4 +130,4 @@ const Overview = ({ userInfo, setUserInfo }) => {
     );
 };
 
-export default Overview;
+export default OverviewTab;

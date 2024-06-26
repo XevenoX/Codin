@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema(
     school: { type: String, required: false },
     skills: { type: String, required: false },
     //pastprojects
-    pastProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
-    
+    pastProjects: [{ type: mongoose.Types.ObjectId, ref: 'Project' }],
+
   },
   { timestamps: true }
 );

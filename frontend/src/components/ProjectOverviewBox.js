@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
+import { Grid, Paper, Typography, Button, Card } from '@mui/material';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -13,7 +9,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 }));
 
-const Overview = () => {
+const ProjectOverviewBox = ({ projectInfo }) => {
     const postedDaysAgo = 1;
     const closeInDays = 1;
     const applicationsReceived = 1;
@@ -21,16 +17,16 @@ const Overview = () => {
     return (
         <div className="overview">
             <Card
-                elevation="6"
+                elevation={6}
                 sx={{
                     p: 2,
                     margin: 1,
                     // width: 1000,
-                    height: 175,
+                    // height: 175,
                     flexGrow: 1,
-                    display: 'flex', // 使用 flex 布局
-                    alignItems: 'center', // 垂直居中
-                    justifyContent: 'center', // 水平居中
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     backgroundColor: (theme) =>
                         theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                 }}
@@ -73,8 +69,9 @@ const Overview = () => {
                                                 WebkitBoxOrient: 'vertical',
                                             }}
                                         >
-                                            Posted {postedDaysAgo} days ago • Close in {closeInDays}{' '}
-                                            days • {applicationsReceived} applications received.
+                                            Posted {Math.floor((new Date() - new Date(projectInfo.project_posttime)) / (1000 * 60 * 60 * 24))} days ago •
+                                            Close in {Math.floor((new Date(projectInfo.project_deadline) - new Date()) / (1000 * 60 * 60 * 24))}
+                                            days • {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
                                         </Typography>
                                     </Grid>
                                     <Grid item className="task-title">
@@ -90,8 +87,7 @@ const Overview = () => {
                                                 WebkitBoxOrient: 'vertical',
                                             }}
                                         >
-                                            Framer Design Mobile Responsiveness Specialist Specialist
-                                            Specialist Specialist
+                                            {projectInfo.project_name}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -111,7 +107,7 @@ const Overview = () => {
                                     variant="body1"
                                     sx={{ fontWeight: 'bold', fontSize: 28 }}
                                 >
-                                    $ 108
+                                    $ {projectInfo.project_budget}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -127,21 +123,26 @@ const Overview = () => {
                                     WebkitBoxOrient: 'vertical',
                                 }}
                             >
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
-                                accusamus nemo repellendus, sapiente voluptatibus numquam quod
-                                fugiat soluta quae doloremque perferendis aut placeat neque
-                                nihil aliquid ducimus cum maiores culpa.
+                                {projectInfo.project_description}
                             </Typography>
                         </Grid>
-                        <Grid item sx={{ height: '15%', margin: 0.5 }}>
-                            <Typography
-                                variant="body2"
-                                xs={{
-                                    fontWeight: 'light',
-                                }}
-                            >
-                                Tag1 • Tag2 • Tag3 • Tag4 • Tag5
-                            </Typography>
+
+                        <Grid sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px', height: '15%', margin: 0.5 }}>
+                            {projectInfo.project_labels.map((label, index) => (
+                                <React.Fragment key={label}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ fontWeight: 'light', color: 'blue' }}
+                                    >
+                                        {label}
+                                    </Typography>
+                                    {index < projectInfo.project_labels.length - 1 && (
+                                        <Typography variant="body2" sx={{ fontWeight: 'light' }}>
+                                            &middot;
+                                        </Typography>
+                                    )}
+                                </React.Fragment>
+                            ))}
                         </Grid>
                     </Grid>
                     <Grid
@@ -165,8 +166,8 @@ const Overview = () => {
                     </Grid>
                 </Grid>
             </Card>
-        </div>
+        </div >
     );
 };
 
-export default Overview;
+export default ProjectOverviewBox;

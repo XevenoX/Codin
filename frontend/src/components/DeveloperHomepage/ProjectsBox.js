@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, Rating, Stack, Divider } from '@mui/material';
-import ProjectOverview from '../ProjectOverview'
+import ProjectOverviewBox from '../ProjectOverviewBox'
 
 const ProjectsBox = () => {
     return (
@@ -21,7 +21,7 @@ const ProjectsBox = () => {
                     }
                 }
             }}>
-                <ProjectOverview />
+                <ProjectOverviewBox />
             </Box>
         </div>
     );

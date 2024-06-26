@@ -1,7 +1,7 @@
-// routes/publisherHomepage.js
+// routes/userInfo.js
 import express from "express";
-import User from "../models/userModel.js";
 const router = express.Router();
+import { ObjectId } from "mongodb";
 import db from "../db/connection.js";
 
 // test GET to fetch all users
@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
 router.get('/findByEmail', async (req, res) => {
     try {
         const email = req.query.email;
-        // const email = "codefive@gmail.com";
         if (!email) {
             return res.status(400).send('Email is required');
         }
@@ -83,6 +82,81 @@ router.post("/sloganUpdate", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error updating user information");
+    }
+});
+
+//get feedbacks
+router.get('/feedbacks', async (req, res) => {
+    try {
+        const rated_for = req.query._id;
+        const collection = db.collection("feedbacks");
+        const pipeline = [
+            {
+                $match: {
+                    rated_for: new ObjectId(rated_for),
+                },
+            },
+            {
+                $sort: {
+                    rated_date: -1,
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'rated_by',
+                    foreignField: '_id',
+                    as: 'raterDetails',
+                },
+            },
+            {
+                $unwind: '$raterDetails',
+            },
+            {
+                $project: {
+                    comment: 1,
+                    rated_date: 1,
+                    rating: 1,
+                    rater_name: '$raterDetails.name',
+                },
+            },
+        ];
+        const feedbacks = await collection.aggregate(pipeline).toArray();
+        res.status(200).json(feedbacks);
+    } catch (error) {
+        console.error('Error fetching feedbacks:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
+//get average rating
+router.get('/averageRating', async (req, res) => {
+    try {
+        const rated_for = req.query._id;
+        const collection = db.collection("feedbacks");
+        const pipeline = [
+            {
+                $match: {
+                    rated_for: new ObjectId(rated_for),
+                },
+            },
+            {
+                $group: {
+                    _id: '$ratedFor',
+                    averageRating: { $avg: '$rating' },
+                    totalRatings: { $sum: 1 },
+                },
+            },
+        ];
+        const result = await collection.aggregate(pipeline).toArray();
+        if (result.length === 0) {
+            res.status(200).send({ averageRating: null, totalRatings: 0 });
+        } else {
+            res.status(200).json(result[0]);
+        }
+    } catch (error) {
+        console.error('Error fetching average rating:', error);
+        res.status(500).send('Internal server error');
     }
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Typography, Box, Rating, TextField, Stack, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -8,8 +8,8 @@ import axios from "axios";
 const ProfileBox = ({ userInfo, setUserInfo }) => {
     const [tempUserInfo, setTempUserInfo] = useState(userInfo);
     const [isEditing, setIsEditing] = useState(false);
-    const [rating, setRating] = useState(3.0);
-    const [numberOfRating, setNumberOfRating] = useState(10);
+    const [rating, setRating] = useState(null);
+    const [numberOfRating, setNumberOfRating] = useState(null);
     async function sloganUpdate(tempUserInfo) {
         console.log(tempUserInfo.email, tempUserInfo.slogan);
         try {
@@ -20,6 +20,21 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
             console.log(res.data);
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    async function fetchPublisherRating(userInfo) {
+        try {
+            const response = await axios.get('/userInfo/averageRating', {
+                params: {
+                    _id: userInfo._id
+                }
+            });
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching average rating:', error);
+            throw error;
         }
     }
 
@@ -38,6 +53,17 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
         setTempUserInfo(userInfo);
         setIsEditing(true);
     };
+
+    useEffect(() => {
+        if (userInfo && userInfo._id) {
+            fetchPublisherRating(userInfo)
+                .then((rating) => {
+                    setRating(rating.averageRating);
+                    setNumberOfRating(rating.totalRatings);
+                })
+                .catch((e) => console.log(e));
+        }
+    }, [userInfo]);
 
     const handleChange = setter => e => setter(e.target.value);
     return (
@@ -128,7 +154,7 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
                 <Stack direction="column" alignItems="left" >
                     {rating !== null ? (
                         <>
-                            <Typography variant="h5" sx={{ ml: 1, color: 'black', fontWeight: 'bold', fontSize: 40 }}>{rating.toFixed(1)}</Typography>
+                            <Typography variant="h5" sx={{ ml: 1, color: 'black', fontWeight: 'bold', fontSize: 40 }}>{rating !== null ? rating.toFixed(1) : 'No ratings yet'}</Typography>
                             <Rating name="read-only" value={rating} readOnly precision={0.5} size={'small'} color={'blue'} />
                             <Typography sx={{ ml: 1 }}>({numberOfRating})</Typography>
                         </>

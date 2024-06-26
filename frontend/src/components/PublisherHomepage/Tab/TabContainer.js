@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Typography, Tabs, Tab, Box } from '@mui/material';
 import PropTypes from 'prop-types';
-import Overview from './OverviewTab';
-import Projects from './ProjectsTab';
+import OverviewTab from './OverviewTab';
+import ProjectsTab from './ProjectsTab';
 import ReviewsTab from './ReviewsTab';
 
 function CustomTabPanel(props) {
@@ -17,7 +17,9 @@ function CustomTabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <Box sx={{ fontSize: '1rem', color: 'text.primary' }}>
+                        {children}
+                    </Box>
                 </Box>
             )}
         </div>
@@ -57,13 +59,13 @@ const TabContainer = ({ userInfo, setUserInfo }) => {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <Overview userInfo={userInfo} setUserInfo={setUserInfo} />
+                <OverviewTab userInfo={userInfo} setUserInfo={setUserInfo} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                <Projects />
+                <ProjectsTab userInfo={userInfo} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                <ReviewsTab style='normal' />
+                <ReviewsTab style='normal' userInfo={userInfo} />
             </CustomTabPanel>
         </Box>
     );

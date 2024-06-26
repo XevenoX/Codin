@@ -4,6 +4,7 @@ import signUp from "./routes/signUp.js";
 import createProject from "./routes/createProject.js";
 import homepage from "./routes/homepage.js";
 import userInfo from "./routes/userInfo.js";
+import projectsList from "./routes/projectsList.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -35,6 +36,7 @@ app.use("/", homepage);
 app.use("/signUp", signUp);
 app.use("/createProject", createProject);
 app.use("/userInfo", userInfo);
+app.use("/projectsList", projectsList);
 
 
 // supply static file
