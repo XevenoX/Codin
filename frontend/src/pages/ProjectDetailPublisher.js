@@ -77,8 +77,14 @@ export default function ProjectDetailPublisher() {
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
+      // const id = params.id?.toString() || undefined;
+      const id = '667c3472880c0b162d2e1fd9';
       try {
-        const response = await fetch("http://localhost:5050/getProject"); // Adjust the URL according to your API endpoint
+        // const response = await fetch(
+        //   "http://localhost:5050/getProject/${params.id.toString()}"
+        // ); 
+        const response = await fetch(`http://localhost:5050/getProject/${id}`);
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -158,7 +164,7 @@ export default function ProjectDetailPublisher() {
                 <BusinessIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Budget: ${projectDetails.project_budget}
+                Budget: €{projectDetails.project_budget}
               </Typography>
             </Stack>
 
@@ -173,13 +179,13 @@ export default function ProjectDetailPublisher() {
                 Labels:
               </Typography>
               <Typography noWrap variant="h5">
-                {Object.keys(projectDetails.project_labels).join(", ")}
+                {Object.values(projectDetails.project_labels).join(", ")}
               </Typography>
             </Stack>
           </Stack>
         </Grid>
       </Grid>
-      <ApplicationList data={testCandidates} />
+      <ApplicationList data={projectDetails.applicants} />
 
       <Grid>
         <Stack direction="column" spacing={2}>

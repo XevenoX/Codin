@@ -72,7 +72,7 @@ export default function ApplicationList({data})  {
               <Card sx={{ minWidth: 180 }}>
                 <CardContent>
                   <Typography variant="h5" component="div">
-                    {item.id}
+                    {item.name}
                   </Typography>
                   <Rating name="read-only" value={item.rating} readOnly />
                   <Typography
