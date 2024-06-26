@@ -1,26 +1,127 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import EditableText from '../../EditableText';
+import { Box, Typography, TextField, Grid, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import axios from "axios";
 
-const Overview = () => {
-    const [about, setAbout] = useState("At Codefive, we are committed to exceeding expectations by providing customized solutions that drive the growth and success of our clients. From tailor-made software development to the creation of unique websites, to the implementation of digital marketing strategies, we are here to help businesses achieve their goals from start to finish. With a highly skilled and passionate multidisciplinary team, we are ready to tackle any challenge and deliver exceptional results. Our commitment is to excellence and the success of our clients.");
-    const [website, setWebsite] = useState("https://codefive.pt");
-    const [industry, setIndustry] = useState("Software Development");
-    const [companySize, setCompanySize] = useState("2-10 employees");
-    const [specialties, setSpecialties] = useState("Wordpress, Mautic, SMS Marketing, Email Marketing, Software, UX/UI, Web Design, Websites, RGPD, Mautic, Marketing, SEO, Software, and E-commerce");
+const Overview = ({ userInfo, setUserInfo }) => {
+    const attributesToDisplay = { industry: 'Industry', website: 'Website', organization_size: 'Organization Size', specialities: 'Specialities' };
 
-    const handleChange = setter => e => setter(e.target.value);
+    const [isEditing, setIsEditing] = useState(false);
+    const [tempUserInfo, setTempUserInfo] = useState(userInfo);
+
+    async function publisherInfoUpdate(tempUserInfo) {
+        try {
+            const res = await axios.post("/userInfo/publisherUpdate", {
+                email: tempUserInfo.email,
+                about_us: tempUserInfo.about_us,
+                industry: tempUserInfo.industry,
+                website: tempUserInfo.website,
+                organization_size: tempUserInfo.organization_size,
+                specialities: tempUserInfo.specialities
+            });
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleSave = () => {
+        publisherInfoUpdate(tempUserInfo);
+        setUserInfo(tempUserInfo);
+        setIsEditing(false);
+    };
+
+    const handleCancel = () => {
+        setTempUserInfo(userInfo);
+        setIsEditing(false);
+    };
+
+    const handleEditClick = () => {
+        setTempUserInfo(userInfo);
+        setIsEditing(true);
+    };
 
     return (
         <Box>
-            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                About us
-            </Typography>
-            <EditableText type={0} label="About" value={about} onChange={handleChange(setAbout)} multiline={true} />
-            <EditableText type={1} label="Website" value={website} onChange={handleChange(setWebsite)} />
-            <EditableText type={1} label="Industry" value={industry} onChange={handleChange(setIndustry)} />
-            <EditableText type={1} label="Company size" value={companySize} onChange={handleChange(setCompanySize)} />
-            <EditableText type={1} label="Specialties" value={specialties} onChange={handleChange(setSpecialties)} multiline={true} />
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%'
+            }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                    About us
+                </Typography>
+                {isEditing ? (
+                    <Grid item>
+                        <IconButton onClick={handleSave}>
+                            <SaveIcon />
+                        </IconButton>
+                        <IconButton onClick={handleCancel}>
+                            <CancelIcon />
+                        </IconButton>
+                    </Grid>
+                ) : (
+                    <Grid item>
+                        <IconButton onClick={handleEditClick}>
+                            <EditIcon />
+                        </IconButton>
+                    </Grid>
+                )}
+            </Box>
+
+            <Grid item xs={12} md={12} mb={'10px'}>
+                {isEditing ? (
+                    <TextField
+                        variant="standard"
+                        fullWidth
+                        multiline="true"
+                        autoFocus
+                        value={tempUserInfo.about_us}
+                        onChange={(e) => setTempUserInfo((prevTempUserInfo) => ({
+                            ...prevTempUserInfo,
+                            about_us: e.target.value,
+                        }))}
+                    />
+                ) : (
+                    <Typography variant="body1" sx={{ cursor: 'text', whiteSpace: 'pre-wrap', color: 'blue' }}>
+                        {userInfo.about_us}
+                    </Typography>
+                )}
+            </Grid>
+
+            {Object.entries(attributesToDisplay).map(([key, value]) => (
+                <Grid container alignItems="center" spacing={3}>
+                    <Grid item xs={4} md={3} >
+                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                            {value}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={9} mb={'10px'}>
+                        {isEditing ? (
+                            <TextField
+                                variant="standard"
+                                fullWidth
+                                multiline={false}
+                                autoFocus
+                                value={tempUserInfo[key]}
+                                onChange={(e) => setTempUserInfo((prevTempUserInfo) => ({
+                                    ...prevTempUserInfo,
+                                    [key]: e.target.value
+                                }))}
+                            />
+
+                        ) : (
+                            <Typography variant="body1" sx={{ cursor: 'text', whiteSpace: 'pre-wrap' }}>
+                                {tempUserInfo[key]}
+                            </Typography>
+                        )}
+                    </Grid>
+                </Grid>
+            ))}
+
         </Box>
     );
 };

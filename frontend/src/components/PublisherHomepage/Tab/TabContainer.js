@@ -37,7 +37,7 @@ function a11yProps(index) {
     };
 }
 
-const ProfileTab = () => {
+const TabContainer = ({ userInfo, setUserInfo }) => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -57,7 +57,7 @@ const ProfileTab = () => {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <Overview />
+                <Overview userInfo={userInfo} setUserInfo={setUserInfo} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <Projects />
@@ -69,4 +69,4 @@ const ProfileTab = () => {
     );
 };
 
-export default ProfileTab;
+export default TabContainer;
