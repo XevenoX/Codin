@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// load user info by email
 router.get('/findByEmail', async (req, res) => {
     try {
         const email = req.query.email;
@@ -37,6 +38,7 @@ router.get('/findByEmail', async (req, res) => {
     }
 });
 
+// update publisher info
 router.post("/publisherUpdate", async (req, res) => {
     try {
         const { email, about_us, industry, website, organization_size, specialities } = req.body;
@@ -63,6 +65,7 @@ router.post("/publisherUpdate", async (req, res) => {
     }
 });
 
+// update publisher slogan
 router.post("/sloganUpdate", async (req, res) => {
     try {
         const { email, slogan } = req.body;
@@ -73,6 +76,33 @@ router.post("/sloganUpdate", async (req, res) => {
         let result = await collection.updateOne(
             { email: email },
             { $set: updatedslogan }
+        );
+        if (result.modifiedCount > 0) {
+            res.status(200).send({ message: "Record updated successfully" });
+        } else {
+            res.status(404).send({ message: "Record not found or no changes made" });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating user information");
+    }
+});
+
+// update developer info
+router.post("/developerUpdate", async (req, res) => {
+    try {
+        const { email, website, work_status, location, school, skills } = req.body;
+        let updatedDeveloperInfo = {
+            website,
+            work_status,
+            location,
+            school,
+            skills
+        };
+        let collection = await db.collection("users");
+        let result = await collection.updateOne(
+            { email: email },
+            { $set: updatedDeveloperInfo }
         );
         if (result.modifiedCount > 0) {
             res.status(200).send({ message: "Record updated successfully" });

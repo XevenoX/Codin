@@ -51,9 +51,6 @@ const OverviewTab = ({ userInfo, setUserInfo }) => {
                 alignItems: 'center',
                 width: '100%'
             }}>
-                {/* <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                    About us
-                </Typography> */}
                 <Box sx={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.35em' }}>
                     About us
                 </Box>

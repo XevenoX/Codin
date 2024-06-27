@@ -1,29 +1,103 @@
 import React, { useState } from 'react';
-import { Box, Avatar, Typography, Rating, Stack, Divider, Container } from '@mui/material';
-import EditableText from '../EditableText';
+import { Box, Avatar, Typography, Stack, Grid, IconButton, TextField } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import axios from "axios";
 
-const PersonalBox = () => {
-    const [workInfo, setWorkInfo] = useState("Currently working in KAN LABs, NYC USA as an ML Engineer(Remote)");
-    const [location, setLocation] = useState("Munich");
-    const [school, setSchool] = useState("Technical University of Munich");
-    const [website, setWebsite] = useState("https://github.com/maxmustermann");
-    const [skills, setSkills] = useState("frontend development");
-    const handleChange = setter => e => setter(e.target.value);
+const PersonalBox = ({ userInfo, setUserInfo }) => {
+    const attributesToDisplay = { work_status: 'Work Status', website: 'Website', location: 'Location', school: 'School', skills: 'Skills' };
+    const [tempUserInfo, setTempUserInfo] = useState(userInfo);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleSave = () => {
+        developerInfoUpdate(tempUserInfo);
+        setUserInfo(tempUserInfo);
+        setIsEditing(false);
+    };
+
+    const handleCancel = () => {
+        setTempUserInfo(userInfo);
+        setIsEditing(false);
+    };
+
+    const handleEditClick = () => {
+        setTempUserInfo(userInfo);
+        setIsEditing(true);
+    };
+
+    async function developerInfoUpdate(tempUserInfo) {
+        try {
+            const res = await axios.post("/userInfo/developerUpdate", {
+                email: tempUserInfo.email,
+                website: tempUserInfo.website,
+                work_status: tempUserInfo.work_status,
+                location: tempUserInfo.location,
+                school: tempUserInfo.school,
+                skills: tempUserInfo.skills
+            });
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
-        <Stack direction='column' spacing={5} sx={{ m: '30px', padding: '20px', alignItems: 'center' }}>
+        <Stack direction='column' spacing={5} sx={{ m: '10px', padding: '20px', alignItems: 'center' }}>
             <Avatar src='avatar_1.jpg' alt='test' sx={{ height: '200px', width: '200px' }} />
             <Stack direction='column' sx={{ alignItems: 'center' }}>
-                <Typography variant="h5" component="div" align="left" sx={{ fontWeight: 'bold' }}>Max Mustermann</Typography>
-                <Typography variant="body1" component="div" align="left" sx={{ color: 'grey' }}>1223356456</Typography>
+                <Typography variant="h5" component="div" align="left" sx={{ fontWeight: 'bold' }}>{userInfo.name}</Typography>
+                <Typography variant="body1" component="div" align="left" sx={{ color: 'grey' }}>{userInfo.email}</Typography>
             </Stack>
-            <Stack direction='column' sx={{ alignItems: 'center' }}>
-                <EditableText type={1} label="Work Status" value={workInfo} onChange={handleChange(setWorkInfo)} />
-                <EditableText type={1} label="Location" value={location} onChange={handleChange(setLocation)} />
-                <EditableText type={1} label="School" value={school} onChange={handleChange(setSchool)} />
-                <EditableText type={1} label="website" value={website} onChange={handleChange(setWebsite)} />
-                <EditableText type={1} label="skills" value={skills} onChange={handleChange(setSkills)} />
-            </Stack>
+
+            <Grid container spacing={2}>
+                <Grid item xs={12} >
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        {isEditing ? (
+                            <Box>
+                                <IconButton onClick={handleSave}>
+                                    <SaveIcon />
+                                </IconButton>
+                                <IconButton onClick={handleCancel}>
+                                    <CancelIcon />
+                                </IconButton>
+                            </Box>
+                        ) : (
+                            <IconButton onClick={handleEditClick}>
+                                <EditIcon />
+                            </IconButton>
+                        )}
+                    </Box>
+                </Grid>
+                {Object.entries(attributesToDisplay).map(([key, value]) => (
+                    <Grid container alignItems="center" spacing={3} key={key} sx={{ mb: 2 }}>
+                        <Grid item xs={4} md={3}>
+                            <Box sx={{ fontWeight: 'bold' }}>
+                                {value}
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} md={9}>
+                            {isEditing ? (
+                                <TextField
+                                    variant="standard"
+                                    fullWidth
+                                    multiline={true}
+                                    autoFocus
+                                    value={tempUserInfo[key]}
+                                    onChange={(e) => setTempUserInfo((prevTempUserInfo) => ({
+                                        ...prevTempUserInfo,
+                                        [key]: e.target.value
+                                    }))}
+                                />
+                            ) : (
+                                <Box sx={{ cursor: 'text', whiteSpace: 'pre-wrap', color: 'blue' }}>
+                                    {tempUserInfo[key]}
+                                </Box>
+                            )}
+                        </Grid>
+                    </Grid>
+                ))}
+            </Grid>
         </Stack>
     );
 };

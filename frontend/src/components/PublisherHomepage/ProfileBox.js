@@ -101,7 +101,7 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
                 alt="Logo"
             />
             <Typography variant="h5" component="div" align="left" sx={{ ml: '20px', mt: '20px', fontWeight: 'bold' }}>
-                Codefive
+                {userInfo.name}
             </Typography>
             <Box sx={{ ml: '20px', width: '60%', height: '50px' }}>
                 <Box sx={{
@@ -141,7 +141,6 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
                         </Box>
                     )}
                 </Box>
-
             </Box>
             <Box sx={{
                 mt: '-105px',
@@ -163,7 +162,6 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
                             No rating yet
                         </Typography>
                     )}
-
                 </Stack>
             </Box>
 

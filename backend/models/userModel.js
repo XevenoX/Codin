@@ -19,10 +19,7 @@ const userSchema = new mongoose.Schema(
     work_status: { type: String, required: false },
     location: { type: String, required: false },
     school: { type: String, required: false },
-    skills: { type: String, required: false },
-    //pastprojects
-    pastProjects: [{ type: mongoose.Types.ObjectId, ref: 'Project' }],
-
+    skills: { type: String, required: false }
   },
   { timestamps: true }
 );

@@ -31,4 +31,20 @@ router.get('/byPublisher/ongoing', async (req, res) => {
     }
 });
 
+//get list of developer past projects
+router.get('/byDeveloper/past', async (req, res) => {
+    const chosen_applicants = req.query.chosen_applicants;
+    try {
+        const collection = db.collection("projects");
+        const pastProjects = await collection.find({
+            chosen_applicants: new ObjectId(chosen_applicants),
+            project_status: { $in: [5] } // contain more items to also select projects in other status
+        }).toArray();
+        res.status(200).json(pastProjects);
+    } catch (error) {
+        console.error('Error fetching ongoing projects:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
 export default router;
