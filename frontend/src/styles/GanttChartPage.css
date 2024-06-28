@@ -19,13 +19,16 @@ header {
     font-weight: bold;
 }
 
-nav a {
+nav button {
     margin: 0 10px;
     text-decoration: none;
     color: #000;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-nav a:hover {
+nav button:hover {
     text-decoration: underline;
 }
 
@@ -45,7 +48,32 @@ nav a:hover {
     font-size: 24px;
 }
 
-main {
+main.main-content {
+    display: flex;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #fff;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.task-state {
+    margin-bottom: 10px;
+}
+
+.task-state-color {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.chart-content {
+    flex-grow: 1;
     padding: 20px;
 }
 

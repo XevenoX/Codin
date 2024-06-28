@@ -13,76 +13,95 @@ const GanttChartPage = () => {
             { type: 'number', label: 'Duration' },
             { type: 'number', label: 'Percent Complete' },
             { type: 'string', label: 'Dependencies' },
+            { type: 'string', role: 'tooltip', 'p': { 'html': true } },
         ],
         [
             '1',
             'Framer Design Mobile Responsiveness Specialist',
             'Open',
             new Date(2024, 2, 12),
-            new Date(2024, 4, 5),
+            new Date(2024, 2, 17),
             null,
-            75,
+            0,
             null,
+            '<div><img src="/profile-pic1.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Framer Design Mobile Responsiveness Specialist</span></div>',
         ],
         [
             '2',
             'Front-End WordPress Designer',
             'Open',
-            new Date(2024, 3, 1),
-            new Date(2024, 4, 10),
+            new Date(2024, 2, 12),
+            new Date(2024, 2, 19),
             null,
-            50,
-            '1',
+            0,
+            null,
+            '<div><img src="/profile-pic2.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Front-End WordPress Designer</span></div>',
         ],
         [
             '3',
             'Part-time Website Product Assistant (PM Assistant)',
             'Awaiting Acceptance',
-            new Date(2024, 3, 15),
-            new Date(2024, 4, 20),
+            new Date(2024, 2, 12),
+            new Date(2024, 2, 20),
             null,
-            20,
-            '2',
+            0,
+            null,
+            '<div><img src="/profile-pic3.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Part-time Website Product Assistant (PM Assistant)</span></div>',
         ],
         [
             '4',
             'Redesign Frontend UI for Website',
             'Awaiting Acceptance',
-            new Date(2024, 3, 22),
-            new Date(2024, 4, 25),
+            new Date(2024, 2, 13),
+            new Date(2024, 2, 21),
             null,
             0,
-            '2',
+            null,
+            '<div><img src="/profile-pic4.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Redesign Frontend UI for Website</span></div>',
         ],
         [
             '5',
             'Website Compliance Specialist (Privacy Law)',
             'In Progress',
+            new Date(2024, 2, 12),
             new Date(2024, 2, 17),
-            new Date(2024, 5, 17),
             null,
-            40,
+            50,
             null,
+            '<div><img src="/profile-pic5.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Website Compliance Specialist (Privacy Law)</span></div>',
         ],
         [
             '6',
-            'Edit Existing Custom Kajabi Theme',
-            'Completed',
-            new Date(2024, 1, 20),
-            new Date(2024, 2, 25),
+            'Website Compliance Specialist (Cookie)',
+            'In Progress',
+            new Date(2024, 2, 12),
+            new Date(2024, 2, 17),
             null,
-            100,
+            50,
             null,
+            '<div><img src="/profile-pic6.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Website Compliance Specialist (Cookie)</span></div>',
         ],
         [
             '7',
-            'AstroJS Consultant',
-            'Completed',
-            new Date(2024, 0, 20),
+            'Edit Existing Custom Kajabi Theme',
+            'Complete',
+            new Date(2024, 2, 12),
             new Date(2024, 2, 17),
             null,
             100,
             null,
+            '<div><img src="/profile-pic7.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>Edit Existing Custom Kajabi Theme</span></div>',
+        ],
+        [
+            '8',
+            'AstroJS Consultant',
+            'Complete',
+            new Date(2024, 2, 12),
+            new Date(2024, 2, 17),
+            null,
+            100,
+            null,
+            '<div><img src="/profile-pic8.png" alt="Profile" style="width:32px;height:32px;border-radius:50%;margin-right:8px;vertical-align:middle;"><span>AstroJS Consultant</span></div>',
         ],
     ];
 
@@ -90,37 +109,58 @@ const GanttChartPage = () => {
         height: 400,
         gantt: {
             trackHeight: 30,
+            palette: [
+                { "color": "#FF6347", "dark": "#FF4500", "light": "#FFA07A" }, // Open
+                { "color": "#FFA500", "dark": "#FF8C00", "light": "#FFD700" }, // Awaiting Acceptance
+                { "color": "#00FF7F", "dark": "#00FA9A", "light": "#98FB98" }, // In Progress
+                { "color": "#4682B4", "dark": "#4169E1", "light": "#87CEFA" }  // Complete
+            ],
         },
+        tooltip: { isHtml: true },
     };
+
+    const taskStates = [
+        { label: 'Open', color: '#FF6347' },
+        { label: 'Awaiting Acceptance', color: '#FFA500' },
+        { label: 'In Progress', color: '#00FF7F' },
+        { label: 'Complete', color: '#4682B4' },
+    ];
 
     return (
         <div>
             <header>
                 <div className="logo">Codin.</div>
                 <nav>
-                    <a href="#">Project Management</a>
-                    <a href="#">Marketplace</a>
+                    <button onClick={() => window.history.back()}>Back</button>
                 </nav>
                 <div className="profile">
-                    <img src="/profile-pic.png" alt="Profile Picture" />
+                    <img src="/profile-pic.png" alt="Profile" />
                     <div className="notifications">
                         <span>🔔</span>
                     </div>
                 </div>
             </header>
-            <main>
-                <div className="toolbar">
+            <main className="main-content">
+                <div className="sidebar">
                     <button className="post-new-project">Post New Project</button>
-                    <button className="grid-view">Grid View</button>
+                    {taskStates.map((state, index) => (
+                        <div key={index} className="task-state">
+                            <span className="task-state-color" style={{ backgroundColor: state.color }}></span>
+                            {state.label}
+                        </div>
+                    ))}
                 </div>
-                <div className="gantt-chart">
-                    <Chart
-                        chartType="Gantt"
-                        width="100%"
-                        height="50vh"
-                        data={data}
-                        options={options}
-                    />
+                <div className="chart-content">
+                    <button className="grid-view" onClick={() => window.history.back()}>Grid View</button>
+                    <div className="gantt-chart">
+                        <Chart
+                            chartType="Gantt"
+                            width="100%"
+                            height="400px"
+                            data={data}
+                            options={options}
+                        />
+                    </div>
                 </div>
             </main>
         </div>

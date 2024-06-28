@@ -1,41 +1,7 @@
 import React from 'react';
 import '../styles/ProjectManagementPage.css';
-import { useNavigate } from 'react-router-dom';
 
 const ProjectManagementPage = () => {
-    const navigate = useNavigate();
-
-    const handleSeeMore = (projectName) => {
-        console.log(`See more details for project: ${projectName}`);
-        // 这里可以添加导航到项目详情页的逻辑
-        alert(`See more details for project: ${projectName}`);
-        // navigate(`/project/${projectName}`); // 导航到项目详情页
-    };
-
-    const handleComplete = (projectName) => {
-        console.log(`Complete project: ${projectName}`);
-        // 这里可以添加完成项目的逻辑，例如显示模态对话框
-        alert(`Complete project: ${projectName}`);
-    };
-
-    const handleWithdraw = (projectName) => {
-        console.log(`Withdraw application for project: ${projectName}`);
-        // 这里可以添加撤回申请的逻辑
-        alert(`Withdraw application for project: ${projectName}`);
-    };
-
-    const handleAccept = (projectName) => {
-        console.log(`Accept offer for project: ${projectName}`);
-        // 这里可以添加接受项目的逻辑
-        alert(`Accept offer for project: ${projectName}`);
-    };
-
-    const handleReject = (projectName) => {
-        console.log(`Reject offer for project: ${projectName}`);
-        // 这里可以添加拒绝项目的逻辑
-        alert(`Reject offer for project: ${projectName}`);
-    };
-
     return (
         <div>
             <header>
@@ -75,48 +41,60 @@ const ProjectManagementPage = () => {
                 <div className="projects-grid">
                     <div className="project-section in-progress">
                         <h2>In Progress</h2>
-                        <div className="project">
-                            <h3>Website Compliance Specialist (Privacy Law)</h3>
-                            <span className="company">Company: Globex Corporation</span>
-                            <span className="complete-before">Complete before: 20.06.2024</span>
-                            <button className="see-more" onClick={() => handleSeeMore('Website Compliance Specialist (Privacy Law)')}>See More</button>
-                            <button className="complete" onClick={() => handleComplete('Website Compliance Specialist (Privacy Law)')}>Complete</button>
+                        <div className="project-list">
+                            <div className="project">
+                                <h3>Website Compliance Specialist (Privacy Law)</h3>
+                                <span className="company">Company: Globex Corporation</span>
+                                <span className="complete-before">Complete before: 20.06.2024</span>
+                                <button className="see-more">See More</button>
+                                <button className="complete">Complete</button>
+                            </div>
+                            {/* Add more projects here */}
                         </div>
                     </div>
                     <div className="project-section applied">
                         <h2>Applied</h2>
-                        <div className="project">
-                            <h3>Framer Design Mobile Responsiveness Specialist</h3>
-                            <span className="company">Company: Globex Corporation</span>
-                            <span className="complete-before">Complete before: 17.06.2024</span>
-                            <button className="see-more" onClick={() => handleSeeMore('Framer Design Mobile Responsiveness Specialist')}>See More</button>
-                            <button className="withdraw" onClick={() => handleWithdraw('Framer Design Mobile Responsiveness Specialist')}>Withdraw</button>
-                        </div>
-                        <div className="project">
-                            <h3>Front-End WordPress Designer</h3>
-                            <span className="company">Company: Globex Corporation</span>
-                            <span className="complete-before">Complete before: 17.06.2024</span>
-                            <button className="see-more" onClick={() => handleSeeMore('Front-End WordPress Designer')}>See More</button>
-                            <button className="withdraw" onClick={() => handleWithdraw('Front-End WordPress Designer')}>Withdraw</button>
+                        <div className="project-list">
+                            <div className="project">
+                                <h3>Framer Design Mobile Responsiveness Specialist</h3>
+                                <span className="company">Company: Globex Corporation</span>
+                                <span className="complete-before">Complete before: 17.06.2024</span>
+                                <button className="see-more">See More</button>
+                                <button className="withdraw">Withdraw</button>
+                            </div>
+                            <div className="project">
+                                <h3>Front-End WordPress Designer</h3>
+                                <span className="company">Company: Globex Corporation</span>
+                                <span className="complete-before">Complete before: 17.06.2024</span>
+                                <button className="see-more">See More</button>
+                                <button className="withdraw">Withdraw</button>
+                            </div>
+                            {/* Add more projects here */}
                         </div>
                     </div>
                     <div className="project-section awaiting-acceptance">
                         <h2>Offers Received</h2>
-                        <div className="project">
-                            <h3>Part-time Website Product Assistant (PM Assistant)</h3>
-                            <span className="company">Company: Globex Corporation</span>
-                            <span className="response-before">Response before: 20.05.2024</span>
-                            <button className="accept" onClick={() => handleAccept('Part-time Website Product Assistant (PM Assistant)')}>Accept</button>
-                            <button className="reject" onClick={() => handleReject('Part-time Website Product Assistant (PM Assistant)')}>Reject</button>
+                        <div className="project-list">
+                            <div className="project">
+                                <h3>Part-time Website Product Assistant (PM Assistant)</h3>
+                                <span className="company">Company: Globex Corporation</span>
+                                <span className="response-before">Response before: 20.05.2024</span>
+                                <button className="accept">Accept</button>
+                                <button className="reject">Reject</button>
+                            </div>
+                            {/* Add more projects here */}
                         </div>
                     </div>
                     <div className="project-section completed">
                         <h2>Complete</h2>
-                        <div className="project">
-                            <h3>Edit Existing Custom Kajabi Theme</h3>
-                            <span className="company">Company: Globex Corporation</span>
-                            <span className="completed-at">Completed at: 17.05.2024</span>
-                            <button className="see-more" onClick={() => handleSeeMore('Edit Existing Custom Kajabi Theme')}>See More</button>
+                        <div className="project-list">
+                            <div className="project">
+                                <h3>Edit Existing Custom Kajabi Theme</h3>
+                                <span className="company">Company: Globex Corporation</span>
+                                <span className="completed-at">Completed at: 17.05.2024</span>
+                                <button className="see-more">See More</button>
+                            </div>
+                            {/* Add more projects here */}
                         </div>
                     </div>
                 </div>
