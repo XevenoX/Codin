@@ -30,7 +30,7 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 
-export default function ApplicationList({data})  {
+export default function ApplicantsList({data})  {
 
   return (
     <React.Fragment>
