@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/CompanyProjectManagementPage.css';
 
 const CompanyProjectManagementPage = () => {
+    const navigate = useNavigate();
+
     const handleSeeMore = (projectName) => {
         console.log(`See more details for project: ${projectName}`);
         alert(`See more details for project: ${projectName}`);
@@ -23,8 +26,7 @@ const CompanyProjectManagementPage = () => {
     };
 
     const handleViewGanttChart = () => {
-        console.log('View Gantt Chart');
-        alert('View Gantt Chart');
+        navigate('/gantt-chart');
     };
 
     return (
@@ -36,7 +38,7 @@ const CompanyProjectManagementPage = () => {
                     <a href="#">Marketplace</a>
                 </nav>
                 <div className="profile">
-                    <img src="profile-pic.png" alt="Profile Picture" />
+                    <img src="/profile-pic.png" alt="Profile Picture" />
                     <div className="notifications">
                         <span>🔔</span>
                     </div>
@@ -116,6 +118,6 @@ const CompanyProjectManagementPage = () => {
             </main>
         </div>
     );
-}
+};
 
 export default CompanyProjectManagementPage;
