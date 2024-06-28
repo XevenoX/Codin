@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ApplicationList from "../components/ApplicationList";
+import ApplicantsList from "../components/ApplicantsList";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -83,7 +83,7 @@ export default function ProjectDetailPublisher() {
         // const response = await fetch(
         //   "http://localhost:5050/getProject/${params.id.toString()}"
         // ); 
-        const response = await fetch(`http://localhost:5050/getProject/${id}`);
+        const response = await fetch(`http://localhost:5050/getProject/publisher/${id}`);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -185,7 +185,7 @@ export default function ProjectDetailPublisher() {
           </Stack>
         </Grid>
       </Grid>
-      <ApplicationList data={projectDetails.applicants} />
+      <ApplicantsList data={projectDetails.applicants} />
 
       <Grid>
         <Stack direction="column" spacing={2}>
