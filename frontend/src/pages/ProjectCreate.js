@@ -53,6 +53,8 @@ export default function ProjectCreate() {
   const [isProjectNameValid, setIsProjectNameValid] = useState(true);
   const [isBudgetValid, setIsBudgetValid] = useState(true);
   const [isDurationValid, setIsDurationValid] = useState(true);
+  const [isApplicationDeadlineValid, setisApplicationDeadlineValid] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   //   const [projectNameError, setProjectNameError] = useState(false);
   //   const [projectDurationError, setProjectDurationError] = useState(false);
@@ -72,9 +74,10 @@ export default function ProjectCreate() {
   };
   const today = getBerlinDate().toISOString().split("T")[0];
   const navigate = useNavigate();
+
   useEffect(() => {
-    setIsProjectNameValid(!isNaN(projectName) && projectName !== "");
-  }, [projectBudget]);
+    setIsProjectNameValid(projectName !== "");
+  }, [projectName]);
   useEffect(() => {
     setIsBudgetValid(!isNaN(projectBudget) && projectBudget !== "");
   }, [projectBudget]);
@@ -87,6 +90,25 @@ export default function ProjectCreate() {
       && Number(projectDuration)>0
     && Number(projectDuration)<=28);
   }, [projectDuration]);
+
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setisApplicationDeadlineValid(projectApplicationDeadline > today);
+  }, [projectApplicationDeadline]);
+
+  useEffect(() => {
+    setIsFormValid(
+      isProjectNameValid &&
+      isBudgetValid &&
+      isDurationValid &&
+      isApplicationDeadlineValid
+    );
+  }, [
+    isProjectNameValid,
+    isBudgetValid,
+    isDurationValid,
+    isApplicationDeadlineValid,
+  ]);
 
 
   async function handleSubmit(e) {
@@ -112,6 +134,7 @@ export default function ProjectCreate() {
           projectLabels: Object.keys(projectLabels).filter(
             (label) => projectLabels[label] === 1
           ),
+          // posttime: getBerlinDate(),
         }),
       });
 
@@ -186,6 +209,7 @@ export default function ProjectCreate() {
                 variant="filled"
                 onChange={(e) => setProjectApplicationDeadline(e.target.value)}
                 value={projectApplicationDeadline}
+                error={!isApplicationDeadlineValid}
                 InputProps={{ inputProps: { min: today } }}
               />
             </Grid>
@@ -250,7 +274,7 @@ export default function ProjectCreate() {
               sx={{ m: 1, width: "25ch" }}
               variant="contained"
               type="submit"
-              disabled={!isProjectNameValid || !isBudgetValid || !isDurationValid }
+              disabled={!isFormValid}
             >
               save and publish
             </Button>

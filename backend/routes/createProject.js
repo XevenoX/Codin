@@ -13,7 +13,12 @@ const router = express.Router();
 // This section will help you create a new record.
 // const project_posttime =  new Date();
 router.post("/", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
+  const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
+  const now = new Date();
+  const utcTime = now.getTime() + now.getTimezoneOffset() * 6000;
+  const berlinTime = new Date(utcTime + berlinOffset * 3600000);
+  
     try {
       let newDocument = {
         project_name: req.body.projectName,
@@ -25,7 +30,8 @@ router.post("/", async (req, res) => {
         project_publisher:req.body.projectPublisher,
         project_labels:req.body.projectLabels,
         project_status: 1, 
-        project_posttime: new Date(),
+        // project_posttime: req.body.posttime,
+        project_posttime: berlinTime,
       };
       let collection = await db.collection("projects");
       let result = await collection.insertOne(newDocument);
