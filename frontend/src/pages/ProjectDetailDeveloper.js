@@ -28,9 +28,16 @@ import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
 export default function ProjectDetailDeveloper() {
-  const subscription = 1;
-  const [projectDetail, setProjectDetail] = useState([]);
+  const user = { 
+    // subscription: 1, 
+    subscription: 0, 
+    applicantId: "667c33a8c6d615bee2e0ba0e" 
+  };
+  const subscription = 1; //repalce with user.subscription (date) - current date >0
   // const subscription = 0;
+  //  const applicantId = '667c33a8c6d615bee2e0ba0e';
+
+  const [projectDetail, setProjectDetail] = useState([]);
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -65,44 +72,16 @@ export default function ProjectDetailDeveloper() {
     return <Typography>No project details found</Typography>;
   }
 
-
-  const handleApply = async () => {
-    const applicantId = '667c33a8c6d615bee2e0ba0e';
-    try {
-      let response = await fetch(`http://localhost:5050/applyProject`, {
-        
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          projectId: projectDetails._id,
-        applicantId: applicantId
-       
-        }),
-      });
-      if (response.status === 200) {
-        alert('Successfully applied to the project');
-        // todo: update local state or refetch project details
-      }
-    } catch (error) {
-      console.error('Error applying to the project:', error);
-      alert('Failed to apply to the project');
-    }
-  };
-
-  
-
   return (
     // /* replace <AssignmentIcon /> with avatar later */
     <Box
       component="form"
       sx={{
-        width: "74%", 
-        margin: "0 auto", 
-        "& .MuiTextField-root": { 
-          m: 1, 
-          width: "25ch" 
+        width: "74%",
+        margin: "0 auto",
+        "& .MuiTextField-root": {
+          m: 1,
+          width: "25ch",
         },
       }}
       noValidate
@@ -116,10 +95,8 @@ export default function ProjectDetailDeveloper() {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Stack direction="row" spacing={2} alignItems="center" mt={2}>
-            <Avatar sx={{ width: 100, height: 100 }} variant="rounded">
-              
-            </Avatar>
-            <Typography noWrap variant="h3">
+            <Avatar sx={{ width: 100, height: 100 }} variant="rounded"></Avatar>
+            <Typography noWrap variant="h4">
               {projectDetails.project_name}
             </Typography>
           </Stack>
@@ -165,20 +142,7 @@ export default function ProjectDetailDeveloper() {
             <Typography noWrap variant="h3">
               € {projectDetails.project_budget}
             </Typography>
-
-            <Typography noWrap variant="caption" color="grey">
-              {projectDetails.applicants} people have applied for the task
-            </Typography>
-            <Button variant="contained" onClick={handleApply}>Apply Now </Button>
-            <Button variant="contained">Contact</Button>
-            <Typography noWrap variant="h5" color="black">
-              only members! please
-            </Typography>
-            <Link to={"/subscription"}>
-              <Typography noWrap variant="h5" color="red">
-                subscribe
-              </Typography>
-            </Link>
+            <ApplyContactButton user={user} projectDetails={projectDetails} />
           </Stack>
         </Grid>
         <Grid>
@@ -187,7 +151,7 @@ export default function ProjectDetailDeveloper() {
               <Typography noWrap variant="h5">
                 Your Task
               </Typography>
-              <Typography sx={{ marginLeft: '2em' }}>
+              <Typography sx={{ marginLeft: "2em" }}>
                 task details: Use the elevation prop to establish hierarchy
                 through the use of shadows. The Paper component's default
                 elevation level is 1. The prop accepts values from 0 to 24. The
@@ -199,7 +163,7 @@ export default function ProjectDetailDeveloper() {
               <Typography noWrap variant="h5">
                 Skills required
               </Typography>
-              <Typography sx={{ marginLeft: '2em' }}>
+              <Typography sx={{ marginLeft: "2em" }}>
                 task details: Use the elevation prop to establish hierarchy
                 through the use of shadows. The Paper component's default
                 elevation level is 1. The prop accepts values from 0 to 24. The
