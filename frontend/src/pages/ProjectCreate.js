@@ -15,12 +15,14 @@ import Container from "@mui/material/Container";
 import InputAdornment from "@mui/material/InputAdornment";
 import { FormControl, FormLabel, FormGroup } from "@mui/material";
 
+
 export default function ProjectCreate() {
   const [projectName, setProjectName] = useState("");
   const [projectDuration, setProjectDuration] = useState("");
   const [projectApplicationDeadline, setProjectApplicationDeadline] =
     useState("");
   const [projectBudget, setProjectBudget] = useState("");
+  
   const [projectDescription, setProjectDescription] = useState("");
   const [projectSkills, setProjectSkills] = useState("");
   const [projectPublisher,setProjectPublisher]= useState("test");
@@ -28,7 +30,7 @@ export default function ProjectCreate() {
   const [projectLabels, setProjectLabels] = useState({
     Java: 0,
     JavaScript: 0,
-    react: 0,
+    React: 0,
     NodeJS: 0,
     Python: 0,
     Ruby: 0,
@@ -48,6 +50,10 @@ export default function ProjectCreate() {
     PostgreSQL: 0,
   });
 
+  const [isProjectNameValid, setIsProjectNameValid] = useState(true);
+  const [isBudgetValid, setIsBudgetValid] = useState(true);
+  const [isDurationValid, setIsDurationValid] = useState(true);
+
   //   const [projectNameError, setProjectNameError] = useState(false);
   //   const [projectDurationError, setProjectDurationError] = useState(false);
   //   const [projectApplicationDeadlineError, setProjectApplicationDeadlineError] = useState(false);
@@ -57,13 +63,38 @@ export default function ProjectCreate() {
   //   const [projectLabelsError, setProjectLabelsError] = useState(false);
 
   const publisher = "test"; //replace with user email from props later
+  const getBerlinDate = () => {
+    const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
+    const now = new Date();
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 6000;
+    const berlinTime = new Date(utcTime + berlinOffset * 3600000);
+    return berlinTime;
+  };
+  const today = getBerlinDate().toISOString().split("T")[0];
   const navigate = useNavigate();
+  useEffect(() => {
+    setIsProjectNameValid(!isNaN(projectName) && projectName !== "");
+  }, [projectBudget]);
+  useEffect(() => {
+    setIsBudgetValid(!isNaN(projectBudget) && projectBudget !== "");
+  }, [projectBudget]);
+  
+  useEffect(() => {
+    setIsDurationValid(
+      !isNaN(projectDuration) 
+      && projectDuration !== ""
+      && Number.isInteger(Number(projectDuration)) 
+      && Number(projectDuration)>0
+    && Number(projectDuration)<=28);
+  }, [projectDuration]);
+
+
   async function handleSubmit(e) {
     e.preventDefault();
     // const project_detail = { ...form };
     try {
       let response;
-
+      
       // if we are adding a new record we will POST to /record.
       response = await fetch("http://localhost:5050/createProject", {
         method: "POST",
@@ -104,7 +135,7 @@ export default function ProjectCreate() {
     <Container
       component="project-create"
       maxWidth="xl"
-      sx={{ width: "75%", margin: "0 auto" }}
+      sx={{ marginLeft: "15%", marginRight: "15%", marginTop: "50px" }}
     >
       <Box
         component="form"
@@ -121,11 +152,13 @@ export default function ProjectCreate() {
                 sx={{ m: 1 }}
                 id="project-name"
                 name="project-name"
-                label="Project Name"
+                label="Project Name*"
                 type="project_name"
                 variant="filled"
                 onChange={(e) => setProjectName(e.target.value)}
                 value={projectName}
+                error={!isProjectNameValid}
+                helperText={!isProjectNameValid && "please type in the name of your project"}
               />
             </Grid>
             <Grid item xs={4}>
@@ -133,11 +166,14 @@ export default function ProjectCreate() {
                 fullWidth
                 sx={{ m: 1 }}
                 id="project-duration"
-                label="Duration"
+                label="Duration (days)*"
                 type="project_duration"
                 variant="filled"
                 onChange={(e) => setProjectDuration(e.target.value)}
                 value={projectDuration}
+                error={!isDurationValid}
+                helperText={!isDurationValid && "Duration must be doable within 4 weeks"}
+                
               />
             </Grid>
             <Grid item xs={4}>
@@ -145,11 +181,12 @@ export default function ProjectCreate() {
                 fullWidth
                 sx={{ m: 1 }}
                 id="project-application-deadline"
-                label="Application Deadline"
+                label="Application Deadline*"
                 type="date"
                 variant="filled"
                 onChange={(e) => setProjectApplicationDeadline(e.target.value)}
                 value={projectApplicationDeadline}
+                InputProps={{ inputProps: { min: today } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -157,7 +194,7 @@ export default function ProjectCreate() {
                 fullWidth
                 sx={{ m: 1 }}
                 id="project-budget"
-                label="Project Budget"
+                label="Project Budget* Note that a 3% service fee will be added, use point instead of comma"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">€</InputAdornment>
@@ -167,6 +204,7 @@ export default function ProjectCreate() {
                 variant="filled"
                 onChange={(e) => setProjectBudget(e.target.value)}
                 value={projectBudget}
+                error={!isBudgetValid}
               />
             </Grid>
 
@@ -212,6 +250,7 @@ export default function ProjectCreate() {
               sx={{ m: 1, width: "25ch" }}
               variant="contained"
               type="submit"
+              disabled={!isProjectNameValid || !isBudgetValid || !isDurationValid }
             >
               save and publish
             </Button>
@@ -223,11 +262,12 @@ export default function ProjectCreate() {
 }
 
 function LabelCheckboxList({ projectLabels, handleCheckboxChange }) {
-  const labelsArray = Object.keys(projectLabels);
+  //alphabetical order
+  const labelsArray = Object.keys(projectLabels).sort();
 
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">Project Labels</FormLabel>
+      <FormLabel component="legend">Project Labels (optional)</FormLabel>
       <FormGroup>
         <Grid container spacing={2}>
           {labelsArray.map((label) => (
