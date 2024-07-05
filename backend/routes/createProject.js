@@ -32,10 +32,12 @@ router.post("/", async (req, res) => {
         project_status: 1, 
         // project_posttime: req.body.posttime,
         project_posttime: berlinTime,
+        applicants: req.body.applicants,
       };
       let collection = await db.collection("projects");
       let result = await collection.insertOne(newDocument);
-      res.send(result).status(204);
+      res.status(201).json({ id: result.insertedId }); // to get the id of just stored new project
+      console.log(result.insertedId);
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding record");

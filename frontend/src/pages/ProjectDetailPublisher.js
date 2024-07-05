@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import ApplicantsList from "../components/ApplicantsList";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -71,14 +72,18 @@ export default function ProjectDetailPublisher() {
   //     labels: { "Java": 0, "JavaScript": 1, "react":1 },
   //   },
   // ];
+  const { id } = useParams(); //get project id
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       // const id = params.id?.toString() || undefined;
-      const id = '667c3472880c0b162d2e1fd9';
+      // test project id
+      // const id = '667c3472880c0b162d2e1fd9';
+      // const id = '6685e158480050cf96708509';
       try {
         // const response = await fetch(
         //   "http://localhost:5050/getProject/${params.id.toString()}"

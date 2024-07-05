@@ -19,7 +19,7 @@ function App() {
           <Route path="/marketplace" element={<MarketPlace />} />
           <Route path="/project" element={<ProjectCreate />} />
           <Route path="/subscription" element={<Subscription />} />
-          <Route path="/projectdetail/publisher" element={<ProjectDetailPublisher />} />
+          <Route path="/projectdetail/publisher/:id" element={<ProjectDetailPublisher />} />
           <Route path="/projectdetail/developer" element={<ProjectDetailDeveloper />} />
 
         </Routes>

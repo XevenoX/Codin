@@ -135,17 +135,19 @@ export default function ProjectCreate() {
             (label) => projectLabels[label] === 1
           ),
           // posttime: getBerlinDate(),
+          applicants: [], //create an empty array
         }),
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      const data = await response.json();
+    console.log("New project ID:", data.id); 
+    navigate(`/projectdetail/publisher/${data.id}`);
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
-    } finally {
-      navigate("/projectdetail/publisher");
-    }
+    } 
   }
   const handleCheckboxChange = (label) => (event) => {
     setProjectLabels((prevLabels) => ({
