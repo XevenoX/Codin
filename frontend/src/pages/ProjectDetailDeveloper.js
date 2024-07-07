@@ -27,6 +27,7 @@ import Chip from "@mui/material/Chip";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
+import { format } from 'date-fns';
 
 export default function ProjectDetailDeveloper() {
   const user = {
@@ -125,8 +126,8 @@ export default function ProjectDetailDeveloper() {
             <Stack direction="row" spacing={1} alignItems="center">
               <HourglassTopIcon color="primary" />
 
-              <Typography noWrap variant="h5">
-                Applicable before: {projectDetails.project_deadline}
+              <Typography noWrap variant="body1">
+                Applicable before:  {format(new Date(projectDetails.project_deadline), 'dd/MM/yyyy HH:mm:ss')}
               </Typography>
             </Stack>
             <Stack direction="row" spacing={1}>

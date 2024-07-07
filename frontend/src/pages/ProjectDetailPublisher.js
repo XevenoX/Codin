@@ -32,6 +32,7 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { CircularProgress } from "@mui/material";
+import { format } from 'date-fns';
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
@@ -142,7 +143,7 @@ export default function ProjectDetailPublisher() {
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
-                <BusinessIcon color="primary" />
+                <AccessTimeIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
                 Duration: {projectDetails.project_duration} Days
@@ -154,10 +155,10 @@ export default function ProjectDetailPublisher() {
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
-                <BusinessIcon color="primary" />
+                <HourglassTopIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Appliable before: {projectDetails.project_deadline}
+                Appliable before: {format(new Date(projectDetails.project_deadline), 'dd/MM/yyyy HH:mm:ss')}
               </Typography>
             </Stack>
 
