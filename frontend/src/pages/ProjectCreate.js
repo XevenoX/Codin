@@ -15,6 +15,11 @@ import Container from "@mui/material/Container";
 import InputAdornment from "@mui/material/InputAdornment";
 import { FormControl, FormLabel, FormGroup } from "@mui/material";
 
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { de } from 'date-fns/locale';
+import { parseISO, formatISO } from 'date-fns';
+const timeZone = 'Europe/Berlin';
 
 export default function ProjectCreate() {
   const [projectName, setProjectName] = useState("");
@@ -22,10 +27,10 @@ export default function ProjectCreate() {
   const [projectApplicationDeadline, setProjectApplicationDeadline] =
     useState("");
   const [projectBudget, setProjectBudget] = useState("");
-  
+
   const [projectDescription, setProjectDescription] = useState("");
   const [projectSkills, setProjectSkills] = useState("");
-  const [projectPublisher,setProjectPublisher]= useState("test");
+  const [projectPublisher, setProjectPublisher] = useState("test");
   //default: all labels are unchosen
   const [projectLabels, setProjectLabels] = useState({
     Java: 0,
@@ -53,7 +58,8 @@ export default function ProjectCreate() {
   const [isProjectNameValid, setIsProjectNameValid] = useState(true);
   const [isBudgetValid, setIsBudgetValid] = useState(true);
   const [isDurationValid, setIsDurationValid] = useState(true);
-  const [isApplicationDeadlineValid, setisApplicationDeadlineValid] = useState(true);
+  const [isApplicationDeadlineValid, setisApplicationDeadlineValid] =
+    useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
 
   //   const [projectNameError, setProjectNameError] = useState(false);
@@ -65,14 +71,22 @@ export default function ProjectCreate() {
   //   const [projectLabelsError, setProjectLabelsError] = useState(false);
 
   const publisher = "test"; //replace with user email from props later
+  // const getBerlinDate = () => {
+  //   const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
+  //   const now = new Date();
+  //   const utcTime = now.getTime() + now.getTimezoneOffset() * 6000;
+  //   const berlinTime = new Date(utcTime + berlinOffset * 3600000);
+  //   return berlinTime;
+  // };
+    // const today = getBerlinDate().toISOString().split("T")[0];
+
   const getBerlinDate = () => {
-    const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
-    const now = new Date();
-    const utcTime = now.getTime() + now.getTimezoneOffset() * 6000;
-    const berlinTime = new Date(utcTime + berlinOffset * 3600000);
-    return berlinTime;
+    return new Date();
   };
-  const today = getBerlinDate().toISOString().split("T")[0];
+  const today = getBerlinDate();
+
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,14 +95,15 @@ export default function ProjectCreate() {
   useEffect(() => {
     setIsBudgetValid(!isNaN(projectBudget) && projectBudget !== "");
   }, [projectBudget]);
-  
+
   useEffect(() => {
     setIsDurationValid(
-      !isNaN(projectDuration) 
-      && projectDuration !== ""
-      && Number.isInteger(Number(projectDuration)) 
-      && Number(projectDuration)>0
-    && Number(projectDuration)<=28);
+      !isNaN(projectDuration) &&
+        projectDuration !== "" &&
+        Number.isInteger(Number(projectDuration)) &&
+        Number(projectDuration) > 0 &&
+        Number(projectDuration) <= 28
+    );
   }, [projectDuration]);
 
   useEffect(() => {
@@ -99,9 +114,9 @@ export default function ProjectCreate() {
   useEffect(() => {
     setIsFormValid(
       isProjectNameValid &&
-      isBudgetValid &&
-      isDurationValid &&
-      isApplicationDeadlineValid
+        isBudgetValid &&
+        isDurationValid &&
+        isApplicationDeadlineValid
     );
   }, [
     isProjectNameValid,
@@ -110,13 +125,12 @@ export default function ProjectCreate() {
     isApplicationDeadlineValid,
   ]);
 
-
   async function handleSubmit(e) {
     e.preventDefault();
     // const project_detail = { ...form };
     try {
       let response;
-      
+
       // if we are adding a new record we will POST to /record.
       response = await fetch("http://localhost:5050/createProject", {
         method: "POST",
@@ -143,17 +157,23 @@ export default function ProjectCreate() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-    console.log("New project ID:", data.id); 
-    navigate(`/projectdetail/publisher/${data.id}`);
+      console.log("New project ID:", data.id);
+      navigate(`/projectdetail/publisher/${data.id}`);
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
-    } 
+    }
   }
   const handleCheckboxChange = (label) => (event) => {
     setProjectLabels((prevLabels) => ({
       ...prevLabels,
       [label]: event.target.checked ? 1 : 0,
     }));
+  };
+  const handleDeadlineChange = (date) => {
+    const zonedDate = new Date(date);
+    setProjectApplicationDeadline(zonedDate);
+    const isValid = zonedDate > today;
+    setisApplicationDeadlineValid(isValid);
   };
 
   return (
@@ -179,11 +199,14 @@ export default function ProjectCreate() {
                 name="project-name"
                 label="Project Name*"
                 type="project_name"
-                variant="filled"
+                variant="outlined"
                 onChange={(e) => setProjectName(e.target.value)}
                 value={projectName}
                 error={!isProjectNameValid}
-                helperText={!isProjectNameValid && "please type in the name of your project"}
+                helperText={
+                  !isProjectNameValid &&
+                  "please type in the name of your project"
+                }
               />
             </Grid>
             <Grid item xs={4}>
@@ -193,27 +216,36 @@ export default function ProjectCreate() {
                 id="project-duration"
                 label="Duration (days)*"
                 type="project_duration"
-                variant="filled"
+                variant="outlined"
                 onChange={(e) => setProjectDuration(e.target.value)}
                 value={projectDuration}
                 error={!isDurationValid}
-                helperText={!isDurationValid && "Duration must be doable within 4 weeks"}
-                
+                helperText={
+                  !isDurationValid && "Duration must be doable within 4 weeks"
+                }
               />
             </Grid>
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                id="project-application-deadline"
-                label="Application Deadline*"
-                type="date"
-                variant="filled"
-                onChange={(e) => setProjectApplicationDeadline(e.target.value)}
-                value={projectApplicationDeadline}
-                error={!isApplicationDeadlineValid}
-                InputProps={{ inputProps: { min: today } }}
-              />
+            <Grid item xs={4} >
+            <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
+                <DateTimePicker
+                  label="Application Deadline*"
+                  inputFormat="yyyy/MM/dd HH:mm:ss"
+                  minDateTime={today}
+                  value={projectApplicationDeadline}
+                  onChange={handleDeadlineChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      sx={{ m: 1, width: '100%' }}
+                      variant="outlined"
+                      error={!isApplicationDeadlineValid}
+                      helperText={!isApplicationDeadlineValid ? 'Deadline must be in the future' : ''}
+                      
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -227,7 +259,7 @@ export default function ProjectCreate() {
                   ),
                 }}
                 type="project_budget"
-                variant="filled"
+                variant="outlined"
                 onChange={(e) => setProjectBudget(e.target.value)}
                 value={projectBudget}
                 error={!isBudgetValid}
@@ -244,7 +276,7 @@ export default function ProjectCreate() {
                 rows={4}
                 type="project_description"
                 defaultValue="Please describe your project in detail!"
-                variant="filled"
+                variant="outlined"
                 onChange={(e) => setProjectDescription(e.target.value)}
                 value={projectDescription}
               />
@@ -259,7 +291,7 @@ export default function ProjectCreate() {
                 rows={4}
                 type="project_skills"
                 defaultValue="Please describe the skills an applicant should bring! Note: You could also mention skills that are not included in our labels"
-                variant="filled"
+                variant="outlined"
                 onChange={(e) => setProjectSkills(e.target.value)}
                 value={projectSkills}
               />
