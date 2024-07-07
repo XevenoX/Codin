@@ -32,77 +32,105 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 export default function ApplicantsList({data})  {
 
-  return (
-    <React.Fragment>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <Grid item>
-          <Typography noWrap variant="h5">
-            Applications
-          </Typography>
+  if(data.length>0){
+    return (
+      <React.Fragment>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <Grid item>
+            <Typography noWrap variant="h5">
+              Applications
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography>Sorted by:</Typography>
+  
+              <FormControl sx={{ minWidth: 200 }}>
+                <InputLabel id="demo-simple-select-label">Sorting</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="candidate-sorting"
+                >
+                  <MenuItem value={10}>First Applied</MenuItem>
+                  <MenuItem value={20}>Rating </MenuItem>
+                  <MenuItem value={30}>Reviews</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Sorted by:</Typography>
-
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel id="demo-simple-select-label">Sorting</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="candidate-sorting"
-              >
-                <MenuItem value={10}>First Applied</MenuItem>
-                <MenuItem value={20}>Rating </MenuItem>
-                <MenuItem value={30}>Reviews</MenuItem>
-              </Select>
-            </FormControl>
-          </Stack>
+  
+        <Box>
+          <ImageList sx={{ width: "75%", height: 450 }}>
+            {data.map((item) => (
+              <ImageListItem key={item.id}>
+                <Card sx={{ minWidth: 180 }}>
+                  <CardContent>
+                    <Typography variant="h5" component="div">
+                      {item.name}
+                    </Typography>
+                    <Rating name="read-only" value={item.rating} readOnly />
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.review} Reviews
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.motivation}
+                      <br />
+                      {'"a benevolent smile"'}
+                    </Typography>
+                    <FormControlLabel control={<Checkbox />} />
+                  </CardContent>
+                  <CardActions>
+                    <Button size="contained">See More</Button>
+                  </CardActions>
+                </Card>
+              </ImageListItem>
+            ))}
+          </ImageList>
+          <Grid>
+            <Button variant="contained">Compare</Button>
+            <Button variant="contained">Offer</Button>
+          </Grid>
+        </Box>
+      </React.Fragment>
+    );
+  }else{
+    return(
+      <React.Fragment>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={2}
+          sx={{ marginBottom: '20px' }}
+        >
+          <Grid item>
+            <Typography noWrap variant="h5">
+              Applications
+            </Typography>
+          </Grid>
+          <Grid item>
+            
+          </Grid>
         </Grid>
-      </Grid>
-
-      <Box>
-        <ImageList sx={{ width: "75%", height: 450 }}>
-          {data.map((item) => (
-            <ImageListItem key={item.id}>
-              <Card sx={{ minWidth: 180 }}>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {item.name}
-                  </Typography>
-                  <Rating name="read-only" value={item.rating} readOnly />
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {item.review} Reviews
-                  </Typography>
-                  <Typography variant="body2">
-                    {item.motivation}
-                    <br />
-                    {'"a benevolent smile"'}
-                  </Typography>
-                  <FormControlLabel control={<Checkbox />} />
-                </CardContent>
-                <CardActions>
-                  <Button size="contained">See More</Button>
-                </CardActions>
-              </Card>
-            </ImageListItem>
-          ))}
-        </ImageList>
         <Grid>
-          <Button variant="contained">Compare</Button>
-          <Button variant="contained">Offer</Button>
+        <Typography variant="h5" sx={{ marginLeft: "2em" }}>no applicants found</Typography>
+
         </Grid>
-      </Box>
-    </React.Fragment>
-  );
+        
+      </React.Fragment>
+    );
+  }
 };
 
 
