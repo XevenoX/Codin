@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import ApplyContactButton from "../components/ApplyContactButton";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -28,23 +29,29 @@ import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
 export default function ProjectDetailDeveloper() {
-  const user = { 
-    // subscription: 1, 
-    subscription: 0, 
-    applicantId: "667c33a8c6d615bee2e0ba0e" 
+  const user = {
+    // subscription: 1,
+    subscription: 0,
+    applicantId: "667c33a8c6d615bee2e0ba0e",
   };
-  const subscription = 1; //repalce with user.subscription (date) - current date >0
+  // const subscription = 1; //repalce with user.subscription (date) - current date >0
   // const subscription = 0;
   //  const applicantId = '667c33a8c6d615bee2e0ba0e';
 
-  const [projectDetail, setProjectDetail] = useState([]);
+  const { id } = useParams(); //get project id
+
+  // const [projectDetail, setProjectDetail] = useState([]);
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
-      const id = "667c3472880c0b162d2e1fd9"; //a test project in database
+      // const id = "667c3472880c0b162d2e1fd9"; //a test project in database
+      // const id = "6687e73d2504b96838ce7473";  //project testtest
+      // const id = "668a48e702ab526fcd2a81a7";
+
+
       try {
         const response = await fetch(
           `http://localhost:5050/getProject/developer/${id}`

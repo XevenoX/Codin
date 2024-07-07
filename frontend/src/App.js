@@ -20,7 +20,7 @@ function App() {
           <Route path="/project" element={<ProjectCreate />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/projectdetail/publisher/:id" element={<ProjectDetailPublisher />} />
-          <Route path="/projectdetail/developer" element={<ProjectDetailDeveloper />} />
+          <Route path="/projectdetail/developer/:id" element={<ProjectDetailDeveloper />} />
 
         </Routes>
       </Layout>
