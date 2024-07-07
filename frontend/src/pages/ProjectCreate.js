@@ -30,7 +30,7 @@ export default function ProjectCreate() {
 
   const [projectDescription, setProjectDescription] = useState("");
   const [projectSkills, setProjectSkills] = useState("");
-  const [projectPublisher, setProjectPublisher] = useState("test");
+  // const [projectPublisher, setProjectPublisher] = useState("test");
   //default: all labels are unchosen
   const [projectLabels, setProjectLabels] = useState({
     Java: 0,
@@ -62,7 +62,7 @@ export default function ProjectCreate() {
     useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const publisher = "test"; //replace with user email from props later
+  const projectPublisher = "668a5653c58cdc0358393661"; //replace with params later
 
 
   const getBerlinDate = () => {

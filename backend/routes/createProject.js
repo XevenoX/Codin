@@ -2,6 +2,7 @@ import express from "express";
 // remember to add this to app.use in server.js
 // This will help us connect to the database
 import db from "../db/connection.js";
+import { ObjectId } from "mongodb";
 
 // This help convert the id from string to ObjectId for the _id.
 // import { ObjectId } from "mongodb";
@@ -18,7 +19,7 @@ router.post("/", async (req, res) => {
   const now = new Date();
   const utcTime = now.getTime() + now.getTimezoneOffset() * 6000;
   const berlinTime = new Date(utcTime + berlinOffset * 3600000);
-  
+  console.log(req.body.projectPublisher);
     try {
       let newDocument = {
         project_name: req.body.projectName,
@@ -27,7 +28,7 @@ router.post("/", async (req, res) => {
         project_budget: req.body.projectBudget, 
         project_deadline:  new Date(req.body.projectApplicationDeadline), //transform
         project_duration: req.body.projectDuration,
-        project_publisher:req.body.projectPublisher,
+        project_publisher:new ObjectId(req.body.projectPublisher),
         project_labels:req.body.projectLabels,
         project_status: 1, 
         // project_posttime: req.body.posttime,
