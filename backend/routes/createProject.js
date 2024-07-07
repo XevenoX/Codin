@@ -25,13 +25,13 @@ router.post("/", async (req, res) => {
         project_description: req.body.projectDescription,
         project_skills: req.body.projectSkills,
         project_budget: req.body.projectBudget, 
-        project_deadline: req.body.projectApplicationDeadline,
+        project_deadline:  new Date(req.body.projectApplicationDeadline), //transform
         project_duration: req.body.projectDuration,
         project_publisher:req.body.projectPublisher,
         project_labels:req.body.projectLabels,
         project_status: 1, 
         // project_posttime: req.body.posttime,
-        project_posttime: berlinTime,
+        project_posttime: now,
         applicants: req.body.applicants,
       };
       let collection = await db.collection("projects");

@@ -62,23 +62,8 @@ export default function ProjectCreate() {
     useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  //   const [projectNameError, setProjectNameError] = useState(false);
-  //   const [projectDurationError, setProjectDurationError] = useState(false);
-  //   const [projectApplicationDeadlineError, setProjectApplicationDeadlineError] = useState(false);
-  //   const [projectBudgetError, setProjectBudgetError] = useState(false);
-  //   const [projectDescriptionError, setProjectDescriptionError] = useState(false);
-  //   const [projectSkillsError, setProjectSkillsError] = useState(false);
-  //   const [projectLabelsError, setProjectLabelsError] = useState(false);
-
   const publisher = "test"; //replace with user email from props later
-  // const getBerlinDate = () => {
-  //   const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
-  //   const now = new Date();
-  //   const utcTime = now.getTime() + now.getTimezoneOffset() * 6000;
-  //   const berlinTime = new Date(utcTime + berlinOffset * 3600000);
-  //   return berlinTime;
-  // };
-    // const today = getBerlinDate().toISOString().split("T")[0];
+
 
   const getBerlinDate = () => {
     return new Date();
@@ -89,44 +74,42 @@ export default function ProjectCreate() {
 
   const navigate = useNavigate();
 
+
   useEffect(() => {
     setIsProjectNameValid(projectName !== "");
-  }, [projectName]);
-  useEffect(() => {
     setIsBudgetValid(!isNaN(projectBudget) && projectBudget !== "");
-  }, [projectBudget]);
-
-  useEffect(() => {
     setIsDurationValid(
       !isNaN(projectDuration) &&
-        projectDuration !== "" &&
-        Number.isInteger(Number(projectDuration)) &&
-        Number(projectDuration) > 0 &&
-        Number(projectDuration) <= 28
+      projectDuration !== "" &&
+      Number.isInteger(Number(projectDuration)) &&
+      Number(projectDuration) > 0 &&
+      Number(projectDuration) <= 28
     );
-  }, [projectDuration]);
-
-  useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setisApplicationDeadlineValid(projectApplicationDeadline > today);
-  }, [projectApplicationDeadline]);
-
-  useEffect(() => {
+  
     setIsFormValid(
       isProjectNameValid &&
-        isBudgetValid &&
-        isDurationValid &&
-        isApplicationDeadlineValid
+      isBudgetValid &&
+      isDurationValid &&
+      isApplicationDeadlineValid
     );
+    console.log(`Name validity changed: ${isProjectNameValid}`);
+    console.log(`projectBudget validity changed: ${isBudgetValid}`);
+    console.log(`projectDuration validity changed: ${isDurationValid}`);
+    console.log(`projectApplicationDeadline validity changed: ${isApplicationDeadlineValid}`);
+  
+    console.log(`Form validity changed: ${isFormValid}`);
   }, [
-    isProjectNameValid,
-    isBudgetValid,
-    isDurationValid,
-    isApplicationDeadlineValid,
+    projectName,
+    projectBudget,
+    projectDuration,
+    projectApplicationDeadline,
   ]);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const isoDate = new Date(projectApplicationDeadline).toISOString();
     // const project_detail = { ...form };
     try {
       let response;
@@ -142,7 +125,7 @@ export default function ProjectCreate() {
           projectDescription,
           projectSkills,
           projectBudget,
-          projectApplicationDeadline,
+          projectApplicationDeadline: isoDate,
           projectDuration,
           projectPublisher,
           projectLabels: Object.keys(projectLabels).filter(
