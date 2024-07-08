@@ -12,7 +12,9 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.patch("/", async (req, res) => {
-  // const { projectId, applicantId } = req.body;
+  if (!ObjectId.isValid(req.body.projectId) || !ObjectId.isValid(req.body.applicantId)) {
+    return res.status(400).send("Invalid ObjectId format");
+  }
 //   console.log(req.body);
 
   try {
@@ -31,7 +33,7 @@ router.patch("/", async (req, res) => {
     ) {
       return res.status(400).send("Applicant has already applied");
     } else {
-      project.applicants = project.applicants || [];
+      project.applicants = project.applicants;
       project.applicants.push(new ObjectId(req.body.applicantId));
       console.log(project.applicants);
       const updates = {
@@ -42,10 +44,10 @@ router.patch("/", async (req, res) => {
       collection = await db.collection("projects");
       query = { _id: new ObjectId(req.body.projectId) };
       let result = await collection.updateOne(query, updates);
-      res.send(result).status(200);
+      return res.status(200).send("Applicant added successfully");
     }
 
-    res.status(200).send("Applicant added successfully");
+    
   } catch (error) {
     console.error("Error applying to project:", error);
     res.status(500).send("Internal server error");

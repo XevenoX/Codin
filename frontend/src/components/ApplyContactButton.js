@@ -28,6 +28,8 @@ import { CircularProgress } from "@mui/material";
 
 
 export default function ApplyContactButton({ user, projectDetails }) {
+  console.log(user);
+  console.log(projectDetails);
     const handleApply = async () => {
         
         try {
@@ -45,7 +47,8 @@ export default function ApplyContactButton({ user, projectDetails }) {
           });
           if (response.status === 200) {
             alert('Successfully applied to the project');
-            // todo: update local state or refetch project details
+            // update local state or refetch project details
+            window.location.reload(); 
           }
         } catch (error) {
           console.error('Error applying to the project:', error);
@@ -55,11 +58,11 @@ export default function ApplyContactButton({ user, projectDetails }) {
     
     // replace with date later
   if(user.subscription==1){
-    if(!projectDetails.applicants){   ///todo: if user already in applicants 
+    if(projectDetails.applicants.length==0){   ///todo: if user already in applicants 
         return (
             <React.Fragment>
               <Typography noWrap variant="caption" color="grey">
-                {projectDetails.applicants} people have applied for the task
+                {projectDetails.applicants.length} people have applied for the task
               </Typography>
               <Button variant="contained" onClick={handleApply}>
                 Apply Now{" "}
