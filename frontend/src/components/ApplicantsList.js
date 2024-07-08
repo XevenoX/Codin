@@ -31,7 +31,6 @@ import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 export default function ApplicantsList({data})  {
-
   if(data.length>0){
     return (
       <React.Fragment>
@@ -75,13 +74,20 @@ export default function ApplicantsList({data})  {
                     <Typography variant="h5" component="div">
                       {item.name}
                     </Typography>
-                    <Rating name="read-only" value={item.rating} readOnly />
+                    <Rating name="read-only" value={parseFloat(item.averageRating)} readOnly />
                     <Typography
                       sx={{ fontSize: 14 }}
                       color="text.secondary"
                       gutterBottom
                     >
-                      {item.review} Reviews
+                      {item.averageRating} average
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.ratingCount} Reviews
                     </Typography>
                     <Typography variant="body2">
                       {item.motivation}
