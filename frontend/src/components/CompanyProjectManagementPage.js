@@ -34,11 +34,11 @@ const CompanyProjectManagementPage = () => {
             <header>
                 <div className="logo">Codin.</div>
                 <nav>
-                    <a href="#">Project Management</a>
-                    <a href="#">Marketplace</a>
+                    <button onClick={() => navigate('/project-management')}>Project Management</button>
+                    <button onClick={() => navigate('/marketplace')}>Marketplace</button>
                 </nav>
                 <div className="profile">
-                    <img src="/profile-pic.png" alt="Profile Picture" />
+                    <img src="/profile-pic.png" alt="Profile" />
                     <div className="notifications">
                         <span>🔔</span>
                     </div>

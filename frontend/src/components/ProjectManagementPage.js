@@ -1,17 +1,24 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/ProjectManagementPage.css';
 
 const ProjectManagementPage = () => {
+    const navigate = useNavigate();
+
+    const handleNavigation = (path) => {
+        navigate(path);
+    };
+
     return (
         <div>
             <header>
                 <div className="logo">Codin.</div>
                 <nav>
-                    <a href="#">Project Management</a>
-                    <a href="#">Marketplace</a>
+                    <button onClick={() => handleNavigation('/project-management')}>Project Management</button>
+                    <button onClick={() => handleNavigation('/marketplace')}>Marketplace</button>
                 </nav>
                 <div className="profile">
-                    <img src="profile-pic.png" alt="Profile Picture" />
+                    <img src="profile-pic.png" alt="Profile" />
                     <div className="notifications">
                         <span>🔔</span>
                     </div>
