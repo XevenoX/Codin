@@ -26,85 +26,81 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
-
 export default function ApplyContactButton({ user, projectDetails }) {
-  console.log(user);
+  console.log("user:",user.applicantId);
   console.log(projectDetails);
-    const handleApply = async () => {
-        
-        try {
-          let response = await fetch(`http://localhost:5050/applyProject`, {
-            
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              projectId: projectDetails._id,
-            applicantId: user.applicantId
-           
-            }),
-          });
-          if (response.status === 200) {
-            alert('Successfully applied to the project');
-            // update local state or refetch project details
-            window.location.reload(); 
-          }
-        } catch (error) {
-          console.error('Error applying to the project:', error);
-          alert('Failed to apply to the project');
-        }
-      };
-    
-    // replace with date later
-  if(user.subscription==1){
-    if(projectDetails.applicants.length==0){   ///todo: if user already in applicants 
-        return (
-            <React.Fragment>
-              <Typography noWrap variant="caption" color="grey">
-                {projectDetails.applicants.length} people have applied for the task
-              </Typography>
-              <Button variant="contained" onClick={handleApply}>
-                Apply Now{" "}
-              </Button>
-              <Button variant="contained">Contact</Button>
-    
-            </React.Fragment>
-          );
-    }else{
-        return(
-            <React.Fragment>
-              <Typography noWrap variant="caption" color="grey">
-                {projectDetails.applicants} people have applied for the task
-              </Typography>
-              <Button variant="contained" disabled>
-                already applied{" "}
-              </Button>
-              <Button variant="contained">Contact</Button>
 
-            </React.Fragment>
-        );
+  const handleApply = async () => {
+    try {
+      let response = await fetch(`http://localhost:5050/applyProject`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectId: projectDetails._id,
+          applicantId: user.applicantId,
+        }),
+      });
+      if (response.status === 200) {
+        alert("Successfully applied to the project");
+        // update local state or refetch project details
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error applying to the project:", error);
+      alert("Failed to apply to the project");
     }
-  }
-  else{
-    return (
+  };
+
+  const alreadyApplied = Array.isArray(projectDetails.applicants)
+  ? projectDetails.applicants.some(
+      (applicant) => applicant.toString() === user.applicantId
+    )
+  : false;
+  console.log("alreadyApplied",alreadyApplied);
+
+  // replace with date later
+  if (user.subscription == 1) {
+
+      return (
         <React.Fragment>
           <Typography noWrap variant="caption" color="grey">
-            subscribe and see how many people have applied for the task 
+            {projectDetails.applicants.length} people have applied for the task
           </Typography>
-          <Button variant="contained" disabled>
-            Apply Now{" "}
+          <Button
+            variant="contained"
+            onClick={handleApply}
+            disabled={alreadyApplied}
+          >
+            {alreadyApplied ? "Already Applied" : "Apply Now"}
           </Button>
-          <Button variant="contained" disabled>Contact</Button>
-          <Typography noWrap variant="h5" color="black">
-            only members! please
-          </Typography>
-          <Link to={"/subscription"}>
-            <Typography noWrap variant="h5" color="red">
-              subscribe
-            </Typography>
-          </Link>
+          <Button variant="contained">Contact</Button>
         </React.Fragment>
       );
+
+    
+  } else {
+    return (
+      <React.Fragment>
+        <Typography noWrap variant="caption" color="grey">
+          subscribe and see how many people have applied for the task
+        </Typography>
+        <Button variant="contained" disabled>
+          Apply Now{" "}
+        </Button>
+        <Button variant="contained" disabled>
+          Contact
+        </Button>
+        <Typography noWrap variant="h5" color="black">
+          only members! please
+        </Typography>
+        <Link to={"/subscription"}>
+          <Typography noWrap variant="h5" color="red">
+            subscribe
+          </Typography>
+        </Link>
+      </React.Fragment>
+    );
   }
 }
