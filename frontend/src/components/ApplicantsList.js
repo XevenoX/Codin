@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -30,10 +31,35 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 
-export default function ApplicantsList({data})  {
+export default function ApplicantsList({ data }) {
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState("desc");
 
-  
-  if(data.length>0){
+  const handleSortingChange = (event) => {
+    setSortBy(event.target.value);
+    if (event.target.value === "rating") {
+      setSortOrder("desc");
+    } else {
+      setSortOrder("desc");
+    }
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    if (sortBy === "rating") {
+      return sortOrder === "desc"
+        ? b.averageRating - a.averageRating
+        : a.averageRating - b.averageRating;
+    }else if (sortBy === "reviews") {
+      return sortOrder === "desc"
+        ? b.ratingCount - a.ratingCount
+        : a.ratingCount - b.ratingCount;
+    }
+    // todo: Add more sorting options
+    return 0;
+  });
+
+  if (data.length > 0) {
     return (
       <React.Fragment>
         <Grid
@@ -50,33 +76,41 @@ export default function ApplicantsList({data})  {
           <Grid item>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography>Sorted by:</Typography>
-  
+
               <FormControl sx={{ minWidth: 200 }}>
                 <InputLabel id="demo-simple-select-label">Sorting</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="candidate-sorting"
+                  value={sortBy || ""}
+                  onChange={handleSortingChange}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Sort By" }}
                 >
-                  <MenuItem value={10}>First Applied</MenuItem>
-                  <MenuItem value={20}>Rating </MenuItem>
-                  <MenuItem value={30}>Reviews</MenuItem>
+                  <MenuItem value="first_applied">First Applied</MenuItem>
+                  <MenuItem value="rating">Rating </MenuItem>
+                  <MenuItem value="reviews">Reviews</MenuItem>
                 </Select>
               </FormControl>
             </Stack>
           </Grid>
         </Grid>
-  
+
         <Box>
           <ImageList sx={{ width: "75%", height: 450 }}>
-            {data.map((item) => (
-              <ImageListItem key={item.id} >
+            {sortedData.map((item) => (
+              <ImageListItem key={item.id}>
                 <Card sx={{ minWidth: 180 }}>
                   <CardContent sx={{ width: "100%" }}>
                     <Typography variant="h5" component="div">
                       {item.name}
                     </Typography>
-                    <Rating name="read-only" value={parseFloat(item.averageRating)} readOnly />
+                    <Rating
+                      name="read-only"
+                      value={parseFloat(item.averageRating)}
+                      readOnly
+                    />
                     <Typography
                       sx={{ fontSize: 14 }}
                       color="text.secondary"
@@ -108,7 +142,11 @@ export default function ApplicantsList({data})  {
             <Button variant="contained">Compare</Button>
             <Button variant="contained">Offer</Button>
           </Grid>
-          <ImageList sx={{ width: "75%", height: 450, mt: 2, spacing: 4 }} cols={3} rowHeight={350}>
+          <ImageList
+            sx={{ width: "75%", height: 450, mt: 2, spacing: 4 }}
+            cols={3}
+            rowHeight={350}
+          >
             {data.map((item) => (
               <ImageListItem key={item.id}>
                 <Card sx={{ backgroundColor: "#e6f2ff" }}>
@@ -137,11 +175,7 @@ export default function ApplicantsList({data})  {
                       {item.skills}
                       <br />
                     </Typography>
-                    
-                    
-                    
                   </CardContent>
-                  
                 </Card>
               </ImageListItem>
             ))}
@@ -149,34 +183,29 @@ export default function ApplicantsList({data})  {
         </Box>
       </React.Fragment>
     );
-  }else{
-    return(
+  } else {
+    return (
       <React.Fragment>
         <Grid
           container
           alignItems="center"
           justifyContent="space-between"
           spacing={2}
-          sx={{ marginBottom: '20px' }}
+          sx={{ marginBottom: "20px" }}
         >
           <Grid item>
             <Typography noWrap variant="h5">
               Applications
             </Typography>
           </Grid>
-          <Grid item>
-            
-          </Grid>
+          <Grid item></Grid>
         </Grid>
         <Grid>
-        <Typography variant="h5" sx={{ marginLeft: "2em" }}>no applicants found</Typography>
-
+          <Typography variant="h5" sx={{ marginLeft: "2em" }}>
+            no applicants found
+          </Typography>
         </Grid>
-        
       </React.Fragment>
     );
   }
-};
-
-
-
+}
