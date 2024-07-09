@@ -133,6 +133,7 @@ export default function ProjectCreate() {
           ),
           // posttime: getBerlinDate(),
           applicants: [], //create an empty array
+          chosen_applicants:null,
         }),
       });
 
