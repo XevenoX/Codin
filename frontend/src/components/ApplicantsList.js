@@ -31,6 +31,8 @@ import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 export default function ApplicantsList({data})  {
+
+  
   if(data.length>0){
     return (
       <React.Fragment>
@@ -68,9 +70,9 @@ export default function ApplicantsList({data})  {
         <Box>
           <ImageList sx={{ width: "75%", height: 450 }}>
             {data.map((item) => (
-              <ImageListItem key={item.id}>
+              <ImageListItem key={item.id} >
                 <Card sx={{ minWidth: 180 }}>
-                  <CardContent>
+                  <CardContent sx={{ width: "100%" }}>
                     <Typography variant="h5" component="div">
                       {item.name}
                     </Typography>
@@ -92,7 +94,6 @@ export default function ApplicantsList({data})  {
                     <Typography variant="body2">
                       {item.motivation}
                       <br />
-                      {'"a benevolent smile"'}
                     </Typography>
                     <FormControlLabel control={<Checkbox />} />
                   </CardContent>
@@ -107,6 +108,44 @@ export default function ApplicantsList({data})  {
             <Button variant="contained">Compare</Button>
             <Button variant="contained">Offer</Button>
           </Grid>
+          <ImageList sx={{ width: "75%", height: 450, mt: 2, spacing: 4 }} cols={3} rowHeight={350}>
+            {data.map((item) => (
+              <ImageListItem key={item.id}>
+                <Card >
+                  <CardContent>
+                    <Typography variant="h5" component="div">
+                      {item.name}
+                    </Typography>
+
+                    <Typography variant="body2">
+                      {item.location}
+                      <br />
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.school}
+                      <br />
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.website}
+                      <br />
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.work_status}
+                      <br />
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.skills}
+                      <br />
+                    </Typography>
+                    
+                    
+                    
+                  </CardContent>
+                  
+                </Card>
+              </ImageListItem>
+            ))}
+          </ImageList>
         </Box>
       </React.Fragment>
     );
