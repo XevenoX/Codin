@@ -3,45 +3,26 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true },
-    email: { type: String, required: true },
+    //general user info
+    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     role: { type: String, required: true },
     password: { type: String, required: true },
+    website: { type: String, required: false },
+    //publisher
+    slogan: { type: String, required: false },
+    about_us: { type: String, required: false },
+    industry: { type: String, required: false },
+    organization_size: { type: String, required: false },
+    specialities: { type: String, required: false },
+    //developer
+    work_status: { type: String, required: false },
+    location: { type: String, required: false },
+    school: { type: String, required: false },
+    skills: { type: String, required: false },
   },
   { timestamps: true }
 );
-
-// const projectSchema = new mongoose.Schema({
-//   // publisher
-//   publisher: { type: String, required: true },
-//   project_name: { type: String, required: true },
-//   description: { type: String, required: true },
-//   startDate: { type: Date, required: true },
-//   endDate: { type: Date, required: true },
-//   keyTechnologies: { type: String },
-//   contractAmount: { type: float, required: true },
-//   projectStatus: { type: String, required: true },
-//   // project label
-//   projectIndex: { type: projectLabel, required: true },
-//   // candidates
-//   candidates: [{ type: [candidate], reuiqred: true }],
-// });
-
-// TODO
-// const projectLabel = new mongoose.Schema({
-//   index: {},
-
-// });
-
-// TODO
-// const candidate = new mongoose.Schema({
-//   name: {},
-// });
-
-// const label = new mongoose.Schema({
-//   labelID: { type: Integer, required: true, unique: true },
-//   labelName: { type: String, required: true, unique: true },
-// });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {

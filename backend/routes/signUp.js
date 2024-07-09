@@ -18,7 +18,9 @@ router.post("/", async (req, res) => {
     const db = getDB(); // use getDB() to ensure database is connected
 
     // res.status(201).json({ message: "new user created" });
-    const { first_name, last_name, email, role, password } = req.body;
+
+    const { name, email, role, password } = req.body;
+
     // TODO: error handling for missing value
 
     // test if the user already exists (no need to register again)
@@ -26,23 +28,23 @@ router.post("/", async (req, res) => {
     const userAlreadyExists = await User.findOne({ email });
     console.log("User exists:", userAlreadyExists);
     if (userAlreadyExists) {
-      throw new Error("User already exists");
+      throw new Error("User already exists"); // send back error response
     }
 
-    // add user
+    // add new user to the collection
     const newUser = {
-      first_name,
-      last_name,
+      name,
       email,
       role,
       password,
     };
     let collection = await db.collection("users");
     let result = await collection.insertOne(newUser);
+
+    // return (response) the created user
     res.status(201).json({
       _id: newUser._id,
-      first_name: newUser.first_name,
-      last_name: newUser.last_name,
+      name: newUser.name,
       email: newUser.email,
       password: newUser.password,
     });
