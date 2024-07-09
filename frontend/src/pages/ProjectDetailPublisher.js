@@ -27,6 +27,8 @@ import ButtonBase from "@mui/material/ButtonBase";
 import BusinessIcon from "@mui/icons-material/Business";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
+import EuroIcon from '@mui/icons-material/Euro';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -252,10 +254,10 @@ export default function ProjectDetailPublisher() {
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
-                <BusinessIcon color="primary" />
+                <EuroIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Budget: €{projectDetails.project_budget}
+                Budget: {projectDetails.project_budget}
               </Typography>
             </Stack>
 
@@ -271,7 +273,7 @@ export default function ProjectDetailPublisher() {
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
-                <BusinessIcon color="primary" />
+                <BookmarkIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
                 Labels:
