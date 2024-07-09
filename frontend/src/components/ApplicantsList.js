@@ -111,7 +111,7 @@ export default function ApplicantsList({data})  {
           <ImageList sx={{ width: "75%", height: 450, mt: 2, spacing: 4 }} cols={3} rowHeight={350}>
             {data.map((item) => (
               <ImageListItem key={item.id}>
-                <Card >
+                <Card sx={{ backgroundColor: "#e6f2ff" }}>
                   <CardContent>
                     <Typography variant="h5" component="div">
                       {item.name}
