@@ -31,37 +31,29 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Modal, FormGroup } from "@mui/material";
 import { format } from 'date-fns';
+
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
 
-  // const projectDetails = [
-  //   {
-  //     id: "Project Name 1",
-  //     duration: 4,
-  //     deadline: "12.07.2024",
-  //     budget: 100,
-  //     labels: { "Java": 0, "JavaScript": 1, "react":1 },
-  //   },
-  // ];
   const { id } = useParams(); //get project id
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editField, setEditField] = useState("");
+  const [editValue, setEditValue] = useState("");
+
   
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
-      // const id = params.id?.toString() || undefined;
-      // test project id
-      // const id = '667c3472880c0b162d2e1fd9';
-      // const id = '6685e158480050cf96708509';
+
       try {
-        // const response = await fetch(
-        //   "http://localhost:5050/getProject/${params.id.toString()}"
-        // ); 
+
         const response = await fetch(`http://localhost:5050/getProject/publisher/${id}`);
 
         if (!response.ok) {
@@ -77,7 +69,47 @@ export default function ProjectDetailPublisher() {
     };
 
     fetchProjectDetails();
-  }, []);
+  }, [id]);
+
+  const handleEditClick = (field, value) => {
+    setEditField(field);
+    setEditValue(value);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditField("");
+    setEditValue("");
+  };
+
+  const handleInputChange = (e) => {
+    setEditValue(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    const updatedProject = { ...projectDetails, [editField]: editValue };
+
+    try {
+      const response = await fetch(`http://localhost:5050/updateProject/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProject),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update project");
+      }
+
+      const data = await response.json();
+      setProjectDetails(data);
+      handleModalClose();
+    } catch (error) {
+      console.error("Error updating project:", error);
+    }
+  };
 
   if (loading) {
     return <CircularProgress />;
@@ -100,7 +132,7 @@ export default function ProjectDetailPublisher() {
         <Grid>
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
-              <ButtonBase>
+            <ButtonBase onClick={() => handleEditClick("project_name", projectDetails.project_name)}>
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -112,7 +144,7 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-              <ButtonBase>
+            <ButtonBase onClick={() => handleEditClick("project_duration", projectDetails.project_duration)}>
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -124,7 +156,7 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-              <ButtonBase>
+            <ButtonBase onClick={() => handleEditClick("project_deadline", projectDetails.project_deadline)}>
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -136,7 +168,7 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-              <ButtonBase>
+            <ButtonBase onClick={() => handleEditClick("project_budget", projectDetails.project_budget)}>
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -148,7 +180,7 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-              <ButtonBase>
+            <ButtonBase onClick={() => handleEditClick("project_labels", projectDetails.project_labels.join(", "))}>
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -169,7 +201,7 @@ export default function ProjectDetailPublisher() {
       <Grid>
         <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
-            <ButtonBase>
+          <ButtonBase onClick={() => handleEditClick("project_description", projectDetails.project_description)}>
               <Typography color="grey">[edit]</Typography>
             </ButtonBase>
             <Typography noWrap variant="h5">
@@ -179,7 +211,7 @@ export default function ProjectDetailPublisher() {
           <Typography>{projectDetails.project_description}</Typography>
 
           <Stack direction="row" spacing={2}>
-            <ButtonBase>
+          <ButtonBase onClick={() => handleEditClick("project_skills", projectDetails.project_skills)}>
               <Typography color="grey">[edit]</Typography>
             </ButtonBase>
             <Typography noWrap variant="h5">
@@ -189,6 +221,38 @@ export default function ProjectDetailPublisher() {
           <Typography>{projectDetails.project_skills}</Typography>
         </Stack>
       </Grid>
+
+      <Modal open={isModalOpen} onClose={handleModalClose}>
+        <Box sx={{ ...modalStyle }}>
+          <Typography variant="h6" component="h2">
+            Edit {editField.replace("_", " ")}
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            value={editValue}
+            onChange={handleInputChange}
+            sx={{ mt: 2, mb: 2 }}
+          />
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
+            Save
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={handleModalClose}>
+              Cancel
+            </Button>
+        </Box>
+      </Modal>
     </Box>
   );
 }
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
