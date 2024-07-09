@@ -36,7 +36,8 @@ router.patch("/", async (req, res) => {
       project.applicants = project.applicants;
       project.applicants.push({
         applicantId: new ObjectId(req.body.applicantId),
-        motivation: req.body.motivation
+        motivation: req.body.motivation,
+        apply_time:new Date(),
       });
 
       console.log(project.applicants);
