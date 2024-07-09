@@ -34,7 +34,11 @@ router.patch("/", async (req, res) => {
       return res.status(400).send("Applicant has already applied");
     } else {
       project.applicants = project.applicants;
-      project.applicants.push(new ObjectId(req.body.applicantId));
+      project.applicants.push({
+        applicantId: new ObjectId(req.body.applicantId),
+        motivation: req.body.motivation
+      });
+
       console.log(project.applicants);
       const updates = {
         $set: {
