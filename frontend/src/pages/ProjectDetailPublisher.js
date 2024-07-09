@@ -37,33 +37,6 @@ import { format } from 'date-fns';
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
 
-  const [testCandidates, setCandidates] = useState([
-    {
-      id: "Candidate 1",
-      rating: 4,
-      review: 12,
-      motivation: "motivation 1",
-    },
-    {
-      id: "Candidate 2",
-      rating: 2,
-      review: 4,
-      motivation: "motivation 2",
-    },
-    {
-      id: "Candidate 3",
-      rating: 1,
-      review: 1,
-      motivation: "motivation 3",
-    },
-    {
-      id: "Candidate 4",
-      rating: 5,
-      review: 20,
-      motivation: "motivation 4",
-    },
-  ]);
-
   // const projectDetails = [
   //   {
   //     id: "Project Name 1",
