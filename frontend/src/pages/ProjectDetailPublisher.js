@@ -32,11 +32,10 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { CircularProgress, Modal, FormGroup } from "@mui/material";
-import { format } from 'date-fns';
-import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { de } from 'date-fns/locale';
-
+import { format } from "date-fns";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { de } from "date-fns/locale";
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
@@ -49,15 +48,20 @@ export default function ProjectDetailPublisher() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editField, setEditField] = useState("");
   const [editValue, setEditValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  
+  const [isProjectNameValid, setIsProjectNameValid] = useState(true);
+  const [isBudgetValid, setIsBudgetValid] = useState(true);
+  const [isDurationValid, setIsDurationValid] = useState(true);
+  const [isApplicationDeadlineValid, setisApplicationDeadlineValid] =
+    useState(true);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
-
       try {
-
-        const response = await fetch(`http://localhost:5050/getProject/publisher/${id}`);
+        const response = await fetch(
+          `http://localhost:5050/getProject/publisher/${id}`
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -78,6 +82,7 @@ export default function ProjectDetailPublisher() {
     setEditField(field);
     setEditValue(value);
     setIsModalOpen(true);
+    setErrorMessage("");
   };
 
   const handleModalClose = () => {
@@ -88,6 +93,25 @@ export default function ProjectDetailPublisher() {
 
   const handleInputChange = (e) => {
     setEditValue(e.target.value);
+    if (editField === "project_name") {
+      setIsProjectNameValid(e.target.value !== "");
+    }
+    if (editField === "project_budget") {
+      setIsBudgetValid(
+        !isNaN(e.target.value) &&
+          e.target.value !== "" &&
+          Number(e.target.value) > 0
+      );
+    }
+    if (editField === "project_duration") {
+      setIsDurationValid(
+        !isNaN(e.target.value) &&
+          e.target.value !== "" &&
+          Number.isInteger(Number(e.target.value)) &&
+          Number(e.target.value) > 0 &&
+          Number(e.target.value) <= 28
+      );
+    }
   };
 
   const handleDateChange = (date) => {
@@ -95,20 +119,36 @@ export default function ProjectDetailPublisher() {
   };
 
   const handleSubmit = async () => {
+    if (editField === "project_name" && !isProjectNameValid) {
+      setErrorMessage("project name cannot be empty");
+      return;
+    }
+    if (editField === "project_budget" && !isBudgetValid) {
+      setErrorMessage("Duration must be greater than 0");
+      return;
+    }
+    if (editField === "project_duration" && !isDurationValid) {
+      setErrorMessage("Duration must be doable within 4 weeks");
+      return;
+    }
     const updatedAttribute = {
       // _id: id,
-      [editField]: editField === "project_deadline" ? editValue.toISOString() : editValue,
+      [editField]:
+        editField === "project_deadline" ? editValue.toISOString() : editValue,
     };
     console.log(updatedAttribute);
 
     try {
-      const response = await fetch(`http://localhost:5050/updateProject/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedAttribute),
-      });
+      const response = await fetch(
+        `http://localhost:5050/updateProject/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedAttribute),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update project");
@@ -143,7 +183,11 @@ export default function ProjectDetailPublisher() {
         <Grid>
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
-            <ButtonBase onClick={() => handleEditClick("project_name", projectDetails.project_name)}>
+              <ButtonBase
+                onClick={() =>
+                  handleEditClick("project_name", projectDetails.project_name)
+                }
+              >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -155,7 +199,14 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-            <ButtonBase onClick={() => handleEditClick("project_duration", projectDetails.project_duration)}>
+              <ButtonBase
+                onClick={() =>
+                  handleEditClick(
+                    "project_duration",
+                    projectDetails.project_duration
+                  )
+                }
+              >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -167,19 +218,37 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-            <ButtonBase onClick={() => handleEditClick("project_deadline", projectDetails.project_deadline)}>
+              <ButtonBase
+                onClick={() =>
+                  handleEditClick(
+                    "project_deadline",
+                    projectDetails.project_deadline
+                  )
+                }
+              >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
                 <HourglassTopIcon color="primary" />
               </Grid>
               <Typography noWrap variant="h5">
-                Appliable before: {format(new Date(projectDetails.project_deadline), 'dd/MM/yyyy HH:mm:ss')}
+                Appliable before:{" "}
+                {format(
+                  new Date(projectDetails.project_deadline),
+                  "dd/MM/yyyy HH:mm:ss"
+                )}
               </Typography>
             </Stack>
 
             <Stack direction="row" spacing={2}>
-            <ButtonBase onClick={() => handleEditClick("project_budget", projectDetails.project_budget)}>
+              <ButtonBase
+                onClick={() =>
+                  handleEditClick(
+                    "project_budget",
+                    projectDetails.project_budget
+                  )
+                }
+              >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -191,7 +260,14 @@ export default function ProjectDetailPublisher() {
             </Stack>
 
             <Stack direction="row" spacing={2}>
-            <ButtonBase onClick={() => handleEditClick("project_labels", projectDetails.project_labels.join(", "))}>
+              <ButtonBase
+                onClick={() =>
+                  handleEditClick(
+                    "project_labels",
+                    projectDetails.project_labels.join(", ")
+                  )
+                }
+              >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
               <Grid>
@@ -212,7 +288,14 @@ export default function ProjectDetailPublisher() {
       <Grid>
         <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
-          <ButtonBase onClick={() => handleEditClick("project_description", projectDetails.project_description)}>
+            <ButtonBase
+              onClick={() =>
+                handleEditClick(
+                  "project_description",
+                  projectDetails.project_description
+                )
+              }
+            >
               <Typography color="grey">[edit]</Typography>
             </ButtonBase>
             <Typography noWrap variant="h5">
@@ -222,7 +305,11 @@ export default function ProjectDetailPublisher() {
           <Typography>{projectDetails.project_description}</Typography>
 
           <Stack direction="row" spacing={2}>
-          <ButtonBase onClick={() => handleEditClick("project_skills", projectDetails.project_skills)}>
+            <ButtonBase
+              onClick={() =>
+                handleEditClick("project_skills", projectDetails.project_skills)
+              }
+            >
               <Typography color="grey">[edit]</Typography>
             </ButtonBase>
             <Typography noWrap variant="h5">
@@ -252,6 +339,8 @@ export default function ProjectDetailPublisher() {
                     fullWidth
                     sx={{ mt: 2, mb: 2 }}
                     variant="outlined"
+                    error={!!errorMessage}
+                    helperText={errorMessage}
                   />
                 )}
               />
@@ -263,14 +352,20 @@ export default function ProjectDetailPublisher() {
               value={editValue}
               onChange={handleInputChange}
               sx={{ mt: 2, mb: 2 }}
+              error={!!errorMessage}
+              helperText={errorMessage}
             />
           )}
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Save
           </Button>
-          <Button variant="outlined" color="secondary" onClick={handleModalClose}>
-              Cancel
-            </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleModalClose}
+          >
+            Cancel
+          </Button>
         </Box>
       </Modal>
     </Box>
