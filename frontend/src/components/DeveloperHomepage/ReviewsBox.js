@@ -13,7 +13,7 @@ const ReviewsBox = ({ userInfo }) => {
                     _id: userInfo._id
                 }
             });
-            console.log(response.data);
+            // console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Error fetching average rating:', error);
@@ -40,7 +40,7 @@ const ReviewsBox = ({ userInfo }) => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         {rating !== null ? (
                             <>
-                                <Typography variant="h5" sx={{ fontWeight: 'bold', fontSize: 30, color: 'blue' }}>{rating !== null ? rating.toFixed(1) : 'No ratings yet'}</Typography>
+                                <Typography variant="h5" sx={{ fontWeight: 'bold', fontSize: 30, color: 'black' }}>{rating !== null ? rating.toFixed(1) : 'No ratings yet'}</Typography>
                                 <Rating name="read-only" value={rating} readOnly precision={0.5} size={'small'} color={'blue'} />
                                 <Typography sx={{ ml: 1 }}>({numberOfRating})</Typography>
                             </>

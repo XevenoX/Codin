@@ -3,6 +3,7 @@ import { Box, Avatar, Typography, Stack, Grid, IconButton, TextField } from '@mu
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AvatarUpload from '../AvatarUpload';
 import axios from "axios";
 
 const PersonalBox = ({ userInfo, setUserInfo }) => {
@@ -44,7 +45,10 @@ const PersonalBox = ({ userInfo, setUserInfo }) => {
 
     return (
         <Stack direction='column' spacing={5} sx={{ m: '10px', padding: '20px', alignItems: 'center' }}>
-            <Avatar src='avatar_1.jpg' alt='test' sx={{ height: '200px', width: '200px' }} />
+            {/* <Avatar src='avatar_1.jpg' alt='test' sx={{ height: '200px', width: '200px' }} /> */}
+            <Box sx={{ height: '200px', width: '200px' }}>
+                <AvatarUpload userInfo={userInfo} width={'200px'} height={'200px'} variant={'circle'} />
+            </Box>
             <Stack direction='column' sx={{ alignItems: 'center' }}>
                 <Typography variant="h5" component="div" align="left" sx={{ fontWeight: 'bold' }}>{userInfo.name}</Typography>
                 <Typography variant="body1" component="div" align="left" sx={{ color: 'grey' }}>{userInfo.email}</Typography>

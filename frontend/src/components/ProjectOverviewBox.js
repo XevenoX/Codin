@@ -1,23 +1,13 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { Grid, Paper, Typography, Button, Card } from '@mui/material';
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-}));
+import { Avatar, Grid, Paper, Typography, Button, Card } from '@mui/material';
+import { formatDistanceToNow } from 'date-fns';
 
 const ProjectOverviewBox = ({ projectInfo }) => {
-    const postedDaysAgo = 1;
-    const closeInDays = 1;
-    const applicationsReceived = 1;
 
     return (
         <div className="overview">
             <Card
-                elevation={6}
+                elevation={3}
                 sx={{
                     p: 2,
                     margin: 1,
@@ -33,14 +23,14 @@ const ProjectOverviewBox = ({ projectInfo }) => {
             >
                 <Grid
                     container
-                    spacing={2}
+                    spacing={1}
                     direction="row"
                     sx={{ height: '100%', alignItems: 'center' }}
                 >
                     <Grid
                         item
                         container
-                        xs={9}
+                        xs={10}
                         direction="column"
                         justifyContent="space-around"
                         alignItems="stretch"
@@ -69,9 +59,18 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                                 WebkitBoxOrient: 'vertical',
                                             }}
                                         >
-                                            Posted {Math.floor((new Date() - new Date(projectInfo.project_posttime)) / (1000 * 60 * 60 * 24))} days ago •
-                                            Close in {Math.floor((new Date(projectInfo.project_deadline) - new Date()) / (1000 * 60 * 60 * 24))}
-                                            days • {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
+                                            Posted {formatDistanceToNow(new Date(projectInfo.project_posttime), { addSuffix: true })} •&nbsp;
+                                            {projectInfo.project_status === 1 && (
+                                                <text>
+                                                    Close {formatDistanceToNow(new Date(projectInfo.project_deadline), { addSuffix: true })} •&nbsp;
+                                                </text>
+                                            )}
+                                            {projectInfo.project_status === 5 && (
+                                                <text>
+                                                    Completed {formatDistanceToNow(new Date(projectInfo.project_completetime), { addSuffix: true })} •&nbsp;
+                                                </text>
+                                            )}
+                                            {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
                                         </Typography>
                                     </Grid>
                                     <Grid item className="task-title">
@@ -128,7 +127,7 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                         </Grid>
 
                         <Grid sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px', height: '15%', margin: 0.5 }}>
-                            {projectInfo.project_labels.map((label, index) => (
+                            {projectInfo.project_labels && projectInfo.project_labels.length > 0 && projectInfo.project_labels.map((label, index) => (
                                 <React.Fragment key={label}>
                                     <Typography
                                         variant="body2"
@@ -144,22 +143,23 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                 </React.Fragment>
                             ))}
                         </Grid>
+
                     </Grid>
                     <Grid
                         item
                         container
                         direction="column"
-                        xs={3}
-                        spacing={3}
+                        xs={2}
+                        spacing={1}
                         sx={{ height: '100%' }}
                     >
                         <Grid item sx={{ flexGrow: 1 }}>
-                            <Paper sx={{ height: '100%' }}>
-                                <Typography>Avatar</Typography>
-                            </Paper>
+                            <Avatar src={projectInfo.avatar} alt="Logo"
+                                variant="square"
+                                sx={{ width: '120px', height: '80px' }} />
                         </Grid>
                         <Grid item sx={{ flexGrow: 0 }}>
-                            <Button variant="contained" fullWidth>
+                            <Button variant="contained" size='small' sx={{ width: '120px' }}>
                                 See More
                             </Button>
                         </Grid>

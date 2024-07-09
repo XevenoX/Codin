@@ -115,6 +115,53 @@ router.post("/developerUpdate", async (req, res) => {
     }
 });
 
+//updateAvatar
+router.post('/updateAvatar', async (req, res) => {
+    try {
+        const { email, avatar } = req.body;
+        // Decode the base64 image
+        let base64Data = avatar.replace(/^data:image\/png;base64,/, "");
+        let collection = await db.collection("users");
+        let result = await collection.updateOne(
+            { email: email },
+            { $set: { avatar: base64Data } }
+        );
+        if (result.modifiedCount > 0) {
+            res.status(200).send({ message: "Avatar updated successfully" });
+        }
+        // else {
+        //     res.status(404).send({ message: "Record not found or no changes made" });
+        // }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error uploading avatar');
+    }
+});
+
+//updateBanner
+router.post('/updateBanner', async (req, res) => {
+    try {
+        const { email, banner } = req.body;
+        // Decode the base64 image
+        let base64Data = banner.replace(/^data:image\/png;base64,/, "");
+        let collection = await db.collection("users");
+        let result = await collection.updateOne(
+            { email: email },
+            { $set: { banner: base64Data } }
+        );
+        if (result.modifiedCount > 0) {
+            res.status(200).send({ message: "Banner updated successfully" });
+        }
+        // else {
+        //     res.status(404).send({ message: "Record not found or no changes made" });
+        // }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error uploading banner');
+    }
+});
+
+
 //get feedbacks
 router.get('/feedbacks', async (req, res) => {
     try {
@@ -147,6 +194,7 @@ router.get('/feedbacks', async (req, res) => {
                     comment: 1,
                     rated_date: 1,
                     rating: 1,
+                    avatar: '$raterDetails.avatar',
                     rater_name: '$raterDetails.name',
                 },
             },
@@ -189,5 +237,7 @@ router.get('/averageRating', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
+
+
 
 export default router;

@@ -20,10 +20,51 @@ router.get('/byPublisher/ongoing', async (req, res) => {
     const project_publisher = req.query.project_publisher;
     try {
         const collection = db.collection("projects");
-        const ongoingProjects = await collection.find({
-            project_publisher: new ObjectId(project_publisher),
-            project_status: { $in: [1] } // contain more items to also select projects in other status
-        }).toArray();
+        // const ongoingProjects = await collection.find({
+        //     project_publisher: new ObjectId(project_publisher),
+        //     project_status: { $in: [1] } // contain more items to also select projects in other status
+        // }).toArray();
+
+        const ongoingProjects = await collection.aggregate([
+            {
+                $match: {
+                    project_publisher: new ObjectId(project_publisher),
+                    project_status: { $in: [1] } // Add more status values as needed
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'project_publisher',
+                    foreignField: '_id',
+                    as: 'publisherDetails'
+                }
+            },
+            {
+                $sort: {
+                    project_posttime: -1,
+                },
+            },
+            {
+                $unwind: '$publisherDetails'
+            },
+            {
+                $project: {
+                    _id: 1,
+                    project_name: 1,
+                    project_status: 1,
+                    project_description: 1,
+                    project_labels: 1,
+                    project_budget: 1,
+                    project_deadline: 1,
+                    project_posttime: 1,
+                    project_completetime: 1,
+                    avatar: '$publisherDetails.avatar',
+                    publisher_namer: '$publisherDetails.name'
+                }
+            }
+        ]).toArray();
+
         res.status(200).json(ongoingProjects);
     } catch (error) {
         console.error('Error fetching ongoing projects:', error);
@@ -39,7 +80,7 @@ router.get('/byDeveloper/past', async (req, res) => {
         const pastProjects = await collection.find({
             chosen_applicants: new ObjectId(chosen_applicants),
             project_status: { $in: [5] } // contain more items to also select projects in other status
-        }).toArray();
+        }).sort({ project_completetime: -1 }).toArray();
         res.status(200).json(pastProjects);
     } catch (error) {
         console.error('Error fetching ongoing projects:', error);

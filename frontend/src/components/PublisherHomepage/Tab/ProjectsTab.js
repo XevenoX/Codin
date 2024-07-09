@@ -13,6 +13,7 @@ const ProjectsTab = ({ userInfo }) => {
                     project_publisher: userInfo._id
                 }
             });
+            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Error fetching ongoing projects:', error);

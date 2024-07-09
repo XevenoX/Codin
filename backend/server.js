@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from 'body-parser';
 import cors from "cors";
 import signUp from "./routes/signUp.js";
 import createProject from "./routes/createProject.js";
@@ -11,6 +12,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import db from "./db/connection.js";
 import cookieParser from "cookie-parser";
+
 
 
 // Load environment variables from .env file
@@ -37,6 +39,8 @@ app.use("/signUp", signUp);
 app.use("/createProject", createProject);
 app.use("/userInfo", userInfo);
 app.use("/projectsList", projectsList);
+app.use(bodyParser.json({ limit: '1mb' }));
+app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 
 
 // supply static file

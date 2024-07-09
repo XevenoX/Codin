@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema(
     role: { type: String, required: true },
     password: { type: String, required: true },
     website: { type: String, required: false },
+    avatar: { type: String, required: false },
     //publisher
+    banner: { type: String, required: false },
     slogan: { type: String, required: false },
     about_us: { type: String, required: false },
     industry: { type: String, required: false },

@@ -53,7 +53,7 @@ const ReviewsTab = ({ style, userInfo }) => {
                             <Box>
                                 <Box>
                                     <Stack direction="row" spacing={2} sx={{ mb: style === 'compact' ? 0 : 2 }}>
-                                        <Avatar src="avatar_1.jpg" alt="Logo" />
+                                        <Avatar src={testimonial.avatar} alt="Logo" />
                                         <Box sx={{ flexGrow: 1 }}>
                                             <Typography variant="subtitle1" component="div">{testimonial.rater_name}</Typography>
                                             <Typography variant="caption" color="textSecondary">

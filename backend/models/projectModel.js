@@ -13,6 +13,7 @@ const projectSchema = new mongoose.Schema(
         project_posttime: { type: Date, required: true },
         project_deadline: { type: Date, required: true },
         project_duration: { type: Number, required: true },
+        project_completetime: { type: Date, required: true },
         //budget
         project_budget: { type: Number, required: true },
         // project label: list, chosen from predefined labels stored on frontend

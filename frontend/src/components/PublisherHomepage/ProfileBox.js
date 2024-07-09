@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Typography, Box, Rating, TextField, Stack, Grid, IconButton } from '@mui/material';
+import { Typography, Box, Rating, TextField, Stack, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AvatarUpload from '../AvatarUpload';
+import BannerUpload from '../PublisherHomepage/BannerUpload';
 import axios from "axios";
 
 const ProfileBox = ({ userInfo, setUserInfo }) => {
@@ -77,7 +79,7 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
             border: '0.5px solid grey',
             borderRadius: '5px'
         }}>
-            <img
+            {/* <img
                 src="/banner.jpg"
                 alt="Banner"
                 style={{
@@ -86,20 +88,20 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
                     objectFit: 'cover',
                     borderRadius: '5px 5px 0px 0px'
                 }}
-            />
-            <Avatar
+            /> */}
+            <BannerUpload userInfo={userInfo} objectFit={'cover'} />
+            <Box
                 sx={{
                     width: 90,
                     height: 90,
                     position: 'absolute',
                     left: 20,
                     top: 20,
-                    bgcolor: 'blue'
                 }}
-                variant="square"
-                src="logo.jpg"
-                alt="Logo"
-            />
+            >
+                <AvatarUpload userInfo={userInfo} width={'90px'} height={'90px'} variant={'square'} />
+            </Box>
+
             <Typography variant="h5" component="div" align="left" sx={{ ml: '20px', mt: '20px', fontWeight: 'bold' }}>
                 {userInfo.name}
             </Typography>
