@@ -33,6 +33,9 @@ import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { CircularProgress, Modal, FormGroup } from "@mui/material";
 import { format } from 'date-fns';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { de } from 'date-fns/locale';
 
 
 export default function ProjectDetailPublisher() {
@@ -85,6 +88,10 @@ export default function ProjectDetailPublisher() {
 
   const handleInputChange = (e) => {
     setEditValue(e.target.value);
+  };
+
+  const handleDateChange = (date) => {
+    setEditValue(date);
   };
 
   const handleSubmit = async () => {
@@ -227,13 +234,33 @@ export default function ProjectDetailPublisher() {
           <Typography variant="h6" component="h2">
             Edit {editField.replace("_", " ")}
           </Typography>
-          <TextField
-            fullWidth
-            variant="outlined"
-            value={editValue}
-            onChange={handleInputChange}
-            sx={{ mt: 2, mb: 2 }}
-          />
+          {editField === "project_deadline" ? (
+            <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
+              <DateTimePicker
+                label="Application Deadline*"
+                inputFormat="yyyy/MM/dd HH:mm:ss"
+                minDateTime={new Date()}
+                value={editValue}
+                onChange={handleDateChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    sx={{ mt: 2, mb: 2 }}
+                    variant="outlined"
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          ) : (
+            <TextField
+              fullWidth
+              variant="outlined"
+              value={editValue}
+              onChange={handleInputChange}
+              sx={{ mt: 2, mb: 2 }}
+            />
+          )}
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Save
           </Button>
