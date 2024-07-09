@@ -95,7 +95,11 @@ export default function ProjectDetailPublisher() {
   };
 
   const handleSubmit = async () => {
-    const updatedProject = { ...projectDetails, [editField]: editValue };
+    const updatedAttribute = {
+      // _id: id,
+      [editField]: editField === "project_deadline" ? editValue.toISOString() : editValue,
+    };
+    console.log(updatedAttribute);
 
     try {
       const response = await fetch(`http://localhost:5050/updateProject/${id}`, {
@@ -103,7 +107,7 @@ export default function ProjectDetailPublisher() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedProject),
+        body: JSON.stringify(updatedAttribute),
       });
 
       if (!response.ok) {
