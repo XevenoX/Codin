@@ -71,6 +71,7 @@ router.get("/publisher/:id", async (req, res) => {
           return {
             ...user,
             motivation: app.motivation,
+            apply_time:app.apply_time,
           };
         } else {
           return app;
