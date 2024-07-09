@@ -55,7 +55,18 @@ export default function ApplicantsList({ data }) {
         ? b.ratingCount - a.ratingCount
         : a.ratingCount - b.ratingCount;
     }
-    // todo: Add more sorting options
+    else if (sortBy === "first_applied") {
+      // todo : how to sort with date type
+      return sortOrder === "asc"
+        ? new Date(b.apply_time) - new Date(a.apply_time)
+        : new Date(a.apply_time) - new Date(b.apply_time);
+    }else if (sortBy === "newest") {
+      // todo : how to sort with date type
+      return sortOrder === "desc"
+        ? new Date(b.apply_time) - new Date(a.apply_time)
+        : new Date(a.apply_time) - new Date(b.apply_time);
+    }
+    // todo: Add more sorting options 
     return 0;
   });
 
@@ -89,6 +100,7 @@ export default function ApplicantsList({ data }) {
                   inputProps={{ "aria-label": "Sort By" }}
                 >
                   <MenuItem value="first_applied">First Applied</MenuItem>
+                  <MenuItem value="newest">Newest</MenuItem>
                   <MenuItem value="rating">Rating </MenuItem>
                   <MenuItem value="reviews">Reviews</MenuItem>
                 </Select>
@@ -127,6 +139,10 @@ export default function ApplicantsList({ data }) {
                     </Typography>
                     <Typography variant="body2">
                       {item.motivation}
+                      <br />
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.apply_time}
                       <br />
                     </Typography>
                     <FormControlLabel control={<Checkbox />} />
