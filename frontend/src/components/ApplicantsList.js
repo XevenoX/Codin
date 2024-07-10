@@ -33,7 +33,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 export default function ApplicantsList({ data }) {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState("rating"); // set default sorting method
   const [sortOrder, setSortOrder] = useState("desc");
 
   const handleSortingChange = (event) => {
