@@ -23,7 +23,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // add import& app.use in this file and write the api in /routes/<yourAPI>.jsimport signUp from "./routes/signUp.js";
-import createProject from "./routes/createProject.js";
 import getProject from "./routes/getProject.js";
 import applyProject from "./routes/applyProject.js";
 import updateProject from "./routes/updateProject.js"
@@ -56,12 +55,12 @@ app.use(express.static(path.join(__dirname, "../frontend/build")));
 // 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
-});app.use("/signUp", signUp);
+}); app.use("/signUp", signUp);
 app.use("/createProject", createProject);
-app.use("/getProject",getProject);
-app.use("/applyProject",applyProject);
-app.use("/updateProject",updateProject);
-app.use("/contact",contact);
+app.use("/getProject", getProject);
+app.use("/applyProject", applyProject);
+app.use("/updateProject", updateProject);
+app.use("/contact", contact);
 
 // start the Express server
 app.listen(PORT, () => {
