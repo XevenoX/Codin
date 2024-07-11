@@ -27,17 +27,40 @@ import ButtonBase from "@mui/material/ButtonBase";
 import BusinessIcon from "@mui/icons-material/Business";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
-import EuroIcon from '@mui/icons-material/Euro';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import EuroIcon from "@mui/icons-material/Euro";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import { CircularProgress, Modal, FormGroup } from "@mui/material";
+import { CircularProgress, Modal, FormGroup,FormLabel } from "@mui/material";
 import { format } from "date-fns";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { de } from "date-fns/locale";
+
+const initialLabels = {
+  Java: 0,
+  JavaScript: 0,
+  React: 0,
+  NodeJS: 0,
+  Python: 0,
+  Ruby: 0,
+  PHP: 0,
+  HTML: 0,
+  CSS: 0,
+  Angular: 0,
+  Vue: 0,
+  TypeScript: 0,
+  jQuery: 0,
+  Bootstrap: 0,
+  Sass: 0,
+  TailwindCSS: 0,
+  Firebase: 0,
+  MongoDB: 0,
+  MySQL: 0,
+  PostgreSQL: 0,
+};
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
@@ -57,6 +80,7 @@ export default function ProjectDetailPublisher() {
   const [isDurationValid, setIsDurationValid] = useState(true);
   const [isApplicationDeadlineValid, setisApplicationDeadlineValid] =
     useState(true);
+  const [editLabels, setEditLabels] = useState({});
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -69,6 +93,7 @@ export default function ProjectDetailPublisher() {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log(data);
         setProjectDetails(data);
       } catch (error) {
         console.error("Failed to fetch project details:", error);
@@ -82,7 +107,16 @@ export default function ProjectDetailPublisher() {
 
   const handleEditClick = (field, value) => {
     setEditField(field);
-    setEditValue(value);
+
+    if (field === "project_labels") {
+      const labelsObj = projectDetails.project_labels.reduce((acc, label) => {
+        acc[label] = true;
+        return acc;
+      }, {});
+      setEditLabels(labelsObj);
+    } else {
+      setEditValue(value);
+    }
     setIsModalOpen(true);
     setErrorMessage("");
   };
@@ -91,6 +125,7 @@ export default function ProjectDetailPublisher() {
     setIsModalOpen(false);
     setEditField("");
     setEditValue("");
+    setEditLabels({});
   };
 
   const handleInputChange = (e) => {
@@ -120,6 +155,13 @@ export default function ProjectDetailPublisher() {
     setEditValue(date);
   };
 
+  const handleCheckboxChange = (label) => (event) => {
+    setEditLabels((prevLabels) => ({
+      ...prevLabels,
+      [label]: event.target.checked,
+    }));
+  };
+
   const handleSubmit = async () => {
     if (editField === "project_name" && !isProjectNameValid) {
       setErrorMessage("project name cannot be empty");
@@ -133,11 +175,16 @@ export default function ProjectDetailPublisher() {
       setErrorMessage("Duration must be doable within 4 weeks");
       return;
     }
-    const updatedAttribute = {
-      // _id: id,
-      [editField]:
-        editField === "project_deadline" ? editValue.toISOString() : editValue,
-    };
+    let updatedAttribute = {};
+    if (editField === "project_labels") {
+      updatedAttribute = {
+        project_labels: Object.keys(editLabels).filter((label) => editLabels[label]),
+      };
+    } else {
+      updatedAttribute = {
+        [editField]: editField === "project_deadline" ? editValue.toISOString() : editValue,
+      };
+    }
     console.log(updatedAttribute);
 
     try {
@@ -266,7 +313,7 @@ export default function ProjectDetailPublisher() {
                 onClick={() =>
                   handleEditClick(
                     "project_labels",
-                    projectDetails.project_labels.join(", ")
+                    projectDetails.project_labels
                   )
                 }
               >
@@ -347,6 +394,29 @@ export default function ProjectDetailPublisher() {
                 )}
               />
             </LocalizationProvider>
+          ) : editField === "project_labels" ? (
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Select Labels</FormLabel>
+              <FormGroup>
+              <Grid container spacing={2}>
+                {Object.keys(initialLabels).sort().map((label) => (
+                  <Grid item xs={3} key={label}>
+                  <FormControlLabel
+                    key={label}
+                    control={
+                      <Checkbox
+                        checked={editLabels[label] || false}
+                        onChange={handleCheckboxChange(label)}
+                        name={label}
+                      />
+                    }
+                    label={label}
+                  />
+                  </Grid>
+                ))}
+                </Grid>
+              </FormGroup>
+            </FormControl>
           ) : (
             <TextField
               fullWidth
