@@ -15,7 +15,7 @@ const projectSchema = new mongoose.Schema(
         project_duration: { type: Number, required: true },
         project_completetime: { type: Date, required: true },
         //budget
-        project_budget: { type: Number, required: true },
+        project_budget: { type: Double, required: true },
         // project label: list, chosen from predefined labels stored on frontend
         project_labels: { type: [String], required: false },
         // candidates and the chosen developer
