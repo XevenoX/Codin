@@ -33,11 +33,12 @@ import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
 export default function ApplyContactButton({ user, projectDetails }) {
-  console.log("user:", user.applicantId);
+  console.log("user:", user);
   console.log(projectDetails);
   const [openDialog, setOpenDialog] = useState(false);
   const [motivation, setMotivation] = useState("");
   const [alreadyApplied, setAlreadyApplied] = useState(false);
+  const [subscription, setSubscription] = useState(false);
 
   const handleApply = async () => {
     try {
@@ -87,8 +88,13 @@ export default function ApplyContactButton({ user, projectDetails }) {
   }, [projectDetails.applicants, user.applicantId]);
   console.log("alreadyApplied", alreadyApplied);
 
+  useEffect(() => {
+    // Calculate subscription status
+    const isSubscribed = new Date(user.subscription) - new Date() > 0;
+    setSubscription(isSubscribed);
+  }, [user.subscription]);
   // replace with date later
-  if (user.subscription == 1) {
+  if (subscription) {
     return (
       <React.Fragment>
         <Typography noWrap variant="caption" color="grey">
@@ -103,27 +109,33 @@ export default function ApplyContactButton({ user, projectDetails }) {
         </Button>
         <Button variant="contained">Contact</Button>
 
-        
         <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Apply for the Project</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please provide your motivation (max 100 characters):
-          </DialogContentText>
-          <textarea
-            value={motivation}
-            onChange={handleMotivationChange}
-            rows={4}
-            maxLength={100}
-            style={{ width: '100%', padding: '8px', marginTop: '8px', marginBottom: '8px' }}
-            placeholder="Enter your motivation here..."
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleApply} disabled={!motivation}>Submit</Button>
-        </DialogActions>
-      </Dialog>
+          <DialogTitle>Apply for the Project</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please provide your motivation (max 100 characters):
+            </DialogContentText>
+            <textarea
+              value={motivation}
+              onChange={handleMotivationChange}
+              rows={4}
+              maxLength={100}
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginTop: "8px",
+                marginBottom: "8px",
+              }}
+              placeholder="Enter your motivation here..."
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog}>Cancel</Button>
+            <Button onClick={handleApply} disabled={!motivation}>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </React.Fragment>
     );
   } else {

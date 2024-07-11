@@ -31,9 +31,18 @@ import { format } from 'date-fns';
 
 export default function ProjectDetailDeveloper() {
   const user = {
-    // subscription: 1,
-    subscription: 0,
-    applicantId: "667c33a8c6d615bee2e0ba0e",
+    //subscription stored as Date()
+
+    // subscription: "2024-07-01T22:00:00.000+00:00", //deactivated 
+    subscription: "2024-09-01T22:00:00.000+00:00",    //activated
+
+    // applicantId: "667c33a8c6d615bee2e0ba0e",
+    // applicantId: "668b843e1e61ca37c5498f62",  //test developer: candidate 1   
+    // applicantId: "668b84861e61ca37c5498f63",  //test developer: candidate 2
+    // applicantId: "668b916896511d11d3954842",  //test developer: candidate 3
+    // applicantId: "668b917e96511d11d3954843",  //test developer: candidate 4
+    // applicantId: "668dc28d4c46544ea6f319dc",  //test developer: candidate 5  
+    applicantId: "668f96576ea26d5feb7a9a61",  //test developer: w/o subscription
   };
   // const subscription = 1; //repalce with user.subscription (date) - current date >0
   // const subscription = 0;
@@ -62,6 +71,7 @@ export default function ProjectDetailDeveloper() {
         }
         const data = await response.json();
         setProjectDetails(data);
+        console.log(data);
       } catch (error) {
         console.error("Failed to fetch project details:", error);
       } finally {
