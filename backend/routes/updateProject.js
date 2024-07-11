@@ -4,7 +4,7 @@ import express from "express";
 import db from "../db/connection.js";
 
 // This help convert the id from string to ObjectId for the _id.
-import { ObjectId } from "mongodb";
+import { Double,ObjectId } from "mongodb";
 
 // router is an instance of the express router.
 // We use it to define our routes.
@@ -15,7 +15,11 @@ const router = express.Router();
 router.post("/:id", async (req, res) => {
     try {
         const updates = req.body;
-        console.log(updates, new ObjectId(req.params.id));
+        console.log("updates",updates, new ObjectId(req.params.id));
+        //convert to double 
+        if (updates.project_budget) {
+          updates.project_budget =  new Double(parseFloat(updates.project_budget));
+      }
         const result = await db.collection('projects').updateOne(
           { _id: new ObjectId(req.params.id) },
           { $set: updates }
