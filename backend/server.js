@@ -81,16 +81,18 @@ app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 // supply static file
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
-}); app.use("/signUp", signUp);
+
 app.use("/createProject", createProject);
 app.use("/getProject", getProject);
 app.use("/applyProject", applyProject);
 app.use("/updateProject", updateProject);
 app.use("/contact", contact);
 app.use("/marketplace", getMarketplaceProjects); // Add this line to use the getMarketplaceProjects route
+
+// 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+}); app.use("/signUp", signUp);
 
 
 // Connect to MongoDB and start the server
