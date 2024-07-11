@@ -4,7 +4,7 @@ import StillOpeningProjects from './StillOpeningProjects';
 import MarketSearch from './MarketSearch';
 import MarketSort from './MarketSort';
 
-const MarketHeader = () => {
+const MarketHeader = ({ onSortChange }) => {
   return (
     <Grid
       container
@@ -38,7 +38,7 @@ const MarketHeader = () => {
           <MarketSearch />
         </Grid>
         <Grid item>
-          <MarketSort />
+          <MarketSort onSortChange={onSortChange} />
         </Grid>
       </Grid>
     </Grid>

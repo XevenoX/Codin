@@ -1,9 +1,12 @@
 import * as React from 'react';
-import Grid from '@mui/system/Unstable_Grid';
+import Grid from '@mui/material/Grid';
 import Overview from './Overview';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
-const MarketItems = () => {
+const MarketItems = ({ projects }) => {
   const gridItemStyle = { mb: 2, width: '100%' };
+
   return (
     <Grid
       container
@@ -15,18 +18,11 @@ const MarketItems = () => {
         alignItems: 'flex-start',
       }}
     >
-      <Grid item sx={gridItemStyle}>
-        <Overview />
-      </Grid>
-      <Grid item sx={gridItemStyle}>
-        <Overview />
-      </Grid>
-      <Grid item sx={gridItemStyle}>
-        <Overview />
-      </Grid>
-      <Grid item sx={gridItemStyle}>
-        <Overview />
-      </Grid>
+      {projects.map((project) => (
+        <Grid item key={project._id} sx={gridItemStyle}>
+          <Overview project={project} />
+        </Grid>
+      ))}
     </Grid>
   );
 };

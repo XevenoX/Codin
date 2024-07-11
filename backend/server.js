@@ -3,6 +3,7 @@ import cors from "cors";
 import signUp from "./routes/signUp.js";
 import signIn from "./routes/signIn.js";
 import signOut from "./routes/signOut.js";
+import getMarketplaceProjects from "./routes/getMarketplaceProjects.js";
 import createProject from "./routes/createProject.js";
 import homepage from "./routes/homepage.js";
 import dotenv from "dotenv";
@@ -48,6 +49,7 @@ app.use("/signUp", signUp);
 app.use("/signIn", signIn);
 app.use("/signOut", signOut);
 app.use("/createProject", createProject);
+app.use("/marketplace", getMarketplaceProjects); // Add this line to use the getMarketplaceProjects route
 
 // 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
 app.get("*", (req, res) => {

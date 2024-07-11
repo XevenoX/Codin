@@ -2,7 +2,10 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-const options = ['Option 1', 'Option 2'];
+const options = [
+  'Framer Design Mobile Responsiveness Specialist Specialist Specialist Specialist',
+  'React Homepage Development',
+];
 
 export default function AutoCompleteControlled() {
   const [value, setValue] = React.useState(options[0]);

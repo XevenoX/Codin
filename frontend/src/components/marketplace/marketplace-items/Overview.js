@@ -13,17 +13,31 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 }));
 
-const Overview = () => {
-  const postedDaysAgo = 1;
-  const closeInDays = 1;
-  const applicationsReceived = 1;
+const Overview = ({ project }) => {
+  if (!project) {
+    return null; // or return some fallback UI
+  }
+
+  const postedDaysAgo = Math.floor(
+    (Date.now() - new Date(project.project_posttime).getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+  const closeInDays = Math.floor(
+    (new Date(project.project_deadline).getTime() - Date.now()) /
+      (1000 * 60 * 60 * 24)
+  );
+  const applicationsReceived = project.applicants
+    ? project.applicants.length
+    : 0;
+
+  const projectLabels = project.project_labels || []; // Ensure project_labels is an array
 
   return (
     <div className="overview">
       <Card
         elevation="6"
         sx={{
-          p: 2,
+          pl: 2,
           margin: 1,
           width: 675,
           height: 200,
@@ -58,7 +72,12 @@ const Overview = () => {
               spacing={2}
             >
               <Grid item xs>
-                <Grid container direction="column" className="task-info">
+                <Grid
+                  container
+                  direction="column"
+                  className="task-info"
+                  sx={{ pt: 0 }}
+                >
                   <Grid item>
                     <Typography
                       variant="subtitle2"
@@ -90,8 +109,7 @@ const Overview = () => {
                         WebkitBoxOrient: 'vertical',
                       }}
                     >
-                      Framer Design Mobile Responsiveness Specialist Specialist
-                      Specialist Specialist
+                      {project.project_name}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -111,7 +129,7 @@ const Overview = () => {
                   variant="body1"
                   sx={{ fontWeight: 'bold', fontSize: 28 }}
                 >
-                  $ 108
+                  ${project.project_budget}
                 </Typography>
               </Grid>
             </Grid>
@@ -127,10 +145,7 @@ const Overview = () => {
                   WebkitBoxOrient: 'vertical',
                 }}
               >
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
-                accusamus nemo repellendus, sapiente voluptatibus numquam quod
-                fugiat soluta quae doloremque perferendis aut placeat neque
-                nihil aliquid ducimus cum maiores culpa.
+                {project.project_description}
               </Typography>
             </Grid>
             <Grid item sx={{ height: '15%', margin: 0.5 }}>
@@ -140,7 +155,7 @@ const Overview = () => {
                   fontWeight: 'light',
                 }}
               >
-                Tag1 • Tag2 • Tag3 • Tag4 • Tag5
+                {projectLabels.join(' • ')}
               </Typography>
             </Grid>
           </Grid>

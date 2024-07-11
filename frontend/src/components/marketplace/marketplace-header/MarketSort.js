@@ -1,10 +1,9 @@
 import * as React from 'react';
 import Grid from '@mui/system/Unstable_Grid';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SelectSort from './SelectSort';
 
-const MarketSort = () => {
+const MarketSort = ({ onSortChange }) => {
   return (
     <Grid
       container
@@ -20,11 +19,10 @@ const MarketSort = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          // marginTop: '18px', // 把 Button 往下面移一点
           marginRight: '10px',
         }}
       >
-        <SelectSort />
+        <SelectSort onSortChange={onSortChange} />
       </Grid>
     </Grid>
   );
