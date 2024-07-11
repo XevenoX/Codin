@@ -39,6 +39,8 @@ export default function ApplyContactButton({ user, projectDetails }) {
   const [motivation, setMotivation] = useState("");
   const [alreadyApplied, setAlreadyApplied] = useState(false);
   const [subscription, setSubscription] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [contactMessage, setContactMessage] = useState("");
 
   const handleApply = async () => {
     try {
@@ -77,6 +79,44 @@ export default function ApplyContactButton({ user, projectDetails }) {
     setMotivation(event.target.value);
   };
 
+  const handleContactClick = () => {
+    setContactDialogOpen(true);
+  };
+
+  const handleContactClose = () => {
+    setContactDialogOpen(false);
+    setContactMessage("");
+  };
+
+  const handleContactSend = async () => {
+    try {
+      let response = await fetch(`http://localhost:5050/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.applicantId,
+          message: contactMessage,
+          projectId: projectDetails._id,
+        }),
+      });
+      if (response.status === 200) {
+        alert("Message sent successfully");
+        handleContactClose();
+      } else {
+        alert("Failed to send the message");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Failed to send the message");
+    }
+  };
+
+  const handleContactMessageChange = (event) => {
+    setContactMessage(event.target.value);
+  };
+
   useEffect(() => {
     // Check if user has already applied
     if (Array.isArray(projectDetails.applicants)) {
@@ -107,7 +147,7 @@ export default function ApplyContactButton({ user, projectDetails }) {
         >
           {alreadyApplied ? "Already Applied" : "Apply Now"}
         </Button>
-        <Button variant="contained">Contact</Button>
+        <Button variant="contained" onClick={handleContactClick}>Contact</Button>
 
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>Apply for the Project</DialogTitle>
@@ -134,6 +174,31 @@ export default function ApplyContactButton({ user, projectDetails }) {
             <Button onClick={handleApply} disabled={!motivation}>
               Submit
             </Button>
+          </DialogActions>
+        </Dialog>
+
+
+
+        <Dialog open={contactDialogOpen} onClose={handleContactClose}>
+          <DialogTitle>Contact</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter your message:
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Message"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={contactMessage}
+              onChange={handleContactMessageChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleContactClose}>Cancel</Button>
+            <Button onClick={handleContactSend} disabled={!contactMessage}>Send</Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>
