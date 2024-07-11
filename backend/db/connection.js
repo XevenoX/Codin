@@ -1,4 +1,5 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,7 +15,8 @@ const uri = process.env.ATLAS_URI || "";
 let client;
 let db;
 
-const connectDB = async () => {
+// MongoDB connection using MongoClient
+const connectMongoClient = async () => {
   if (!db) {
     client = new MongoClient(uri, {
       serverApi: {
@@ -38,6 +40,25 @@ const connectDB = async () => {
       throw err;
     }
   }
+};
+
+// MongoDB connection using Mongoose
+const connectMongoose = async () => {
+  try {
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Mongoose connected to MongoDB');
+  } catch (err) {
+    console.error('Mongoose connection error:', err);
+    throw err;
+  }
+};
+
+const connectDB = async () => {
+  await connectMongoClient();
+  await connectMongoose();
 };
 
 const getDB = () => {
