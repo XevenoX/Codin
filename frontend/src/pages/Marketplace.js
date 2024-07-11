@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 
 const MarketPlace = () => {
   // ---------------- Select Price Range ----------------------
-  const [priceRange, setPriceRange] = useState([20, 37]);
+  const [priceRange, setPriceRange] = useState([0, 3000]);
 
   // for displaying projects
   const [projects, setProjects] = useState([]);
@@ -31,13 +31,20 @@ const MarketPlace = () => {
     axios.defaults.baseURL =
       process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
     loadProjects();
-  }, [page, sortCriteria, searchTerm]);
+  }, [page, sortCriteria, searchTerm, priceRange]); // 添加 priceRange 作为依赖项
 
   async function loadProjects() {
     setLoading(true);
     try {
       const res = await axios.get('/marketplace/projects', {
-        params: { page, limit: 5, sort: sortCriteria, search: searchTerm },
+        params: {
+          page,
+          limit: 5,
+          sort: sortCriteria,
+          search: searchTerm,
+          minPrice: priceRange[0],
+          maxPrice: priceRange[1],
+        },
       });
       setProjects(res.data.projects);
       setTotalPages(res.data.totalPages);
@@ -67,7 +74,6 @@ const MarketPlace = () => {
 
   const handleSelectCategory = (e) => {
     setCategory(e.target.value);
-    console.log(`category: ${category}`);
     setPage(1); // Reset page to 1 when filters change
   };
 
@@ -80,13 +86,11 @@ const MarketPlace = () => {
 
   const handleSelectStartDate = (newValue) => {
     setStartDate(newValue);
-    console.log(`start date: ${startDate}`);
     setPage(1); // Reset page to 1 when filters change
   };
 
   const handleSelectEndDate = (newValue) => {
     setEndDate(newValue);
-    console.log(`end date: ${endDate}`);
     setPage(1); // Reset page to 1 when filters change
   };
 

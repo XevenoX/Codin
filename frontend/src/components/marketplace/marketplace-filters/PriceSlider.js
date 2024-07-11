@@ -4,23 +4,7 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 
-// function valuetext(value) {
-//   return `${value}°C`;
-// }
-
 export default function PriceSlider({ priceRange, handlePriceChange }) {
-  // 使用 priceRange 创建显示的文本
-  // const valuetext = (value) => {
-  //   const [minPrice, maxPrice] = priceRange;
-  //   if (value === minPrice) {
-  //     return `${minPrice}`;
-  //   } else if (value === maxPrice) {
-  //     return `${maxPrice}`;
-  //   } else {
-  //     return `${value}°C`;
-  //   }
-  // };
-
   const [minPrice, maxPrice] = priceRange;
 
   return (
@@ -34,7 +18,8 @@ export default function PriceSlider({ priceRange, handlePriceChange }) {
           value={priceRange}
           onChange={handlePriceChange}
           valueLabelDisplay="auto"
-          //getAriaValueText={valuetext}
+          min={0} // 设置最小值
+          max={3000} // 设置最大值
         />
       </Box>
     </Card>

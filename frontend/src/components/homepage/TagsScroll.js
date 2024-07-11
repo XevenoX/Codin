@@ -10,12 +10,12 @@ import {
 import { ChevronRight } from '@mui/icons-material';
 
 const destinations = [
-  { name: 'Berlin', properties: 1750, image: '/api/placeholder/300/200' },
-  { name: 'Hamburg', properties: 724, image: '/api/placeholder/300/200' },
-  { name: 'Munich', properties: 719, image: '/api/placeholder/300/200' },
-  { name: 'Baltic Sea', properties: 25021, image: '/api/placeholder/300/200' },
-  { name: 'Cologne', properties: 757, image: '/api/placeholder/300/200' },
-  { name: 'Dresden', properties: 561, image: '/api/placeholder/300/200' },
+  { name: 'Frontend', properties: 1750, image: '/api/placeholder/300/200' },
+  { name: 'Material UI', properties: 724, image: '/api/placeholder/300/200' },
+  { name: 'React', properties: 719, image: '/api/placeholder/300/200' },
+  { name: 'MongoDB', properties: 25021, image: '/api/placeholder/300/200' },
+  { name: 'JavaScript', properties: 757, image: '/api/placeholder/300/200' },
+  { name: 'NodeJS', properties: 561, image: '/api/placeholder/300/200' },
   // Add more destinations as needed
 ];
 
@@ -40,10 +40,10 @@ const TagsScroll = () => {
   return (
     <Box sx={{ position: 'relative', py: 4 }}>
       <Typography variant="h4" component="h2" gutterBottom>
-        Explore Germany
+        Explore Projects
       </Typography>
       <Typography variant="body1" color="text.secondary" gutterBottom>
-        These popular destinations have a lot to offer
+        See projects with different technologies
       </Typography>
       <Box
         ref={scrollContainerRef}

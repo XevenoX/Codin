@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from '@mui/system/Unstable_Grid';
+import Grid from '@mui/material/Grid'; // 确保使用正确的 Grid 组件
 import Category from './Category';
 import PriceSlider from './PriceSlider';
 import DateRange from './DateRange';
