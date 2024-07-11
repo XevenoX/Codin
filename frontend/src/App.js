@@ -6,10 +6,12 @@ import MarketPlace from './pages/Marketplace';
 import SignUp from './pages/SignUp';
 import PublisherHomepage from './pages/PublisherHomepage';
 import DeveloperHomepage from './pages/DeveloperHomepage';
+import ClippedDrawer from './components/ClippedDrawer';
+import Test from './pages/Test';
+import Subscription from './pages/Subscription';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectDetailPublisher from './pages/ProjectDetailPublisher';
 import ProjectDetailDeveloper from './pages/ProjectDetailDeveloper';
-import Subscription from './pages/Subscription';
 
 function App() {
   return (

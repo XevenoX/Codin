@@ -2,6 +2,9 @@ import express from "express";
 import bodyParser from 'body-parser';
 import cors from "cors";
 import signUp from "./routes/signUp.js";
+import signIn from "./routes/signIn.js";
+import signOut from "./routes/signOut.js";
+import getMarketplaceProjects from "./routes/getMarketplaceProjects.js";
 import createProject from "./routes/createProject.js";
 import homepage from "./routes/homepage.js";
 import userInfo from "./routes/userInfo.js";
@@ -27,21 +30,47 @@ import getProject from "./routes/getProject.js";
 import applyProject from "./routes/applyProject.js";
 import updateProject from "./routes/updateProject.js"
 import contact from "./routes/contact.js"
+import homepage from "./routes/homepage.js";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import { connectDB, getDB } from "./db/connection.js";
+import cookieParser from "cookie-parser";
 
-// add import& app.use in this file and write the api in /routes/<yourAPI>.js
+// Load environment variables from .env file
+dotenv.config({ path: "./.env" });
+
+
 const PORT = process.env.PORT || 5050;
 const app = express();
+
+// Supply static file
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.use(cors());
 // to receive and send out json properly
 app.use(express.json());
-// 使用中间件解析 URL 编码的请求体
 app.use(express.urlencoded({ extended: true }));
-// 使用中间件解析 cookie
 app.use(cookieParser());
+
+// Ensure database connection before handling routes
+app.use(async (req, res, next) => {
+  try {
+    if (!getDB()) {
+      await connectDB();
+    }
+    next();
+  } catch (err) {
+    console.error("Database connection error:", err);
+    res.status(500).json({ error: "Database connection error" });
+  }
+});
 
 app.use("/", homepage);
 app.use("/signUp", signUp);
+app.use("/signIn", signIn);
+app.use("/signOut", signOut);
 app.use("/createProject", createProject);
 app.use("/userInfo", userInfo);
 app.use("/projectsList", projectsList);
@@ -61,8 +90,17 @@ app.use("/getProject", getProject);
 app.use("/applyProject", applyProject);
 app.use("/updateProject", updateProject);
 app.use("/contact", contact);
+app.use("/marketplace", getMarketplaceProjects); // Add this line to use the getMarketplaceProjects route
 
-// start the Express server
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+
+// Connect to MongoDB and start the server
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
