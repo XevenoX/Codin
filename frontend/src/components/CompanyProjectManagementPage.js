@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchProjects, createSampleData } from '../api';
+import axios from 'axios';
 import '../styles/CompanyProjectManagementPage.css';
 
 const CompanyProjectManagementPage = () => {
     const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        axios.defaults.baseURL =
+            process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
         const getProjects = async () => {
-            const data = await fetchProjects();
-            console.log('Fetched projects:', data); // 调试日志
-            setProjects(data);
+            try {
+                const res = await axios.get('/api/projects');
+                setProjects(res.data);
+                setLoading(false);
+                console.log('Fetched projects:', res.data);
+            } catch (err) {
+                console.error('Error fetching projects:', err);
+                setError(err);
+                setLoading(false);
+            }
         };
-
         getProjects();
     }, []);
 
@@ -41,6 +51,14 @@ const CompanyProjectManagementPage = () => {
         navigate('/gantt-chart');
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
     return (
         <div>
             <header>
@@ -52,7 +70,7 @@ const CompanyProjectManagementPage = () => {
                 <div className="profile">
                     <img src="/profile-pic.png" alt="Profile" />
                     <div className="notifications">
-                        <span>🔔</span>
+                        <span role="img" aria-label="notification">🔔</span>
                     </div>
                 </div>
             </header>
@@ -65,13 +83,13 @@ const CompanyProjectManagementPage = () => {
                     <div className="project-section in-progress">
                         <h2>In Progress</h2>
                         <div className="project-list">
-                            {projects.filter(project => project.status === 'In Progress').map(project => (
+                            {projects.filter(project => project.project_status === 3).map(project => (
                                 <div className="project" key={project._id}>
-                                    <h3>{project.name}</h3>
-                                    <span className="developer">Developer: {project.developer || 'Unknown'}</span>
-                                    <span className="complete-before">Complete before: {new Date(project.endDate).toLocaleDateString()}</span>
-                                    <button className="see-more" onClick={() => handleSeeMore(project.name)}>See More</button>
-                                    <button className="confirm" onClick={() => handleConfirm(project.name)}>Confirm</button>
+                                    <h3>{project.project_name}</h3>
+                                    <span className="developer">Developer: {project.chosen_applicants || 'Unknown'}</span>
+                                    <span className="complete-before">Complete before: {new Date(project.project_deadline).toLocaleDateString()}</span>
+                                    <button className="see-more" onClick={() => handleSeeMore(project.project_name)}>See More</button>
+                                    <button className="confirm" onClick={() => handleConfirm(project.project_name)}>Confirm</button>
                                 </div>
                             ))}
                         </div>
@@ -79,13 +97,13 @@ const CompanyProjectManagementPage = () => {
                     <div className="project-section open">
                         <h2>Open</h2>
                         <div className="project-list">
-                            {projects.filter(project => project.status === 'Open').map(project => (
+                            {projects.filter(project => project.project_status === 1).map(project => (
                                 <div className="project" key={project._id}>
-                                    <h3>{project.name}</h3>
-                                    <span className="applications-received">Applications received: {project.applications || 0}</span>
-                                    <span className="close-at">Close at: {new Date(project.endDate).toLocaleDateString()}</span>
-                                    <button className="see-more" onClick={() => handleSeeMore(project.name)}>See More</button>
-                                    <button className="delete" onClick={() => handleDelete(project.name)}>Delete</button>
+                                    <h3>{project.project_name}</h3>
+                                    <span className="applications-received">Applications received: {project.applicants ? project.applicants.length : 0}</span>
+                                    <span className="close-at">Close at: {new Date(project.project_deadline).toLocaleDateString()}</span>
+                                    <button className="see-more" onClick={() => handleSeeMore(project.project_name)}>See More</button>
+                                    <button className="delete" onClick={() => handleDelete(project.project_name)}>Delete</button>
                                 </div>
                             ))}
                         </div>
@@ -93,12 +111,12 @@ const CompanyProjectManagementPage = () => {
                     <div className="project-section awaiting-acceptance">
                         <h2>Awaiting Acceptance</h2>
                         <div className="project-list">
-                            {projects.filter(project => project.status === 'Awaiting Acceptance').map(project => (
+                            {projects.filter(project => project.project_status === 2).map(project => (
                                 <div className="project" key={project._id}>
-                                    <h3>{project.name}</h3>
-                                    <span className="developer">Developer: {project.developer || 'Unknown'}</span>
-                                    <span className="wait-until">Wait until: {new Date(project.endDate).toLocaleDateString()}</span>
-                                    <button className="see-more" onClick={() => handleSeeMore(project.name)}>See More</button>
+                                    <h3>{project.project_name}</h3>
+                                    <span className="developer">Developer: {project.chosen_applicants || 'Unknown'}</span>
+                                    <span className="wait-until">Wait until: {new Date(project.project_deadline).toLocaleDateString()}</span>
+                                    <button className="see-more" onClick={() => handleSeeMore(project.project_name)}>See More</button>
                                 </div>
                             ))}
                         </div>
@@ -106,12 +124,12 @@ const CompanyProjectManagementPage = () => {
                     <div className="project-section completed">
                         <h2>Completed</h2>
                         <div className="project-list">
-                            {projects.filter(project => project.status === 'Completed').map(project => (
+                            {projects.filter(project => project.project_status === 5).map(project => (
                                 <div className="project" key={project._id}>
-                                    <h3>{project.name}</h3>
-                                    <span className="developer">Developer: {project.developer || 'Unknown'}</span>
-                                    <span className="completed-at">Completed at: {new Date(project.endDate).toLocaleDateString()}</span>
-                                    <button className="see-more" onClick={() => handleSeeMore(project.name)}>See More</button>
+                                    <h3>{project.project_name}</h3>
+                                    <span className="developer">Developer: {project.chosen_applicants || 'Unknown'}</span>
+                                    <span className="completed-at">Completed at: {new Date(project.project_completetime).toLocaleDateString()}</span>
+                                    <button className="see-more" onClick={() => handleSeeMore(project.project_name)}>See More</button>
                                 </div>
                             ))}
                         </div>
