@@ -2,7 +2,7 @@ import express from "express";
 // remember to add this to app.use in server.js
 // This will help us connect to the database
 import db from "../db/connection.js";
-import { ObjectId } from "mongodb";
+import { Double, ObjectId } from "mongodb";
 
 // This help convert the id from string to ObjectId for the _id.
 // import { ObjectId } from "mongodb";
@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
         project_name: req.body.projectName,
         project_description: req.body.projectDescription,
         project_skills: req.body.projectSkills,
-        project_budget: req.body.projectBudget, 
+        project_budget: new Double(parseFloat(req.body.projectBudget)), 
         project_deadline:  new Date(req.body.projectApplicationDeadline), //transform
         project_duration: req.body.projectDuration,
         project_publisher:new ObjectId(req.body.projectPublisher),
