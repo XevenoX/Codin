@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from '@mui/system/Unstable_Grid';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 const StillOpeningProjects = () => {

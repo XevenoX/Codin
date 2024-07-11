@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PriceSlider from '../components/marketplace/marketplace-filters/PriceSlider';
 import { Typography } from '@mui/material';
 import Category from '../components/marketplace/marketplace-filters/Category';
-// import DateRange from '../components/marketplace/marketplace-filters/DateRange';
 import dayjs from 'dayjs';
-// import Transitions from '../components/marketplace/LongSelect';
 import SortByMenu from '../components/marketplace/SortByMenu';
 import MarketHeader from '../components/marketplace/marketplace-header/MarketHeader';
 import Box from '@mui/material/Box';
@@ -27,18 +25,19 @@ const MarketPlace = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortCriteria, setSortCriteria] = useState('priceAsc');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     axios.defaults.baseURL =
       process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
     loadProjects();
-  }, [page, sortCriteria]);
+  }, [page, sortCriteria, searchTerm]);
 
   async function loadProjects() {
     setLoading(true);
     try {
       const res = await axios.get('/marketplace/projects', {
-        params: { page, limit: 5, sort: sortCriteria },
+        params: { page, limit: 5, sort: sortCriteria, search: searchTerm },
       });
       setProjects(res.data.projects);
       setTotalPages(res.data.totalPages);
@@ -96,6 +95,11 @@ const MarketPlace = () => {
     setPage(1); // Reset page to 1 when filters change
   };
 
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    setPage(1); // Reset page to 1 when filters change
+  };
+
   return (
     <Box
       className="marketplace"
@@ -117,12 +121,15 @@ const MarketPlace = () => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <MarketHeader onSortChange={handleSortChange} />
+            <MarketHeader
+              onSortChange={handleSortChange}
+              onSearch={handleSearch}
+            />
           </Grid>
           <Grid
             item
-            xs={12}
             container
+            xs={12}
             spacing={2}
             sx={{
               display: 'flex',

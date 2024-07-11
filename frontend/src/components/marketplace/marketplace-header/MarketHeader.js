@@ -1,10 +1,10 @@
 import * as React from 'react';
-import Grid from '@mui/system/Unstable_Grid';
+import Grid from '@mui/material/Grid';
 import StillOpeningProjects from './StillOpeningProjects';
 import MarketSearch from './MarketSearch';
 import MarketSort from './MarketSort';
 
-const MarketHeader = ({ onSortChange }) => {
+const MarketHeader = ({ onSortChange, onSearch }) => {
   return (
     <Grid
       container
@@ -18,8 +18,8 @@ const MarketHeader = ({ onSortChange }) => {
       }}
     >
       <Grid
-        container
         item
+        container
         className="market-header-container"
         sx={{
           width: '100%',
@@ -35,7 +35,7 @@ const MarketHeader = ({ onSortChange }) => {
           <StillOpeningProjects />
         </Grid>
         <Grid item sx={{ marginBottom: '18px' }}>
-          <MarketSearch />
+          <MarketSearch onSearch={onSearch} />
         </Grid>
         <Grid item>
           <MarketSort onSortChange={onSortChange} />

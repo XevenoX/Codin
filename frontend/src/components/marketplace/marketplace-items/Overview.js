@@ -35,7 +35,7 @@ const Overview = ({ project }) => {
   return (
     <div className="overview">
       <Card
-        elevation="6"
+        elevation={6}
         sx={{
           pl: 2,
           margin: 1,

@@ -1,9 +1,19 @@
 import * as React from 'react';
 import Grid from '@mui/system/Unstable_Grid';
-import AutoCompleteControlled from './AutoCompleteControlled';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-const MarketSearch = () => {
+const MarketSearch = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    onSearch(searchTerm);
+  };
+
   return (
     <Grid
       container
@@ -11,7 +21,12 @@ const MarketSearch = () => {
       sx={{ display: 'flex', flexDirection: 'row' }}
     >
       <Grid item sx={{ display: 'flex', alignItems: 'flex-start', mr: 1 }}>
-        <AutoCompleteControlled />
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
       </Grid>
       <Grid
         item
@@ -23,7 +38,9 @@ const MarketSearch = () => {
           marginRight: '10px',
         }}
       >
-        <Button variant="contained">Search</Button>
+        <Button variant="contained" onClick={handleSearchClick}>
+          Search
+        </Button>
       </Grid>
     </Grid>
   );
