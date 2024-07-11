@@ -107,7 +107,7 @@ router.get("/developer/:id", async (req, res) => {
       // query = {_id: { $in: project.applicants }};
       query = { _id: new ObjectId(project.project_publisher) };
       let publisher = await collection.findOne(query);
-      // console.log(publisher);
+      console.log(publisher);
       project.project_publisher = publisher.name;
       // console.log(publisher.name);
     }
@@ -115,34 +115,35 @@ router.get("/developer/:id", async (req, res) => {
     //get applicants
 
     //TODO: if (subscription)
-    if (project.applicants && project.applicants.length > 0) {
-      collection = await db.collection("users");
-      // query = {_id: { $in: project.applicants }};
-      const applicantIds = project.applicants.map(
-        (applicant) => applicant.applicantId
-      );
-      query = { _id: { $in: applicantIds.map((id) => new ObjectId(id)) } };
-      const applicants = await collection.find(query).toArray();
 
-      project.applicants = project.applicants.map((applicant) => {
-        const foundApplicant = applicants.find((a) =>
-          a._id.equals(applicant.applicantId)
-        );
-        return {
-          ...applicant,
-          applicantInfo: foundApplicant,
-        };
-      });
-      // query = { _id: { $in: project.applicants.map(applicantId => new ObjectId(applicantId)) } };
-      // const applicants = await collection.find(query).toArray();
+    // if (project.applicants && project.applicants.length > 0) {
+    //   collection = await db.collection("users");
+    //   // query = {_id: { $in: project.applicants }};
+    //   const applicantIds = project.applicants.map(
+    //     (applicant) => applicant.applicantId
+    //   );
+    //   query = { _id: { $in: applicantIds.map((id) => new ObjectId(id)) } };
+    //   const applicants = await collection.find(query).toArray();
 
-      // project.applicants = applicants.length;
+    //   // project.applicants = project.applicants.map((applicant) => {
+    //   //   const foundApplicant = applicants.find((a) =>
+    //   //     a._id.equals(applicant.applicantId)
+    //   //   );
+    //   //   return {
+    //   //     ...applicant,
+    //   //     applicantInfo: foundApplicant,
+    //   //   };
+    //   // });
+    //   // query = { _id: { $in: project.applicants.map(applicantId => new ObjectId(applicantId)) } };
+    //   // const applicants = await collection.find(query).toArray();
 
-      ///TODO: get reviews of each applicants (projects: finished & _id matches)
-      // console.log(project);
+    //   // project.applicants = applicants.length;
 
-      // console.log(project);
-    }
+    //   ///TODO: get reviews of each applicants (projects: finished & _id matches)
+    //   // console.log(project);
+
+    //   console.log(project);
+    // }
 
     res.status(200).json(project);
   } catch (error) {
