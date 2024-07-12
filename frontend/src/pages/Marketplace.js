@@ -13,8 +13,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import axios from 'axios';
 import Button from '@mui/material/Button';
+import { useCookies } from 'react-cookie';
 
 const MarketPlace = () => {
+  // cookie
+  const [cookies] = useCookies(['user']); // 读取 'user' cookie
+  const user = cookies.user;
+
   // ---------------- Select Price Range ----------------------
   const [priceRange, setPriceRange] = useState([0, 3000]);
 
@@ -44,6 +49,7 @@ const MarketPlace = () => {
           search: searchTerm,
           minPrice: priceRange[0],
           maxPrice: priceRange[1],
+          user: user ? user.id : null, // 将用户ID传递给后端
         },
       });
       setProjects(res.data.projects);
