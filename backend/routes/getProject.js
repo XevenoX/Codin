@@ -3,7 +3,9 @@
 import express from "express";
 
 // This will help us connect to the database
-import db from "../db/connection.js";
+import { getDB } from "../db/connection.js";
+
+const db = getDB();
 
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
@@ -12,7 +14,6 @@ import { ObjectId } from "mongodb";
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
-
 
 router.get("/publisher/:id", async (req, res) => {
   const { id } = req.params;
@@ -71,21 +72,20 @@ router.get("/publisher/:id", async (req, res) => {
           return {
             ...user,
             motivation: app.motivation,
-            apply_time:app.apply_time,
+            apply_time: app.apply_time,
           };
         } else {
           return app;
         }
       });
     }
-console.log(project);
+    console.log(project);
     res.status(200).json(project);
   } catch (error) {
     console.error("Failed to fetch project and applicants:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 router.get("/developer/:id", async (req, res) => {
   const { id } = req.params;

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 // Load environmental variables
-dotenv.config();
+dotenv.config({ path: "./.env" });
 
 const uri = process.env.ATLAS_URI || "";
 
@@ -22,7 +22,7 @@ const connectDB = async () => {
 
 const getDB = () => {
   if (mongoose.connection.readyState !== 1) {
-    throw new Error("Database not connected. Call connectDB first.");
+    return null; // 返回 null 而不是抛出错误
   }
   return mongoose.connection.db;
 };

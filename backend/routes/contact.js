@@ -3,7 +3,9 @@
 import express from "express";
 
 // This will help us connect to the database
-import db from "../db/connection.js";
+import { getDB } from "../db/connection.js";
+
+const db = getDB();
 
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
@@ -13,13 +15,9 @@ import { ObjectId } from "mongodb";
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 
-
-    
-  // This section will help you get a list of all the records.
-  router.post("/", async (req, res) => {
-    console.log(req.body);
-    
-  });
-
+// This section will help you get a list of all the records.
+router.post("/", async (req, res) => {
+  console.log(req.body);
+});
 
 export default router;
