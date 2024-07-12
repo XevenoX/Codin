@@ -1,7 +1,9 @@
 import express from "express";
 
 // This will help us connect to the database
-import db from "../db/connection.js";
+import { getDB } from "../db/connection.js";
+
+const db = getDB();
 
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
@@ -12,10 +14,15 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.patch("/", async (req, res) => {
-  if (!ObjectId.isValid(req.body.projectId) || !ObjectId.isValid(req.body.applicantId)) {
+  const db = getDB();
+
+  if (
+    !ObjectId.isValid(req.body.projectId) ||
+    !ObjectId.isValid(req.body.applicantId)
+  ) {
     return res.status(400).send("Invalid ObjectId format");
   }
-//   console.log(req.body);
+  //   console.log(req.body);
 
   try {
     let collection = await db.collection("projects");
@@ -37,7 +44,7 @@ router.patch("/", async (req, res) => {
       project.applicants.push({
         applicantId: new ObjectId(req.body.applicantId),
         motivation: req.body.motivation,
-        apply_time:new Date(),
+        apply_time: new Date(),
       });
 
       console.log(project.applicants);
@@ -51,8 +58,6 @@ router.patch("/", async (req, res) => {
       let result = await collection.updateOne(query, updates);
       return res.status(200).send("Applicant added successfully");
     }
-
-    
   } catch (error) {
     console.error("Error applying to project:", error);
     res.status(500).send("Internal server error");

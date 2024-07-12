@@ -1,19 +1,19 @@
 import express from "express";
-// remember to add this to app.use in server.js
+// Remember to add this to app.use in server.js
 // This will help us connect to the database
-import db from "../db/connection.js";
+import { getDB } from "../db/connection.js";
 import { Double, ObjectId } from "mongodb";
 
-// This help convert the id from string to ObjectId for the _id.
-// import { ObjectId } from "mongodb";
-
-// router is an instance of the express router.
+// Router is an instance of the express router.
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
+
 // This section will help you create a new record.
 // const project_posttime =  new Date();
 router.post("/", async (req, res) => {
+  const db = getDB();
+
   // console.log(req.body);
   const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
   const now = new Date();
@@ -48,9 +48,15 @@ router.post("/", async (req, res) => {
 
 // This section will help you get a list of all the records.
 router.get("/", async (req, res) => {
-  let collection = await db.collection("projects");
-  let results = await collection.find({}).toArray();
-  res.send(results).status(200);
+  try {
+    let db = getDB(); // Get the database connection
+    let collection = await db.collection("projects");
+    let results = await collection.find({}).toArray();
+    res.status(200).send(results); // Ensure to set the status before sending the response
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching records");
+  }
 });
 
 export default router;

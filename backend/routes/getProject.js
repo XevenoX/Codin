@@ -3,7 +3,9 @@
 import express from "express";
 
 // This will help us connect to the database
-import db from "../db/connection.js";
+import { getDB } from "../db/connection.js";
+
+const db = getDB();
 
 // This help convert the id from string to ObjectId for the _id.
 import { ObjectId } from "mongodb";
@@ -14,6 +16,8 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.get("/publisher/:id", async (req, res) => {
+  const db = getDB();
+
   const { id } = req.params;
 
   if (!ObjectId.isValid(id)) {
@@ -80,7 +84,7 @@ router.get("/publisher/:id", async (req, res) => {
           return {
             ...user,
             motivation: app.motivation,
-            apply_time:app.apply_time,
+            apply_time: app.apply_time,
           };
         } else {
           return app;
@@ -96,6 +100,8 @@ router.get("/publisher/:id", async (req, res) => {
 });
 
 router.get("/developer/:id", async (req, res) => {
+  const db = getDB();
+
   const { id } = req.params;
   console.log(id);
   if (!ObjectId.isValid(id)) {
