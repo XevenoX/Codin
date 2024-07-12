@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import ApplyContactButton from "../components/ApplyContactButton";
+import { useCookies } from 'react-cookie';
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -30,6 +31,11 @@ import { CircularProgress } from "@mui/material";
 import { format } from 'date-fns';
 
 export default function ProjectDetailDeveloper() {
+
+  // get user info with cookies when login function is fixed
+
+  // const [cookies] = useCookies(['user']); 
+  // const user = cookies.user;
   const user = {
     //subscription stored as Date()
 
@@ -128,9 +134,11 @@ export default function ProjectDetailDeveloper() {
           <Stack spacing={2} mt={2}>
             <Stack direction="row" spacing={1} alignItems="center">
               <BusinessIcon color="primary" />
+              <Link to={`/publisherhomepage/${projectDetails.publisher_id}`}>
               <Typography noWrap variant="h5">
                 {projectDetails.project_publisher}
               </Typography>
+              </Link>
             </Stack>
             <Stack direction="row" spacing={1} alignItems="center">
               <AccessTimeIcon color="primary" />
