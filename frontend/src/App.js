@@ -12,30 +12,38 @@ import Subscription from './pages/Subscription';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectDetailPublisher from './pages/ProjectDetailPublisher';
 import ProjectDetailDeveloper from './pages/ProjectDetailDeveloper';
+import { CookiesProvider, useCookies } from 'react-cookie';
 
 function App() {
+  const [cookies, setCookie] = useCookies(['user']);
+
+  function handleLogin(user) {
+    setCookie('user', user, { path: '/' });
+  }
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/marketplace" element={<MarketPlace />} />
-          <Route path="/publisherhomepage" element={<PublisherHomepage />} />
-          <Route path="/developerhomepage" element={<DeveloperHomepage />} />
-          <Route path="/project" element={<ProjectCreate />} />
-          <Route path="/subscription" element={<Subscription />} />
-          <Route
-            path="/projectdetail/publisher/:id"
-            element={<ProjectDetailPublisher />}
-          />
-          <Route
-            path="/projectdetail/developer/:id"
-            element={<ProjectDetailDeveloper />}
-          />
-        </Route>
-      </Routes>
-    </Router>
+    <CookiesProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Homepage onLogin={handleLogin} />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/marketplace" element={<MarketPlace />} />
+            <Route path="/publisherhomepage" element={<PublisherHomepage />} />
+            <Route path="/developerhomepage" element={<DeveloperHomepage />} />
+            <Route path="/project" element={<ProjectCreate />} />
+            <Route path="/subscription" element={<Subscription />} />
+            <Route
+              path="/projectdetail/publisher/:id"
+              element={<ProjectDetailPublisher />}
+            />
+            <Route
+              path="/projectdetail/developer/:id"
+              element={<ProjectDetailDeveloper />}
+            />
+          </Route>
+        </Routes>
+      </Router>
+    </CookiesProvider>
   );
 }
 

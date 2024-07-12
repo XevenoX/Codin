@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useCookies } from 'react-cookie';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -31,11 +32,13 @@ function Copyright(props) {
   );
 }
 
-export default function SignIn() {
+export default function SignIn({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [cookies, setCookie] = useCookies(['user']);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,7 +58,9 @@ export default function SignIn() {
         // 登录成功
         setError('');
         setEmailError(false);
-        // Navigate to homepage or other page
+        setCookie('user', data.user, { path: '/' });
+        onLogin(data.user);
+        navigate('/'); // 跳转到首页或其他页面
       } else {
         // 登录失败
         setError(data.message || 'Login failed');
