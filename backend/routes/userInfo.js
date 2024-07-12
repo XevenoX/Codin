@@ -4,11 +4,10 @@ const router = express.Router();
 import { ObjectId } from "mongodb";
 import { getDB } from "../db/connection.js";
 
-const db = getDB();
-
 // test GET to fetch all users
 router.get("/", async (req, res) => {
   try {
+    const db = getDB();
     let collection = await db.collection("users");
     const users = await collection.find({}).toArray();
     res.status(200).json(users);
@@ -25,8 +24,9 @@ router.get("/findByEmail", async (req, res) => {
     if (!email) {
       return res.status(400).send("Email is required");
     }
-
+    const db = getDB();
     let collection = await db.collection("users");
+
     const user = await collection.findOne({ email: email });
 
     if (!user) {
@@ -58,6 +58,7 @@ router.post("/publisherUpdate", async (req, res) => {
       organization_size,
       specialities,
     };
+    const db = getDB();
     let collection = await db.collection("users");
     let result = await collection.updateOne(
       { email: email },
@@ -81,6 +82,7 @@ router.post("/sloganUpdate", async (req, res) => {
     let updatedslogan = {
       slogan,
     };
+    const db = getDB();
     let collection = await db.collection("users");
     let result = await collection.updateOne(
       { email: email },
@@ -108,6 +110,7 @@ router.post("/developerUpdate", async (req, res) => {
       school,
       skills,
     };
+    const db = getDB();
     let collection = await db.collection("users");
     let result = await collection.updateOne(
       { email: email },
@@ -130,6 +133,7 @@ router.post("/updateAvatar", async (req, res) => {
     const { email, avatar } = req.body;
     // Decode the base64 image
     let base64Data = avatar.replace(/^data:image\/png;base64,/, "");
+    const db = getDB();
     let collection = await db.collection("users");
     let result = await collection.updateOne(
       { email: email },
@@ -153,6 +157,7 @@ router.post("/updateBanner", async (req, res) => {
     const { email, banner } = req.body;
     // Decode the base64 image
     let base64Data = banner.replace(/^data:image\/png;base64,/, "");
+    const db = getDB();
     let collection = await db.collection("users");
     let result = await collection.updateOne(
       { email: email },
@@ -174,6 +179,7 @@ router.post("/updateBanner", async (req, res) => {
 router.get("/feedbacks", async (req, res) => {
   try {
     const rated_for = req.query._id;
+    const db = getDB();
     const collection = db.collection("feedbacks");
     const pipeline = [
       {
@@ -219,6 +225,7 @@ router.get("/feedbacks", async (req, res) => {
 router.get("/averageRating", async (req, res) => {
   try {
     const rated_for = req.query._id;
+    const db = getDB();
     const collection = db.collection("feedbacks");
     const pipeline = [
       {

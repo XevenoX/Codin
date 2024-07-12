@@ -14,6 +14,8 @@ import { Double, ObjectId } from "mongodb";
 const router = express.Router();
 
 router.post("/:id", async (req, res) => {
+  const db = getDB();
+
   try {
     const updates = req.body;
     console.log("updates", updates, new ObjectId(req.params.id));

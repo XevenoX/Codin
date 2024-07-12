@@ -16,8 +16,8 @@ import ProjectDetailDeveloper from './pages/ProjectDetailDeveloper';
 function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
+      <Routes>
+        <Route path="/" element={<Layout />}>
           <Route path="/" element={<Homepage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/marketplace" element={<MarketPlace />} />
@@ -25,11 +25,16 @@ function App() {
           <Route path="/developerhomepage" element={<DeveloperHomepage />} />
           <Route path="/project" element={<ProjectCreate />} />
           <Route path="/subscription" element={<Subscription />} />
-          <Route path="/projectdetail/publisher/:id" element={<ProjectDetailPublisher />} />
-          <Route path="/projectdetail/developer/:id" element={<ProjectDetailDeveloper />} />
-
-        </Routes>
-      </Layout>
+          <Route
+            path="/projectdetail/publisher/:id"
+            element={<ProjectDetailPublisher />}
+          />
+          <Route
+            path="/projectdetail/developer/:id"
+            element={<ProjectDetailDeveloper />}
+          />
+        </Route>
+      </Routes>
     </Router>
   );
 }

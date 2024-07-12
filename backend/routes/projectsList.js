@@ -8,6 +8,7 @@ const db = getDB();
 // test GET to fetch all projects
 router.get("/", async (req, res) => {
   try {
+    const db = getDB();
     let collection = await db.collection("projects");
     const projects = await collection.find({}).toArray();
     res.status(200).json(projects);
@@ -21,6 +22,7 @@ router.get("/", async (req, res) => {
 router.get("/byPublisher/ongoing", async (req, res) => {
   const project_publisher = req.query.project_publisher;
   try {
+    const db = getDB();
     const collection = db.collection("projects");
     // const ongoingProjects = await collection.find({
     //     project_publisher: new ObjectId(project_publisher),
@@ -80,6 +82,7 @@ router.get("/byPublisher/ongoing", async (req, res) => {
 router.get("/byDeveloper/past", async (req, res) => {
   const chosen_applicants = req.query.chosen_applicants;
   try {
+    const db = getDB();
     const collection = db.collection("projects");
     const pastProjects = await collection
       .find({

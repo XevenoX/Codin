@@ -14,6 +14,8 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.patch("/", async (req, res) => {
+  const db = getDB();
+
   if (
     !ObjectId.isValid(req.body.projectId) ||
     !ObjectId.isValid(req.body.applicantId)

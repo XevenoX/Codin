@@ -16,6 +16,8 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.get("/publisher/:id", async (req, res) => {
+  const db = getDB();
+
   const { id } = req.params;
 
   if (!ObjectId.isValid(id)) {
@@ -88,6 +90,8 @@ router.get("/publisher/:id", async (req, res) => {
 });
 
 router.get("/developer/:id", async (req, res) => {
+  const db = getDB();
+
   const { id } = req.params;
   console.log(id);
   if (!ObjectId.isValid(id)) {

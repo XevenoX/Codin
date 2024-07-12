@@ -12,6 +12,8 @@ const router = express.Router();
 // This section will help you create a new record.
 // const project_posttime =  new Date();
 router.post("/", async (req, res) => {
+  const db = getDB();
+
   // console.log(req.body);
   const berlinOffset = 2; // Berlin is GMT+2 during daylight saving time
   const now = new Date();

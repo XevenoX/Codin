@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import { useNavigate } from 'react-router-dom';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -14,6 +15,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const Overview = ({ project }) => {
+  const navigate = useNavigate();
   if (!project) {
     return null; // or return some fallback UI
   }
@@ -31,6 +33,10 @@ const Overview = ({ project }) => {
     : 0;
 
   const projectLabels = project.project_labels || []; // Ensure project_labels is an array
+
+  const handleSeeMoreClick = () => {
+    navigate(`/projectdetail/developer/${project._id}`);
+  };
 
   return (
     <div className="overview">
@@ -173,7 +179,11 @@ const Overview = ({ project }) => {
               </Paper>
             </Grid>
             <Grid item sx={{ flexGrow: 0 }}>
-              <Button variant="contained" fullWidth>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleSeeMoreClick}
+              >
                 See More
               </Button>
             </Grid>
