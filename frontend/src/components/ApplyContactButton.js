@@ -99,6 +99,7 @@ export default function ApplyContactButton({ user, projectDetails }) {
           userId: user.applicantId,
           message: contactMessage,
           projectId: projectDetails._id,
+          publisher_id:projectDetails.publisher_id,
         }),
       });
       if (response.status === 200) {
