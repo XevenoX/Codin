@@ -19,7 +19,12 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const db = getDB();
 
-  console.log(req.body);
+  try {
+    console.log(req.body);
+    res.status(200).send(req.body);
+  } catch (error) {
+    res.status(500).send({ error: "Internal Server Error" });
+  }
 });
 
 export default router;
