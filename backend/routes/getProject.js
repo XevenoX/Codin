@@ -13,7 +13,6 @@ import { ObjectId } from "mongodb";
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 
-
 router.get("/publisher/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -37,31 +36,41 @@ router.get("/publisher/:id", async (req, res) => {
       );
       query = { _id: { $in: applicantIds } };
       const applicants = await collection.find(query).toArray();
+      // console.log("applicants",applicants);
 
-      collection = await db.collection("projects");
+      collection = await db.collection("feedbacks");
       for (let applicant of applicants) {
-        let completedProjectsQuery = {
-          chosen_applicants: applicant._id,
-          project_status: 5,
-        };
-
-        let completedProjects = await collection
-          .find(completedProjectsQuery)
-          .toArray();
-
-        let totalRating = 0;
-        let ratingCount = 0;
-        for (let completedProject of completedProjects) {
-          if (completedProject.developer_rating) {
-            totalRating += parseFloat(completedProject.developer_rating);
-            ratingCount += 1;
-          }
+        const rated_for = applicant._id;
+        console.log(rated_for);
+        const collection = db.collection("feedbacks");
+        const pipeline = [
+          {
+            $match: {
+              rated_for: new ObjectId(rated_for),
+            },
+          },
+          {
+            $group: {
+              _id: "$ratedFor",
+              averageRating: { $avg: "$rating" },
+              totalRatings: { $sum: 1 },
+            },
+          },
+        ];
+        const result = await collection.aggregate(pipeline).toArray();
+        console.log(result);
+        // console.log(result.averageRating, result.totalRatings);
+        if (result.length === 0) {
+          applicant.averageRating = 0;
+          applicant.ratingCount = 0;
+        }else{
+          applicant.averageRating = result[0].averageRating;
+          applicant.ratingCount = result[0].totalRatings;
         }
-
-        applicant.averageRating =
-          ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : null;
-        applicant.ratingCount = ratingCount;
+        
+        console.log(applicant);
       }
+
 
       project.applicants = project.applicants.map((app) => {
         let user = applicants.find(
@@ -78,14 +87,13 @@ router.get("/publisher/:id", async (req, res) => {
         }
       });
     }
-console.log(project);
+    console.log(project);
     res.status(200).json(project);
   } catch (error) {
     console.error("Failed to fetch project and applicants:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 router.get("/developer/:id", async (req, res) => {
   const { id } = req.params;
