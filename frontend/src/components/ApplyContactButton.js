@@ -38,6 +38,7 @@ export default function ApplyContactButton({ user, projectDetails }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [motivation, setMotivation] = useState("");
   const [alreadyApplied, setAlreadyApplied] = useState(false);
+  const [alreadyPassedDeadline, setAlreadyPassedDeadline] = useState(true);
   const [subscription, setSubscription] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [contactMessage, setContactMessage] = useState("");
@@ -126,6 +127,11 @@ export default function ApplyContactButton({ user, projectDetails }) {
       );
       setAlreadyApplied(isApplied);
     }
+    //check deadline
+    if(new Date(projectDetails.project_deadline)-new Date()>0){
+      setAlreadyPassedDeadline(false);
+
+    }
   }, [projectDetails.applicants, user.applicantId]);
   console.log("alreadyApplied", alreadyApplied);
 
@@ -144,9 +150,9 @@ export default function ApplyContactButton({ user, projectDetails }) {
         <Button
           variant="contained"
           onClick={alreadyApplied ? null : handleOpenDialog}
-          disabled={alreadyApplied}
-        >
-          {alreadyApplied ? "Already Applied" : "Apply Now"}
+          disabled={alreadyApplied||alreadyPassedDeadline}
+        > 
+          {alreadyApplied ? "Already Applied" : (alreadyPassedDeadline ? "Passed Deadline":"Apply Now")}
         </Button>
         <Button variant="contained" onClick={handleContactClick}>Contact</Button>
 
