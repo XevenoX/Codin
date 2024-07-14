@@ -20,6 +20,7 @@ import applyProject from "./routes/applyProject.js";
 import updateProject from "./routes/updateProject.js";
 import contact from "./routes/contact.js";
 import { connectDB } from "./db/connection.js";
+import projectpage from "./routes/projectpage.js";
 
 // Load environment variables from .env file
 dotenv.config({ path: "./.env" });
@@ -67,6 +68,7 @@ app.use("/applyProject", applyProject);
 app.use("/updateProject", updateProject);
 app.use("/contact", contact);
 app.use("/marketplace", getMarketplaceProjects);
+app.use("/projectpage", projectpage);
 
 // 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
 app.get("*", (req, res) => {
