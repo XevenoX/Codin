@@ -7,9 +7,11 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("Login request received:", email); // 记录登录请求
 
     // Ensure both email and password are provided
     if (!email || !password) {
+      console.log("Email or password not provided"); // 添加日志
       return res
         .status(400)
         .json({ message: "Please provide email and password" });
@@ -18,12 +20,15 @@ router.post("/", async (req, res) => {
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found for email:", email);
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
     // Check Password
     const isMatch = await user.checkPassword(password);
+    console.log("Password match result:", isMatch);
     if (!isMatch) {
+      console.log("Password does not match for user:", email);
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
@@ -41,6 +46,8 @@ router.post("/", async (req, res) => {
       sameSite: "strict", // Protect against CSRF
       maxAge: 3600000, // 1 hour
     });
+
+    console.log("Login successful for user:", email);
 
     // Send response without including the token
     res.status(200).json({
