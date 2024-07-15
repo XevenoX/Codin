@@ -35,6 +35,7 @@ export default function ApplicantsList({ data }) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [sortBy, setSortBy] = useState("rating"); // set default sorting method
   const [sortOrder, setSortOrder] = useState("desc");
+  const [showCompare, setShowCompare] = useState(false);
 
   const handleSortingChange = (event) => {
     setSortBy(event.target.value);
@@ -43,6 +44,20 @@ export default function ApplicantsList({ data }) {
     } else {
       setSortOrder("desc");
     }
+  };
+
+
+  const handleCheckboxChange = (event, item) => {
+    const itemId = item._id;
+    setSelectedItems((prevSelectedItems) =>
+      event.target.checked
+        ? [...prevSelectedItems, itemId].slice(-3) // limit to 3 items
+        : prevSelectedItems.filter((id) => id !== itemId)
+    );
+  };
+
+  const handleCompare = () => {
+    setShowCompare(true);
   };
 
   const sortedData = [...data].sort((a, b) => {
@@ -69,6 +84,11 @@ export default function ApplicantsList({ data }) {
     // todo: Add more sorting options 
     return 0;
   });
+
+  const selectedData = data.filter((item) =>
+    selectedItems.includes(item._id)
+  );
+
 
   if (data.length > 0) {
     return (
@@ -112,7 +132,7 @@ export default function ApplicantsList({ data }) {
         <Box>
           <ImageList sx={{ width: "75%", height: 450 }}>
             {sortedData.map((item) => (
-              <ImageListItem key={item.id}>
+              <ImageListItem key={item._id}>
                 <Card sx={{ minWidth: 180 }}>
                   <CardContent sx={{ width: "100%" }}>
                     <Typography variant="h5" component="div">
@@ -145,7 +165,9 @@ export default function ApplicantsList({ data }) {
                       {item.apply_time}
                       <br />
                     </Typography>
-                    <FormControlLabel control={<Checkbox />} />
+                    <FormControlLabel control={<Checkbox checked={selectedItems.includes(item._id)}
+                          onChange={(e) => handleCheckboxChange(e, item)}
+                          value={item._id}/>} />
                   </CardContent>
                   <CardActions>
                     <Button size="contained">See More</Button>
@@ -155,16 +177,19 @@ export default function ApplicantsList({ data }) {
             ))}
           </ImageList>
           <Grid>
-            <Button variant="contained">Compare</Button>
+            <Button variant="contained"
+              onClick={handleCompare}
+              disabled={selectedItems.length === 0}>Compare</Button>
             <Button variant="contained">Offer</Button>
           </Grid>
+          {showCompare && (
           <ImageList
             sx={{ width: "75%", height: 450, mt: 2, spacing: 4 }}
             cols={3}
             rowHeight={350}
           >
-            {data.map((item) => (
-              <ImageListItem key={item.id}>
+            {selectedData.map((item) => (
+              <ImageListItem key={item._id}>
                 <Card sx={{ backgroundColor: "#e6f2ff" }}>
                   <CardContent>
                     <Typography variant="h5" component="div">
@@ -196,6 +221,7 @@ export default function ApplicantsList({ data }) {
               </ImageListItem>
             ))}
           </ImageList>
+          )}
         </Box>
       </React.Fragment>
     );
