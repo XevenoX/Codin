@@ -122,6 +122,7 @@ router.get("/developer/:id", async (req, res) => {
       query = { _id: new ObjectId(project.project_publisher) };
       let publisher = await collection.findOne(query);
       console.log(publisher);
+      project.publisher_id = project.project_publisher;
       project.project_publisher = publisher.name;
       // console.log(publisher.name);
     }
@@ -156,7 +157,7 @@ router.get("/developer/:id", async (req, res) => {
     //   ///TODO: get reviews of each applicants (projects: finished & _id matches)
     //   // console.log(project);
 
-    //   console.log(project);
+      console.log(project);
     // }
 
     res.status(200).json(project);
