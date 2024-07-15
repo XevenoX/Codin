@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useCookies } from 'react-cookie';
 import { useParams } from "react-router-dom";
 import ApplicantsList from "../components/ApplicantsList";
 import Button from "@mui/material/Button";
@@ -64,6 +65,8 @@ const initialLabels = {
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
+    // const [cookies] = useCookies(['user']); 
+  // const user = cookies.user;
 
   const { id } = useParams(); //get project id
 
