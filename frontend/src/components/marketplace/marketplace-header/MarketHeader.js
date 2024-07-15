@@ -4,7 +4,7 @@ import StillOpeningProjects from './StillOpeningProjects';
 import MarketSearch from './MarketSearch';
 import MarketSort from './MarketSort';
 
-const MarketHeader = ({ onSortChange, onSearch }) => {
+const MarketHeader = ({ onSortChange, onSearch, totalProjects }) => {
   return (
     <Grid
       container
@@ -32,7 +32,7 @@ const MarketHeader = ({ onSortChange, onSearch }) => {
         }}
       >
         <Grid item>
-          <StillOpeningProjects />
+          <StillOpeningProjects totalProjects={totalProjects} />
         </Grid>
         <Grid item sx={{ marginBottom: '18px' }}>
           <MarketSearch onSearch={onSearch} />
