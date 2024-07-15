@@ -3,9 +3,13 @@ import { Box, TextField, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useCookies } from 'react-cookie';
 import axios from "axios";
 
 const OverviewTab = ({ userInfo, setUserInfo }) => {
+    // cookie
+    const [cookies] = useCookies(['user']); // 读取 'user' cookie
+    const currentUser = cookies.user;
     const attributesToDisplay = { industry: 'Industry', website: 'Website', organization_size: 'Organization Size', specialities: 'Specialities' };
 
     const [isEditing, setIsEditing] = useState(false);
@@ -66,9 +70,11 @@ const OverviewTab = ({ userInfo, setUserInfo }) => {
                     </Grid>
                 ) : (
                     <Grid item>
-                        <IconButton onClick={handleEditClick}>
-                            <EditIcon />
-                        </IconButton>
+                        {currentUser.email === userInfo.email && (
+                            <IconButton onClick={handleEditClick}>
+                                <EditIcon />
+                            </IconButton>
+                        )}
                     </Grid>
                 )}
             </Box>

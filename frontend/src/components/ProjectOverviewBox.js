@@ -47,7 +47,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                 <Grid container direction="column" className="task-info">
                                     <Grid item>
                                         <Typography
-                                            variant="subtitle2"
                                             sx={{
                                                 fontSize: 10,
                                                 fontWeight: 'light',
@@ -61,14 +60,14 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                         >
                                             Posted {formatDistanceToNow(new Date(projectInfo.project_posttime), { addSuffix: true })} •&nbsp;
                                             {projectInfo.project_status === 1 && (
-                                                <text>
+                                                <span>
                                                     Close {formatDistanceToNow(new Date(projectInfo.project_deadline), { addSuffix: true })} •&nbsp;
-                                                </text>
+                                                </span>
                                             )}
                                             {projectInfo.project_status === 5 && (
-                                                <text>
+                                                <span>
                                                     Completed {formatDistanceToNow(new Date(projectInfo.project_completetime), { addSuffix: true })} •&nbsp;
-                                                </text>
+                                                </span>
                                             )}
                                             {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
                                         </Typography>
@@ -103,7 +102,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                 }}
                             >
                                 <Typography
-                                    variant="body1"
                                     sx={{ fontWeight: 'bold', fontSize: 28 }}
                                 >
                                     $ {projectInfo.project_budget}
@@ -112,7 +110,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                         </Grid>
                         <Grid item sx={{ height: '30%', overflow: 'hidden' }}>
                             <Typography
-                                variant="body2"
                                 sx={{
                                     margin: 0.5,
                                     overflow: 'hidden',
@@ -130,13 +127,12 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                             {projectInfo.project_labels && projectInfo.project_labels.length > 0 && projectInfo.project_labels.map((label, index) => (
                                 <React.Fragment key={label}>
                                     <Typography
-                                        variant="body2"
                                         sx={{ fontWeight: 'light', color: 'blue' }}
                                     >
                                         {label}
                                     </Typography>
                                     {index < projectInfo.project_labels.length - 1 && (
-                                        <Typography variant="body2" sx={{ fontWeight: 'light' }}>
+                                        <Typography sx={{ fontWeight: 'light' }}>
                                             &middot;
                                         </Typography>
                                     )}

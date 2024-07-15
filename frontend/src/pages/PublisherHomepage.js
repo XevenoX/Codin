@@ -11,8 +11,8 @@ const PublisherHomepage = () => {
 
     async function loadUserInfo() {
         try {
-            const res = await axios.get("/userInfo/findByEmail", {
-                params: { email: "codefive@gmail.com" } //replace this after having user session
+            const res = await axios.get("/userInfo/findUser", {
+                params: { _id: "66797fd23225fe692d5b7427" } //replace this after having user session
             });
             setUserInfo(res.data);
         } catch (error) {

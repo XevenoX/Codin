@@ -13,8 +13,8 @@ const DeveloperHomepage = () => {
 
     async function loadUserInfo() {
         try {
-            const res = await axios.get("/userInfo/findByEmail", {
-                params: { email: "maxmustermann@gmail.com" } //replace this after having user session
+            const res = await axios.get("/userInfo/findUser", {
+                params: { _id: "667981413225fe692d5b742a" } //replace this after having user session
             });
             setUserInfo(res.data);
         } catch (error) {
@@ -47,7 +47,7 @@ const DeveloperHomepage = () => {
     }
 
     return (
-        <Box sx={{ display: 'flex', height: '85%' }}>
+        <Box sx={{ display: 'flex', height: '85%', backgroundColor: 'white' }}>
             <Box sx={{ flex: 1 }}>
                 <PersonalBox userInfo={userInfo} setUserInfo={setUserInfo} />
             </Box>
