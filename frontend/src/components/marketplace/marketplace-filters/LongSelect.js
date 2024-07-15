@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Card from '@mui/material/Card';
-
 import {
   Box,
-  Radio,
-  RadioGroup,
+  Checkbox,
   FormControlLabel,
   FormControl,
   FormLabel,
@@ -12,7 +10,10 @@ import {
   Collapse,
 } from '@mui/material';
 
-export default function LongSelect({ category, handleSelectCategory }) {
+export default function LongSelect({
+  selectedCategories,
+  handleSelectCategories,
+}) {
   const [showAll, setShowAll] = useState(false);
 
   const toggleShowAll = () => {
@@ -20,58 +21,79 @@ export default function LongSelect({ category, handleSelectCategory }) {
   };
 
   const categories = [
-    'Frontend',
-    'Backend',
-    'AI',
-    'Data Science',
-    'DevOps',
-    'Security',
-    'UI/UX',
-    'Marketing',
-    'Sales',
-    'Finance',
+    'Java',
+    'JavaScript',
+    'React',
+    'NodeJS',
+    'Python',
+    'Ruby',
+    'PHP',
+    'HTML',
+    'CSS',
+    'Angular',
+    'Vue',
+    'TypeScript',
+    'jQuery',
+    'Bootstrap',
+    'Sass',
+    'TailwindCSS',
+    'Firebase',
+    'MongoDB',
+    'MySQL',
+    'PostgreSQL',
   ];
 
   const initialCategories = categories.slice(0, 5);
   const hiddenCategories = categories.slice(5);
 
-  const radioStyles = {
-    '& .MuiSvgIcon-root': {
-      fontSize: 12,
-    },
+  const handleCheckboxChange = (event) => {
+    const value = event.target.value.toLowerCase(); // 确保转换为小写
+    handleSelectCategories((prevSelected) =>
+      prevSelected.includes(value)
+        ? prevSelected.filter((category) => category !== value)
+        : [...prevSelected, value]
+    );
   };
 
   return (
     <Card sx={{ width: '100%' }}>
       <FormControl component="fieldset" sx={{ m: 2 }}>
         <FormLabel component="legend">Category</FormLabel>
-        <RadioGroup value={category} onChange={handleSelectCategory}>
-          {initialCategories.map((cat) => (
-            <FormControlLabel
-              key={cat}
-              value={cat.toLowerCase()}
-              control={<Radio sx={radioStyles} />}
-              label={cat}
-            />
-          ))}
+        {initialCategories.map((cat) => (
+          <FormControlLabel
+            key={cat}
+            control={
+              <Checkbox
+                checked={selectedCategories.includes(cat.toLowerCase())}
+                onChange={handleCheckboxChange}
+                value={cat.toLowerCase()}
+              />
+            }
+            label={cat}
+          />
+        ))}
 
-          <Collapse in={showAll}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              {hiddenCategories.map((cat) => (
-                <FormControlLabel
-                  key={cat}
-                  value={cat.toLowerCase()}
-                  control={<Radio sx={radioStyles} />}
-                  label={cat}
-                />
-              ))}
-            </Box>
-          </Collapse>
+        <Collapse in={showAll}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            {hiddenCategories.map((cat) => (
+              <FormControlLabel
+                key={cat}
+                control={
+                  <Checkbox
+                    checked={selectedCategories.includes(cat.toLowerCase())}
+                    onChange={handleCheckboxChange}
+                    value={cat.toLowerCase()}
+                  />
+                }
+                label={cat}
+              />
+            ))}
+          </Box>
+        </Collapse>
 
-          <Button onClick={toggleShowAll} sx={{ mr: 8, pl: 0 }}>
-            {showAll ? 'Show Less' : 'Show All'}
-          </Button>
-        </RadioGroup>
+        <Button onClick={toggleShowAll} sx={{ mr: 8, pl: 0 }}>
+          {showAll ? 'Show Less' : 'Show All'}
+        </Button>
       </FormControl>
     </Card>
   );

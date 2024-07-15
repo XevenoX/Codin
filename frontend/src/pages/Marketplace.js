@@ -25,33 +25,54 @@ const MarketPlace = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalProjects, setTotalProjects] = useState(0); // 新增状态
+  const [totalProjects, setTotalProjects] = useState(0);
   const [sortCriteria, setSortCriteria] = useState('priceAsc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]); // 修改初始化
+
+  const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [endDate, setEndDate] = useState(
+    dayjs().add(2, 'year').format('YYYY-MM-DD')
+  );
 
   useEffect(() => {
     axios.defaults.baseURL =
       process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
     loadProjects();
-  }, [page, sortCriteria, searchTerm, priceRange]);
+  }, [
+    page,
+    sortCriteria,
+    searchTerm,
+    priceRange,
+    startDate,
+    endDate,
+    selectedCategories,
+  ]); // 添加 selectedCategories 依赖项
 
   async function loadProjects() {
     setLoading(true);
     try {
-      const res = await axios.get('/marketplace/projects', {
-        params: {
-          page,
-          limit: 5,
-          sort: sortCriteria,
-          search: searchTerm,
-          minPrice: priceRange[0],
-          maxPrice: priceRange[1],
-          user: user ? user.id : null,
-        },
-      });
+      const params = {
+        page,
+        limit: 5,
+        sort: sortCriteria,
+        search: searchTerm,
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+        startDate,
+        endDate,
+        user: user ? user.id : null,
+        selectedCategories: selectedCategories
+          .map((cat) => cat.toLowerCase())
+          .join(','), // 确保转换为小写
+      };
+
+      console.log('Request parameters:', params); // 打印请求参数
+
+      const res = await axios.get('/marketplace/projects', { params });
       setProjects(res.data.projects);
       setTotalPages(res.data.totalPages);
-      setTotalProjects(res.data.totalProjects); // 更新项目总数
+      setTotalProjects(res.data.totalProjects);
     } catch (error) {
       console.error(error);
       setError(error);
@@ -73,26 +94,18 @@ const MarketPlace = () => {
     setPage(1);
   };
 
-  const [category, setCategory] = useState('frontend');
-
-  const handleSelectCategory = (e) => {
-    setCategory(e.target.value);
+  const handleSelectCategories = (categories) => {
+    setSelectedCategories(categories);
     setPage(1);
   };
 
-  const today = dayjs();
-  const yesterday = dayjs().subtract(1, 'day');
-
-  const [startDate, setStartDate] = useState(today);
-  const [endDate, setEndDate] = useState(today);
-
   const handleSelectStartDate = (newValue) => {
-    setStartDate(newValue);
+    setStartDate(newValue.format('YYYY-MM-DD'));
     setPage(1);
   };
 
   const handleSelectEndDate = (newValue) => {
-    setEndDate(newValue);
+    setEndDate(newValue.format('YYYY-MM-DD'));
     setPage(1);
   };
 
@@ -125,7 +138,7 @@ const MarketPlace = () => {
             <MarketHeader
               onSortChange={handleSortChange}
               onSearch={handleSearch}
-              totalProjects={totalProjects} // 传递项目总数
+              totalProjects={totalProjects}
             />
           </Grid>
           <Grid
@@ -141,8 +154,8 @@ const MarketPlace = () => {
           >
             <Grid item xs={12} md={3} className="market-filters">
               <MarketFilters
-                category={category}
-                handleSelectCategory={handleSelectCategory}
+                selectedCategories={selectedCategories}
+                handleSelectCategories={handleSelectCategories} // 传递 handleSelectCategory
                 priceRange={priceRange}
                 handlePriceChange={handlePriceChange}
                 startDate={startDate}

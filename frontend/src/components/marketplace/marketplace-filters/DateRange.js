@@ -15,9 +15,6 @@ export default function DateRange({
   endDate,
   handleSelectEndDate,
 }) {
-  const today = dayjs();
-  const yesterday = dayjs().subtract(1, 'day');
-
   return (
     <Card sx={{ width: '100%' }}>
       <Box sx={{ m: 1 }}>
@@ -28,25 +25,19 @@ export default function DateRange({
             </Typography>
             <Grid item>
               <DatePicker
-                defaultValue={yesterday}
-                disablePast
-                value={startDate}
-                onChange={handleSelectStartDate}
-                required={true}
+                value={dayjs(startDate)}
+                onChange={(newValue) => handleSelectStartDate(newValue)}
                 renderInput={(params) => <TextField {...params} size="small" />}
               />
             </Grid>
+            <Typography sx={{ pl: 1, pt: 1 }} variant="body1">
+              Task End
+            </Typography>
             <Grid item>
-              <Typography sx={{ pb: 1 }} variant="body1">
-                Task End
-              </Typography>
               <DatePicker
-                defaultValue={yesterday}
-                disablePast
-                minDate={startDate}
-                value={endDate}
-                onChange={handleSelectEndDate}
-                required={true}
+                value={dayjs(endDate)}
+                minDate={dayjs(startDate)}
+                onChange={(newValue) => handleSelectEndDate(newValue)}
                 renderInput={(params) => <TextField {...params} size="small" />}
               />
             </Grid>
