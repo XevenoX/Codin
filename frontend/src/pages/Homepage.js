@@ -2,10 +2,10 @@ import React from 'react';
 import SignIn from '../components/SignIn';
 import TagsScroll from '../components/homepage/TagsScroll';
 
-const Homepage = () => {
+const Homepage = ({ onLogin }) => {
   return (
     <div className="homepage">
-      <SignIn />
+      <SignIn onLogin={onLogin} />
       <TagsScroll />
     </div>
   );

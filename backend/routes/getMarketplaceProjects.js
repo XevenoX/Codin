@@ -12,6 +12,8 @@ router.get("/projects", async (req, res) => {
     search = "",
     minPrice = 0,
     maxPrice = 3000,
+    startDate, // 新增的开始日期
+    endDate, // 新增的结束日期
   } = req.query;
 
   const sortCriteria = {};
@@ -37,16 +39,39 @@ router.get("/projects", async (req, res) => {
     const db = getDB(); // 使用 getDB 函数获取数据库连接
     const collection = db.collection("projects");
 
-    // 暂时去掉 project_deadline 过滤
     const query = {
       project_budget: {
         $gte: parseInt(minPrice),
         $lte: parseInt(maxPrice),
-      }, // 添加价格区间过滤
+      },
     };
 
     if (search) {
       query.project_name = { $regex: search, $options: "i" }; // 添加搜索条件，忽略大小写
+    }
+
+    // 添加日期过滤条件
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      // 计算项目的开始日期（project_start = project_deadline - project_duration）
+      query.$expr = {
+        $and: [
+          {
+            $gte: [
+              {
+                $subtract: [
+                  "$project_deadline",
+                  { $multiply: ["$project_duration", 24 * 60 * 60 * 1000] },
+                ],
+              },
+              start,
+            ],
+          },
+          { $lte: ["$project_deadline", end] },
+        ],
+      };
     }
 
     console.log("Query:", query); // 打印查询条件
@@ -85,6 +110,7 @@ router.get("/projects", async (req, res) => {
       projects: paginatedProjects,
       totalPages: Math.ceil(totalProjects / limit),
       currentPage: parseInt(page),
+      totalProjects,
     });
   } catch (error) {
     console.error("Failed to fetch projects:", error.message, error.stack);

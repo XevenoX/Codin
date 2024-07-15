@@ -16,19 +16,16 @@ import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
 
 const MarketPlace = () => {
-  // cookie
-  const [cookies] = useCookies(['user']); // 读取 'user' cookie
+  const [cookies] = useCookies(['user']);
   const user = cookies.user;
 
-  // ---------------- Select Price Range ----------------------
   const [priceRange, setPriceRange] = useState([0, 3000]);
-
-  // for displaying projects
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalProjects, setTotalProjects] = useState(0); // 新增状态
   const [sortCriteria, setSortCriteria] = useState('priceAsc');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -36,7 +33,7 @@ const MarketPlace = () => {
     axios.defaults.baseURL =
       process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
     loadProjects();
-  }, [page, sortCriteria, searchTerm, priceRange]); // 添加 priceRange 作为依赖项
+  }, [page, sortCriteria, searchTerm, priceRange]);
 
   async function loadProjects() {
     setLoading(true);
@@ -49,11 +46,12 @@ const MarketPlace = () => {
           search: searchTerm,
           minPrice: priceRange[0],
           maxPrice: priceRange[1],
-          user: user ? user.id : null, // 将用户ID传递给后端
+          user: user ? user.id : null,
         },
       });
       setProjects(res.data.projects);
       setTotalPages(res.data.totalPages);
+      setTotalProjects(res.data.totalProjects); // 更新项目总数
     } catch (error) {
       console.error(error);
       setError(error);
@@ -72,18 +70,16 @@ const MarketPlace = () => {
 
   const handlePriceChange = (event, newPriceRange) => {
     setPriceRange(newPriceRange);
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
-  // ---------------- Select Task Category ----------------------
   const [category, setCategory] = useState('frontend');
 
   const handleSelectCategory = (e) => {
     setCategory(e.target.value);
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
-  // ---------------- Select Date Range ----------------------
   const today = dayjs();
   const yesterday = dayjs().subtract(1, 'day');
 
@@ -92,22 +88,22 @@ const MarketPlace = () => {
 
   const handleSelectStartDate = (newValue) => {
     setStartDate(newValue);
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
   const handleSelectEndDate = (newValue) => {
     setEndDate(newValue);
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
   const handleSortChange = (newCriteria) => {
     setSortCriteria(newCriteria);
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
   return (
@@ -115,11 +111,6 @@ const MarketPlace = () => {
       className="marketplace"
       sx={{ display: 'flex', justifyContent: 'center' }}
     >
-      {/* {loading && <CircularProgress />}
-      {error && (
-        <Alert severity="error">Error loading projects: {error.message}</Alert>
-      )} */}
-      {/* {!loading && !error && ( */}
       <Box
         className="marketplace-container"
         sx={{
@@ -134,6 +125,7 @@ const MarketPlace = () => {
             <MarketHeader
               onSortChange={handleSortChange}
               onSearch={handleSearch}
+              totalProjects={totalProjects} // 传递项目总数
             />
           </Grid>
           <Grid
@@ -190,7 +182,6 @@ const MarketPlace = () => {
           </Grid>
         </Grid>
       </Box>
-      {/* )} */}
     </Box>
   );
 };

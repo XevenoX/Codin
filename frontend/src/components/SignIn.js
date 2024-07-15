@@ -62,11 +62,13 @@ export default function SignIn({ onLogin }) {
         onLogin(data.user);
         navigate('/'); // 跳转到首页或其他页面
       } else {
+        console.log('Login failed:', data.message);
         // 登录失败
         setError(data.message || 'Login failed');
         setEmailError(true);
       }
     } catch (error) {
+      console.log('An error occurred during login:', error); // 添加日志
       setError('An error occurred during login');
       setEmailError(true);
     }

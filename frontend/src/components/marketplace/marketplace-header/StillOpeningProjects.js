@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-const StillOpeningProjects = () => {
+const StillOpeningProjects = ({ totalProjects }) => {
   return (
     <Grid container className="still-opening-projects">
       <Grid item container className="still-opening-projects-container">
@@ -11,7 +11,7 @@ const StillOpeningProjects = () => {
             Still Opening Projects
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 'light' }}>
-            49 projects found
+            {totalProjects} projects found
           </Typography>
         </Grid>
       </Grid>
