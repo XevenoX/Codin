@@ -3,6 +3,7 @@ import { Box, Alert, Container, CircularProgress, Divider } from '@mui/material'
 import ReviewsBox from '../components/DeveloperHomepage/ReviewsBox';
 import ProjectsBox from '../components/DeveloperHomepage/ProjectsBox';
 import PersonalBox from '../components/DeveloperHomepage/PersonalBox';
+import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 
@@ -10,11 +11,12 @@ const DeveloperHomepage = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const _id = useParams();
 
     async function loadUserInfo() {
         try {
-            const res = await axios.get("/userInfo/findByEmail", {
-                params: { email: "maxmustermann@gmail.com" } //replace this after having user session
+            const res = await axios.get("/userInfo/findUser", {
+                params: { _id: _id }  //replace this after having user session
             });
             setUserInfo(res.data);
         } catch (error) {
@@ -47,7 +49,7 @@ const DeveloperHomepage = () => {
     }
 
     return (
-        <Box sx={{ display: 'flex', height: '85%' }}>
+        <Box sx={{ display: 'flex', height: '85%', backgroundColor: 'white' }}>
             <Box sx={{ flex: 1 }}>
                 <PersonalBox userInfo={userInfo} setUserInfo={setUserInfo} />
             </Box>

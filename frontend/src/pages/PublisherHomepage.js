@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Container, CircularProgress, Alert } from '@mui/material';
 import ProfileBox from '../components/PublisherHomepage/ProfileBox';
 import TabContainer from '../components/PublisherHomepage/Tab/TabContainer';
+import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 const PublisherHomepage = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const _id = useParams();
 
     async function loadUserInfo() {
         try {
-            const res = await axios.get("/userInfo/findByEmail", {
-                params: { email: "codefive@gmail.com" } //replace this after having user session
+            const res = await axios.get("/userInfo/findUser", {
+                params: { _id: _id } //replace this after having user session
             });
             setUserInfo(res.data);
         } catch (error) {

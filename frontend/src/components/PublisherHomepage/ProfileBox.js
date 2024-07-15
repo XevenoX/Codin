@@ -5,9 +5,13 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AvatarUpload from '../AvatarUpload';
 import BannerUpload from '../PublisherHomepage/BannerUpload';
+import { useCookies } from 'react-cookie';
 import axios from "axios";
 
 const ProfileBox = ({ userInfo, setUserInfo }) => {
+    // cookie
+    const [cookies] = useCookies(['user']); // 读取 'user' cookie
+    const currentUser = cookies.user;
     const [tempUserInfo, setTempUserInfo] = useState(userInfo);
     const [isEditing, setIsEditing] = useState(false);
     const [rating, setRating] = useState(null);
@@ -79,16 +83,6 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
             border: '0.5px solid grey',
             borderRadius: '5px'
         }}>
-            {/* <img
-                src="/banner.jpg"
-                alt="Banner"
-                style={{
-                    width: '100%',
-                    height: '50%',
-                    objectFit: 'cover',
-                    borderRadius: '5px 5px 0px 0px'
-                }}
-            /> */}
             <BannerUpload userInfo={userInfo} objectFit={'cover'} />
             <Box
                 sx={{
@@ -137,9 +131,12 @@ const ProfileBox = ({ userInfo, setUserInfo }) => {
                             <Typography variant="body1" sx={{ cursor: 'text', whiteSpace: 'pre-wrap', color: 'grey' }}>
                                 {userInfo.slogan}
                             </Typography>
-                            <IconButton onClick={handleEditClick}>
-                                <EditIcon />
-                            </IconButton>
+                            {/* only allow the owner to edit */}
+                            {currentUser.email === userInfo.email && (
+                                <IconButton onClick={handleEditClick}>
+                                    <EditIcon />
+                                </IconButton>
+                            )}
                         </Box>
                     )}
                 </Box>
