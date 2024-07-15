@@ -1,51 +1,52 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import InputAdornment from "@mui/material/InputAdornment";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Rating from "@mui/material/Rating";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import { FixedSizeList } from "react-window";
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
-import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import ButtonBase from "@mui/material/ButtonBase";
-import BusinessIcon from "@mui/icons-material/Business";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import HourglassTopIcon from "@mui/icons-material/HourglassTop";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ImageListItemBar from "@mui/material/ImageListItemBar";
+import React from 'react';
+import { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import InputAdornment from '@mui/material/InputAdornment';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Rating from '@mui/material/Rating';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { FixedSizeList } from 'react-window';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import ButtonBase from '@mui/material/ButtonBase';
+import BusinessIcon from '@mui/icons-material/Business';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ApplicantsList({ data }) {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [sortBy, setSortBy] = useState("rating"); // set default sorting method
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortBy, setSortBy] = useState('rating'); // set default sorting method
+  const [sortOrder, setSortOrder] = useState('desc');
   const [showCompare, setShowCompare] = useState(false);
+  const navigate = useNavigate();
 
   const handleSortingChange = (event) => {
     setSortBy(event.target.value);
-    if (event.target.value === "rating") {
-      setSortOrder("desc");
+    if (event.target.value === 'rating') {
+      setSortOrder('desc');
     } else {
-      setSortOrder("desc");
+      setSortOrder('desc');
     }
   };
-
 
   const handleCheckboxChange = (event, item) => {
     const itemId = item._id;
@@ -59,36 +60,34 @@ export default function ApplicantsList({ data }) {
   const handleCompare = () => {
     setShowCompare(true);
   };
-
+  const handleSeeMoreClick = (item) => {
+    navigate(`/developerhomepage/${item._id}`);
+  };
   const sortedData = [...data].sort((a, b) => {
-    if (sortBy === "rating") {
-      return sortOrder === "desc"
+    if (sortBy === 'rating') {
+      return sortOrder === 'desc'
         ? b.averageRating - a.averageRating
         : a.averageRating - b.averageRating;
-    }else if (sortBy === "reviews") {
-      return sortOrder === "desc"
+    } else if (sortBy === 'reviews') {
+      return sortOrder === 'desc'
         ? b.ratingCount - a.ratingCount
         : a.ratingCount - b.ratingCount;
-    }
-    else if (sortBy === "first_applied") {
+    } else if (sortBy === 'first_applied') {
       // todo : how to sort with date type
-      return sortOrder === "asc"
+      return sortOrder === 'asc'
         ? new Date(b.apply_time) - new Date(a.apply_time)
         : new Date(a.apply_time) - new Date(b.apply_time);
-    }else if (sortBy === "newest") {
+    } else if (sortBy === 'newest') {
       // todo : how to sort with date type
-      return sortOrder === "desc"
+      return sortOrder === 'desc'
         ? new Date(b.apply_time) - new Date(a.apply_time)
         : new Date(a.apply_time) - new Date(b.apply_time);
     }
-    // todo: Add more sorting options 
+    // todo: Add more sorting options
     return 0;
   });
 
-  const selectedData = data.filter((item) =>
-    selectedItems.includes(item._id)
-  );
-
+  const selectedData = data.filter((item) => selectedItems.includes(item._id));
 
   if (data.length > 0) {
     return (
@@ -114,10 +113,10 @@ export default function ApplicantsList({ data }) {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="candidate-sorting"
-                  value={sortBy || ""}
+                  value={sortBy || ''}
                   onChange={handleSortingChange}
                   displayEmpty
-                  inputProps={{ "aria-label": "Sort By" }}
+                  inputProps={{ 'aria-label': 'Sort By' }}
                 >
                   <MenuItem value="first_applied">First Applied</MenuItem>
                   <MenuItem value="newest">Newest</MenuItem>
@@ -130,14 +129,18 @@ export default function ApplicantsList({ data }) {
         </Grid>
 
         <Box>
-          <ImageList sx={{ width: "75%", height: 450 }}>
+          <ImageList sx={{ width: '75%', height: 450 }}>
             {sortedData.map((item) => (
               <ImageListItem key={item._id}>
                 <Card sx={{ minWidth: 180 }}>
-                  <CardContent sx={{ width: "100%" }}>
-                    <Typography variant="h5" component="div">
-                      {item.name}
-                    </Typography>
+                  <CardContent sx={{ width: '100%' }}>
+                    <Link
+                      to={`/developerhomepage/${item._id}`}
+                    >
+                      <Typography variant="h5" component="div">
+                        {item.name}
+                      </Typography>
+                    </Link>
                     <Rating
                       name="read-only"
                       value={parseFloat(item.averageRating)}
@@ -165,62 +168,72 @@ export default function ApplicantsList({ data }) {
                       {item.apply_time}
                       <br />
                     </Typography>
-                    <FormControlLabel control={<Checkbox checked={selectedItems.includes(item._id)}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedItems.includes(item._id)}
                           onChange={(e) => handleCheckboxChange(e, item)}
-                          value={item._id}/>} />
+                          value={item._id}
+                        />
+                      }
+                    />
                   </CardContent>
                   <CardActions>
-                    <Button size="contained">See More</Button>
+                    <Button size="contained" onClick={() => handleSeeMoreClick(item)}>See More</Button>
                   </CardActions>
                 </Card>
               </ImageListItem>
             ))}
           </ImageList>
           <Grid>
-            <Button variant="contained"
+            <Button
+              variant="contained"
               onClick={handleCompare}
-              disabled={selectedItems.length === 0}>Compare</Button>
+              disabled={selectedItems.length === 0}
+            >
+              Compare
+            </Button>
             <Button variant="contained">Offer</Button>
           </Grid>
           {showCompare && (
-          <ImageList
-            sx={{ width: "75%", height: 450, mt: 2, spacing: 4 }}
-            cols={3}
-            rowHeight={350}
-          >
-            {selectedData.map((item) => (
-              <ImageListItem key={item._id}>
-                <Card sx={{ backgroundColor: "#e6f2ff" }}>
-                  <CardContent>
-                    <Typography variant="h5" component="div">
-                      {item.name}
-                    </Typography>
+            <ImageList
+              sx={{ width: '75%', height: 450, mt: 2, spacing: 4 }}
+              cols={3}
+              rowHeight={350}
+            >
+              {selectedData.map((item) => (
+                <ImageListItem key={item._id}>
+                  <Card sx={{ backgroundColor: '#e6f2ff' }}>
+                    <CardContent>
+                      <Typography variant="h5" component="div">
+                        {item.name}
+                      </Typography>
 
-                    <Typography variant="body2">
-                      {item.location}
-                      <br />
-                    </Typography>
-                    <Typography variant="body2">
-                      {item.school}
-                      <br />
-                    </Typography>
-                    <Typography variant="body2">
-                      {item.website}
-                      <br />
-                    </Typography>
-                    <Typography variant="body2">
-                      {item.work_status}
-                      <br />
-                    </Typography>
-                    <Typography variant="body2">
-                      {item.skills}
-                      <br />
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </ImageListItem>
-            ))}
-          </ImageList>
+                      <Typography variant="body2">
+                        {item.location}
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        {item.school}
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        {item.website}
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        {item.work_status}
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        {item.skills}
+                        <br />
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </ImageListItem>
+              ))}
+            </ImageList>
           )}
         </Box>
       </React.Fragment>
@@ -233,7 +246,7 @@ export default function ApplicantsList({ data }) {
           alignItems="center"
           justifyContent="space-between"
           spacing={2}
-          sx={{ marginBottom: "20px" }}
+          sx={{ marginBottom: '20px' }}
         >
           <Grid item>
             <Typography noWrap variant="h5">
@@ -243,7 +256,7 @@ export default function ApplicantsList({ data }) {
           <Grid item></Grid>
         </Grid>
         <Grid>
-          <Typography variant="h5" sx={{ marginLeft: "2em" }}>
+          <Typography variant="h5" sx={{ marginLeft: '2em' }}>
             no applicants found
           </Typography>
         </Grid>
