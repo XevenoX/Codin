@@ -1,51 +1,54 @@
 import express from "express";
-import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
-// This will help us connect to the database
-import db from "../db/connection.js";
-
-// This help convert the id from string to ObjectId for the _id.
-import { ObjectId } from "mongodb";
-
-// router is an instance of the express router.
-// We use it to define our routes.
-// The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  // console.log(req.body);
   try {
-    // res.status(201).json({ message: "new user created" });
-    const { first_name, last_name, email, role, password } = req.body;
-    // TODO: error handling for missing values
+    const { name, email, role, password } = req.body;
 
-    // test if the user already exists (no need to register again)
-    const userAlreadyExists = await User.findOne({ email: email });
-    if (userAlreadyExists) {
-      throw new Error("User already exists");
-    }
+    // 使用 Mongoose 模型创建新用户
+    const newUser = new User({ name, email, role, password });
 
-    // add user
-    const newUser = {
-      first_name,
-      last_name,
-      email,
-      role,
-      password,
-    };
-    let collection = await db.collection("users");
-    let result = await collection.insertOne(newUser);
-    res.status(201).json({
-      _id: newUser._id,
-      first_name: newUser.first_name,
-      last_name: newUser.last_name,
-      email: newUser.email,
-      password: newUser.password,
-    });
+    // 保存新用户，触发 pre-save 钩子来编码密码
+    const savedUser = await newUser.save();
+
+    // 生成 JWT
+    const token = jwt.sign(
+      { _id: savedUser._id, role: savedUser.role },
+      "your_jwt_secret",
+      { expiresIn: "1h" }
+    );
+
+    // 设置 cookie 并响应新用户（不包括密码）
+    res
+      .status(201)
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      })
+      .json({
+        _id: savedUser._id,
+        name: savedUser.name,
+        email: savedUser.email,
+        role: savedUser.role,
+      });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+
+    if (err.code === 11000) {
+      return res.status(400).json({ error: "User already exists" });
+    }
+
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((val) => val.message);
+      return res.status(400).json({ error: messages });
+    }
+
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the user" });
   }
 });
 

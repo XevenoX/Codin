@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
   {
     //general user info
     email: { type: String, required: true, unique: true },
-    username: { type: String, required: true },
+    name: { type: String, required: true },
     role: { type: String, required: true },
     password: { type: String, required: true },
     website: { type: String, required: false },
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     work_status: { type: String, required: false },
     location: { type: String, required: false },
     school: { type: String, required: false },
-    skills: { type: String, required: false }
+    skills: { type: String, required: false },
   },
   { timestamps: true }
 );
