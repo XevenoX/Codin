@@ -3,6 +3,9 @@ import { Avatar, Grid, Paper, Typography, Button, Card } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
 
 const ProjectOverviewBox = ({ projectInfo }) => {
+    const isValidDate = (date) => {
+        return date instanceof Date && !isNaN(date);
+    };
 
     return (
         <div className="overview">
@@ -58,18 +61,25 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                                 WebkitBoxOrient: 'vertical',
                                             }}
                                         >
-                                            Posted {formatDistanceToNow(new Date(projectInfo.project_posttime), { addSuffix: true })} •&nbsp;
-                                            {projectInfo.project_status === 1 && (
-                                                <span>
-                                                    Close {formatDistanceToNow(new Date(projectInfo.project_deadline), { addSuffix: true })} •&nbsp;
-                                                </span>
+                                            {/* check if the date  valid before rendoring */}
+                                            {isValidDate(projectInfo.project_posttime) && (
+                                                <Typography variant="body2">
+                                                    Posted {formatDistanceToNow(projectInfo.project_posttime, { addSuffix: true })} •&nbsp;
+                                                </Typography>
                                             )}
-                                            {projectInfo.project_status === 5 && (
-                                                <span>
-                                                    Completed {formatDistanceToNow(new Date(projectInfo.project_completetime), { addSuffix: true })} •&nbsp;
-                                                </span>
+                                            {projectInfo.project_status === 1 && isValidDate(projectInfo.project_deadline) && (
+                                                <Typography variant="body2">
+                                                    Close {formatDistanceToNow(projectInfo.project_deadline, { addSuffix: true })} •&nbsp;
+                                                </Typography>
                                             )}
-                                            {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
+                                            {projectInfo.project_status === 5 && isValidDate(projectInfo.project_completetime) && (
+                                                <Typography variant="body2">
+                                                    Completed {formatDistanceToNow(projectInfo.project_completetime, { addSuffix: true })} •&nbsp;
+                                                </Typography>
+                                            )}
+                                            <Typography variant="body2">
+                                                {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
+                                            </Typography>
                                         </Typography>
                                     </Grid>
                                     <Grid item className="task-title">
