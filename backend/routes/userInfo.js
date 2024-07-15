@@ -17,22 +17,48 @@ router.get("/", async (req, res) => {
   }
 });
 
-// load user info by email
-router.get("/findByEmail", async (req, res) => {
+// // load user info by email
+// router.get("/findByEmail", async (req, res) => {
+//   try {
+//     const email = req.query.email;
+//     if (!email) {
+//       return res.status(400).send("Email is required");
+//     }
+//     const db = getDB();
+//     let collection = await db.collection("users");
+
+//     const user = await collection.findOne({ email: email });
+
+//     if (!user) {
+//       return res.status(404).send("User not found");
+//     }
+
+//     res.status(200).json(user);
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     res.status(500).send("Internal server error");
+//   }
+// });
+
+// Load user info by email or objectid
+router.get("/findUser", async (req, res) => {
   try {
-    const email = req.query.email;
-    if (!email) {
-      return res.status(400).send("Email is required");
+    const { email, _id } = req.query;
+    if (!email && !_id) {
+      return res.status(400).send("Either email or objectid is required");
     }
     const db = getDB();
-    let collection = await db.collection("users");
-
-    const user = await collection.findOne({ email: email });
-
+    const collection = db.collection("users");
+    let query = {};
+    if (email) {
+      query.email = email;
+    } else if (_id) {
+      query._id = new ObjectId(_id);
+    }
+    const user = await collection.findOne(query);
     if (!user) {
       return res.status(404).send("User not found");
     }
-
     res.status(200).json(user);
   } catch (error) {
     console.error("Error fetching user:", error);
