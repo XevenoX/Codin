@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Chart } from 'react-google-charts';
 import '../styles/ProjectManagementPage.css';
 
 const ProjectManagementPage = () => {
@@ -10,14 +11,13 @@ const ProjectManagementPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.defaults.baseURL =
-            process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
+        axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
         const getProjects = async () => {
             try {
                 const res = await axios.get('/projectpage');
+                console.log('Fetched projects:', res.data); // 打印获取的数据
                 setProjects(res.data);
                 setLoading(false);
-                console.log('Fetched projects:', res.data);
             } catch (err) {
                 console.error('Error fetching projects:', err);
                 setError(err);
@@ -39,6 +39,29 @@ const ProjectManagementPage = () => {
         return <div>Error: {error.message}</div>;
     }
 
+    // 计算项目所有收入的总和，确保项目预算是有效的数字
+    const totalIncome = projects.reduce((sum, project) => {
+        const income = Number(project.project_budget);
+        return sum + (isNaN(income) ? 0 : income);
+    }, 0);
+
+    // Prepare data for the chart
+    const chartData = [
+        ['Date', 'Income'],
+        ...projects.map(project => [
+            new Date(project.project_posttime).toLocaleDateString('en-GB', { year: 'numeric', month: 'short' }),
+            project.project_budget
+        ])
+    ];
+
+    const chartOptions = {
+        title: '',
+        curveType: 'function',
+        legend: { position: 'bottom' },
+        hAxis: { title: 'Date', format: 'MMM yyyy' },
+        vAxis: { title: 'Income', minValue: 0 },
+    };
+
     return (
         <div>
             <header>
@@ -57,11 +80,17 @@ const ProjectManagementPage = () => {
             <main>
                 <div className="dashboard">
                     <div className="graph">
-                        <div className="graph-info">
-                            <span className="value">Value</span>
-                            <span className="amount">$2,987</span>
-                        </div>
-                        <img src="graph-placeholder.png" alt="Graph" />
+                        <Chart
+                            chartType="LineChart"
+                            width="800px"
+                            height="400px"
+                            data={chartData}
+                            options={chartOptions}
+                        />
+                    </div>
+                    <div className="graph-info">
+                        <span className="value">Total Income</span>
+                        <span className="amount">${totalIncome.toLocaleString()}</span>
                     </div>
                     <div className="stats">
                         <div className="stat achieved">
