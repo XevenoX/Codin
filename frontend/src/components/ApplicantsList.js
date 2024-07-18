@@ -72,10 +72,13 @@ export default function ApplicantsList({ data, budget }) {
   const user = {
     _id: '668a5888c8ffc377f5295970',
   };
-  const handlePayed = async () => {
+  const handlePayed = async (data) => {
+    console.log("handlePayed",data);
     const requestBody = {
       value: offerAmount,
       _id: user._id,
+      payPalData:data,
+      chosen_applicant:selectedItems,
     };
 
     try {
@@ -403,7 +406,7 @@ export default function ApplicantsList({ data, budget }) {
                 ) => {
                   try {
                     const response = await fetch(
-                      `/api/orders/${data.orderID}/capture`,
+                      `http://localhost:5050/paypal/orders/${data.orderID}/capture`,
 
                       {
                         method: 'POST',
@@ -457,6 +460,7 @@ export default function ApplicantsList({ data, budget }) {
 
                         JSON.stringify(orderData, null, 2)
                       );
+                      handlePayed(orderData);
                     }
                   } catch (error) {
                     console.error(error);

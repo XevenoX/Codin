@@ -162,11 +162,10 @@ router.post("/orders", async (req, res) => {
     }
     if(cart[0].id==="Project"){
         amount=cart[0].quantity;
-
-
     }
     console.log("amount", amount);
     const { jsonResponse, httpStatusCode } = await createOrder(cart);
+    console.log("jsonResponse",jsonResponse);
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
     console.error("Failed to create order:", error);
@@ -174,10 +173,12 @@ router.post("/orders", async (req, res) => {
   }
 });
 
-router.post("/api/orders/:orderID/capture", async (req, res) => {
+router.post("/orders/:orderID/capture", async (req, res) => {
+    console.log("Sucessfully connected to capture api");
   try {
     const { orderID } = req.params;
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+    console.log("jsonResponse",jsonResponse);
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
     console.error("Failed to create order:", error);
