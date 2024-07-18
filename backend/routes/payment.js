@@ -150,17 +150,21 @@ router.post("/project/:id", async (req, res) => {
       amount:req.body.value,
     };
     
-    let collection = await db.collection("payedProjects");
+    let collection = await db.collection("paidProjects");
     
     let payment = await collection.insertOne(newDocument);
     console.log(payment);
 
     let updates ={
-      payed:req.body.payPalData.id,
+      paid:req.body.payPalData.id,
+      chosen_applicant:new ObjectId(req.body.chosen_applicant[0]),
+      project_status:2, //set status to awaiting acceptance
     };
     
     let result = await db.collection("projects").updateOne({ _id: new ObjectId(id) }, { $set: updates });
     res.status(201).json({ result });
+
+
     // let query = { _id: new ObjectId(id) };
     // console.log(id);
     // const update = {
