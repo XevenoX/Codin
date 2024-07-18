@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.16.0",
     "@mui/lab": "^5.0.0-alpha.171",
     "@mui/material": "^5.16.0",
+    "@mui/styles": "^5.16.4",
     "@mui/x-date-pickers": "^7.9.0",
     "@paypal/react-paypal-js": "^8.5.0",
     "@testing-library/jest-dom": "^6.4.6",
