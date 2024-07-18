@@ -124,6 +124,7 @@ router.get("/developer/:id", async (req, res) => {
       console.log(publisher);
       project.publisher_id = project.project_publisher;
       project.project_publisher = publisher.name;
+      project.avatar = publisher.avatar;
       // console.log(publisher.name);
     }
 

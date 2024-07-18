@@ -65,6 +65,7 @@ export default function ProjectDetailDeveloper() {
         const data = await response.json();
         setProjectDetails(data);
         console.log(data);
+        
 
         
       } catch (error) {
@@ -73,6 +74,7 @@ export default function ProjectDetailDeveloper() {
         setLoading(false);
       }
     };
+
     
 
     fetchProjectDetails();
@@ -111,7 +113,7 @@ export default function ProjectDetailDeveloper() {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Stack direction="row" spacing={2} alignItems="center" mt={2}>
-            <Avatar sx={{ width: 100, height: 100 }} variant="rounded"></Avatar>
+            <Avatar sx={{ width: 100, height: 100 }} variant="rounded" src={projectDetails.avatar} alt="Logo"></Avatar>
             <Typography noWrap variant="h4">
               {projectDetails.project_name}
             </Typography>
