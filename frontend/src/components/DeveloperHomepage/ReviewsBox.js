@@ -13,7 +13,6 @@ const ReviewsBox = ({ userInfo }) => {
                     _id: userInfo._id
                 }
             });
-            // console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Error fetching average rating:', error);

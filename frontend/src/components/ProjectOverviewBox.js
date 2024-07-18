@@ -1,11 +1,19 @@
 import * as React from 'react';
-import { Avatar, Grid, Paper, Typography, Button, Card } from '@mui/material';
+import { Avatar, Grid, Typography, Button, Card } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectOverviewBox = ({ projectInfo }) => {
+    const navigate = useNavigate();
     const isValidDate = (date) => {
         return date instanceof Date && !isNaN(date);
     };
+    const handleSeeMoreClick = () => {
+        navigate(`/projectdetail/developer/${projectInfo._id}`);
+    };
+    const project_posttime_parsed = new Date(projectInfo.project_posttime);
+    const project_deadline_parsed = new Date(projectInfo.project_deadline);
+    const project_completetime_parsed = new Date(projectInfo.project_completetime);
 
     return (
         <div className="overview">
@@ -14,8 +22,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                 sx={{
                     p: 2,
                     margin: 1,
-                    // width: 1000,
-                    // height: 175,
                     flexGrow: 1,
                     display: 'flex',
                     alignItems: 'center',
@@ -58,28 +64,28 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                                 textOverflow: 'ellipsis',
                                                 display: '-webkit-box',
                                                 WebkitLineClamp: 2,
-                                                WebkitBoxOrient: 'vertical',
+                                                WebkitBoxOrient: 'horizontal',
                                             }}
                                         >
                                             {/* check if the date  valid before rendoring */}
-                                            {isValidDate(projectInfo.project_posttime) && (
-                                                <Typography variant="body2">
-                                                    Posted {formatDistanceToNow(projectInfo.project_posttime, { addSuffix: true })} •&nbsp;
-                                                </Typography>
+                                            {isValidDate(project_posttime_parsed) && (
+                                                <span sx={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.43, letterSpacing: '0.01071em' }}>
+                                                    Posted {formatDistanceToNow(project_posttime_parsed, { addSuffix: true })} •&nbsp;
+                                                </span>
                                             )}
-                                            {projectInfo.project_status === 1 && isValidDate(projectInfo.project_deadline) && (
-                                                <Typography variant="body2">
-                                                    Close {formatDistanceToNow(projectInfo.project_deadline, { addSuffix: true })} •&nbsp;
-                                                </Typography>
+                                            {projectInfo.project_status === 1 && isValidDate(project_deadline_parsed) && (
+                                                <span sx={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.43, letterSpacing: '0.01071em' }}>
+                                                    Close {formatDistanceToNow(project_deadline_parsed, { addSuffix: true })} •&nbsp;
+                                                </span>
                                             )}
-                                            {projectInfo.project_status === 5 && isValidDate(projectInfo.project_completetime) && (
-                                                <Typography variant="body2">
-                                                    Completed {formatDistanceToNow(projectInfo.project_completetime, { addSuffix: true })} •&nbsp;
-                                                </Typography>
+                                            {projectInfo.project_status === 5 && isValidDate(project_completetime_parsed) && (
+                                                <span sx={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.43, letterSpacing: '0.01071em' }}>
+                                                    Completed {formatDistanceToNow(project_completetime_parsed, { addSuffix: true })} •&nbsp;
+                                                </span>
                                             )}
-                                            <Typography variant="body2">
+                                            <span sx={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.43, letterSpacing: '0.01071em' }}>
                                                 {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
-                                            </Typography>
+                                            </span>
                                         </Typography>
                                     </Grid>
                                     <Grid item className="task-title">
@@ -165,7 +171,7 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                 sx={{ width: '120px', height: '80px' }} />
                         </Grid>
                         <Grid item sx={{ flexGrow: 0 }}>
-                            <Button variant="contained" size='small' sx={{ width: '120px' }}>
+                            <Button variant="contained" size='small' sx={{ width: '120px' }} onClick={handleSeeMoreClick}>
                                 See More
                             </Button>
                         </Grid>

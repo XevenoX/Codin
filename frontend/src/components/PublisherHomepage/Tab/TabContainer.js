@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Typography, Tabs, Tab, Box } from '@mui/material';
+import React from 'react';
+import { Tabs, Tab, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import OverviewTab from './OverviewTab';
 import ProjectsTab from './ProjectsTab';
