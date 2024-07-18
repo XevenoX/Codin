@@ -34,31 +34,12 @@ export default function ProjectDetailDeveloper() {
 
   // get user info with cookies when login function is fixed
 
-  // const [cookies] = useCookies(['user']); 
-  // const user = cookies.user;
-  const user = {
-    //subscription stored as Date()
+  const [cookies] = useCookies(['user']); 
+  const user = cookies.user;
+  // const user = {
+  //   _id: "668b84861e61ca37c5498f63",  //test developer: candidate 2
+  // };
 
-    // applicantId: "667c33a8c6d615bee2e0ba0e",
-    // applicantId: "668b843e1e61ca37c5498f62",  //test developer: candidate 1  
-    // subscription: "2024-09-01T22:00:00.000+00:00",    //activated 
-    _id: "668b84861e61ca37c5498f63",  //test developer: candidate 2
-    // subscription: "2024-09-01T22:00:00.000+00:00",    //activated
-    // applicantId: "668b916896511d11d3954842",  //test developer: candidate 3
-    // subscription: "2024-09-01T22:00:00.000+00:00",    //activated
-    // applicantId: "668b917e96511d11d3954843",  //test developer: candidate 4
-    // subscription: "2024-09-01T22:00:00.000+00:00",    //activated
-    // applicantId: "668dc28d4c46544ea6f319dc",  //test developer: candidate 5
-    // subscription: "2024-09-01T22:00:00.000+00:00",    //activated  
-
-
-
-    // applicantId: "668f96576ea26d5feb7a9a61",  //test developer: w/o subscription
-    // subscription: "2024-07-01T22:00:00.000+00:00", //deactivated 
-  };
-  // const subscription = 1; //repalce with user.subscription (date) - current date >0
-  // const subscription = 0;
-  //  const applicantId = '667c33a8c6d615bee2e0ba0e';
 
   const { id } = useParams(); //get project id
 
@@ -93,10 +74,10 @@ export default function ProjectDetailDeveloper() {
       }
     };
     const fetchSubscription = async () => {
-      console.log("user._id",user._id);
+      console.log("user._id",user.id);
       try{
       const response = await fetch(
-        `http://localhost:5050/payment/checkSubscription/${user._id}`
+        `http://localhost:5050/payment/checkSubscription/${user.id}`
       ); // Adjust the URL according to your API endpoint
       if (!response.ok) {
         throw new Error('Network response was not ok');
