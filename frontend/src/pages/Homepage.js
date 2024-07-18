@@ -27,7 +27,7 @@ const Homepage = ({ onLogin }) => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Box>
+          <Box sx={{ width: { xs: '80%', sm: '80%', md: '80%' } }}>
             <TagsScroll />
           </Box>
         </Box>

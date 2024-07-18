@@ -64,7 +64,7 @@ export default function Navigation({ user, onLogout }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar sx={{ justifyContent: 'space-between', width: '53%' }}>
+        <Toolbar sx={{ justifyContent: 'space-between', width: '73%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: 'auto' }}>
             <Box
               component={Link}
