@@ -133,7 +133,7 @@ export default function Navigation({ user, onLogout }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar sx={{ justifyContent: 'space-between', width: '73%', height: '45px' }}>
+        <Toolbar variant="dense" sx={{ justifyContent: 'space-between', width: '73%', maxHeight: '35px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: 'auto' }}>
             <Box
               component={Link}
@@ -144,7 +144,7 @@ export default function Navigation({ user, onLogout }) {
                 textDecoration: 'none',
               }}
             >
-              <img src={codinLogo} alt="Logo" style={{ height: '50px' }} />
+              <img src={codinLogo} alt="Logo" style={{ height: '40px' }} />
             </Box>
             <Typography variant="h6" component="div" sx={{ ml: 20 }}>
               <Link
@@ -220,7 +220,7 @@ export default function Navigation({ user, onLogout }) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-                <Avatar sx={{ width: 50, height: 50 }} src={avatar}></Avatar>
+                <Avatar sx={{ width: 40, height: 40 }} src={avatar}></Avatar>
               </IconButton>
             </Tooltip>
             <Menu
