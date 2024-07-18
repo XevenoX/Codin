@@ -20,6 +20,7 @@ export default function Navigation({ user, onLogout }) {
   const [cookies] = useCookies(['user']);
   const currentUser = cookies.user;
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [subscription, setSubscription] = useState(false);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
@@ -105,11 +106,32 @@ export default function Navigation({ user, onLogout }) {
     }
   }
 
+  const fetchSubscription = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5050/payment/checkSubscription/${currentUser.id}`
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      let isSubscribed = false;
+      if (new Date(result.newest) - new Date() > 0) {
+        isSubscribed = true;
+      };
+      setSubscription(isSubscribed);
+    } catch (error) {
+      console.error("Failed to fetch subscription details:", error);
+    }
+  };
+
   useEffect(() => {
     if (currentUser) {
       axios.defaults.baseURL = "http://localhost:5050";
       loadAvatar();
       loadMessages();
+      fetchSubscription();
+      console.log(subscription);
     }
   }, [currentUser]);
 
@@ -220,7 +242,17 @@ export default function Navigation({ user, onLogout }) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-                <Avatar sx={{ width: 40, height: 40 }} src={avatar}></Avatar>
+                {(subscription) ? (
+                  <Badge badgeContent='V' color="warning"
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}>
+                    <Avatar sx={{ width: 40, height: 40 }} src={avatar}></Avatar>
+                  </Badge>
+                ) : (
+                  <Avatar sx={{ width: 40, height: 40 }} src={avatar}></Avatar>
+                )}
               </IconButton>
             </Tooltip>
             <Menu
