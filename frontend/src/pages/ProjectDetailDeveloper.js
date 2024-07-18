@@ -105,11 +105,7 @@ export default function ProjectDetailDeveloper() {
       noValidate
       autoComplete="off"
     >
-      <Grid>
-        <IconButton aria-label="arrow-back">
-          <ArrowBackIcon />
-        </IconButton>
-      </Grid>
+
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Stack direction="row" spacing={2} alignItems="center" mt={2}>
