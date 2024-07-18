@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -20,6 +21,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { de } from 'date-fns/locale';
 import { parseISO, formatISO } from 'date-fns';
 const timeZone = 'Europe/Berlin';
+const [cookies] = useCookies(['user']); 
+const user = cookies.user;
 
 export default function ProjectCreate() {
   const [projectName, setProjectName] = useState('');
@@ -61,7 +64,6 @@ export default function ProjectCreate() {
     useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const projectPublisher = '668a5653c58cdc0358393661'; //replace with params later
 
   const getBerlinDate = () => {
     return new Date();
@@ -119,7 +121,7 @@ export default function ProjectCreate() {
           projectBudget,
           projectApplicationDeadline: isoDate,
           projectDuration,
-          projectPublisher,
+          projectPublisher:user.id,
           projectLabels: Object.keys(projectLabels).filter(
             (label) => projectLabels[label] === 1
           ),
@@ -152,6 +154,7 @@ export default function ProjectCreate() {
     setisApplicationDeadlineValid(isValid);
   };
 
+ if(user.role=="publisher"){
   return (
     <Container
       component="project-create"
@@ -296,6 +299,7 @@ export default function ProjectCreate() {
       </Box>
     </Container>
   );
+ }
 }
 
 function LabelCheckboxList({ projectLabels, handleCheckboxChange }) {
