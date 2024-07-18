@@ -7,7 +7,7 @@ dotenv.config({ path: "./.env" });
 
 const router = express.Router();
 
-const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET  } = process.env;
+const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 const app = express();
 
@@ -16,7 +16,30 @@ app.use(express.static("client"));
 
 // parse post params sent in body in json format
 app.use(express.json());
+let amount="";
 
+const plans = [
+    {
+      value: "1",
+      length: "trial",
+      plan: "1",
+    },
+    {
+      value: "5",
+      length: "month",
+      plan: "2",
+    },
+    {
+      value: "10",
+      length: "quarter",
+      plan: "3",
+    },
+    {
+      value: "30",
+      length: "year",
+      plan: "4",
+    },
+  ];
 /**
  * Generate an OAuth 2.0 access token for authenticating with PayPal REST APIs.
  * @see https://developer.paypal.com/api/rest/authentication/
@@ -27,7 +50,7 @@ const generateAccessToken = async () => {
       throw new Error("MISSING_API_CREDENTIALS");
     }
     const auth = Buffer.from(
-      PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET,
+      PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET
     ).toString("base64");
     const response = await fetch(`${base}/v1/oauth2/token`, {
       method: "POST",
@@ -52,32 +75,11 @@ const createOrder = async (cart) => {
   // use the cart information passed from the front-end to calculate the purchase unit details
   console.log(
     "shopping cart information passed from the frontend createOrder() callback:",
-    cart,
+    cart
   );
 
   const accessToken = await generateAccessToken();
-  const plans = [
-    {
-      value: '1',
-      length: 'trial',
-      plan: '1',
-    },
-    {
-      value: '5',
-      length: 'month',
-      plan: '2',
-    },
-    {
-      value: '10',
-      length: 'quarter',
-      plan: '3',
-    },
-    {
-      value: '30',
-      length: 'year',
-      plan: '4',
-    },
-  ];
+ 
   const url = `${base}/v2/checkout/orders`;
   const payload = {
     intent: "CAPTURE",
@@ -85,7 +87,7 @@ const createOrder = async (cart) => {
       {
         amount: {
           currency_code: "EUR",
-          value: plans[0].value,
+          value: amount,
         },
       },
     ],
@@ -149,7 +151,14 @@ router.post("/orders", async (req, res) => {
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
     const { cart } = req.body;
-    console.log("cart",cart);
+    console.log("cart", cart);
+    plans.forEach(plan => {
+        console.log(cart.quantity,plan.plan,plan);
+      if ((cart[0].quantity === plan.plan)) {
+        amount=plan.value;
+      }
+    });
+    console.log("amount", amount);
     const { jsonResponse, httpStatusCode } = await createOrder(cart);
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
@@ -173,6 +182,5 @@ router.post("/api/orders/:orderID/capture", async (req, res) => {
 router.get("/", (req, res) => {
   res.sendFile(path.resolve("./client/checkout.html"));
 });
-
 
 export default router;

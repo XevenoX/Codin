@@ -237,7 +237,7 @@ const user = cookies.user;
         </FormControl>
         <Grid>
         <PayPalScriptProvider options={initialOptions}>
-          {/* <ButtonBehavior plans={plans} selectedPlan={selectedPlan}/> */}
+          
           <PayPalButtons
             style={{
               shape: 'rect',
@@ -266,7 +266,7 @@ const user = cookies.user;
                       {
                         id: "Subscription Plan",
 
-                        quantity: "1",
+                        quantity: selectedPlanRef.current,
                       },
                     ],
                   }),
