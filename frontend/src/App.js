@@ -15,6 +15,7 @@ import CompanyProjectManagementPage from './pages/CompanyProjectManagementPage';
 import GanttChartPage from './pages/GanttChartPage';
 import Navigation from './components/Navigation';
 import ProtectedRoute from './components/ProtectedRoute';
+import Footer from './components/Footer.js';
 
 function App() {
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
@@ -69,6 +70,7 @@ function App() {
             />
           </Route>
         </Routes>
+        <Footer />
       </Router>
     </CookiesProvider>
   );
