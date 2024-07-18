@@ -21,7 +21,9 @@ const Homepage = ({ onLogin }) => {
             alignItems: 'center',
           }}
         >
-          <SignIn onLogin={onLogin} />
+          <Box sx={{ width: { xs: '80%', sm: '70%', md: '60%' }, mb: 14 }}>
+            <SignIn onLogin={onLogin} />
+          </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Box sx={{ width: '60%' }}>

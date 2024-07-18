@@ -13,8 +13,16 @@ import Alert from '@mui/material/Alert';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
+
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
 
 const MarketPlace = () => {
+  const query = useQuery();
+  const initialCategory = query.get('category');
+
   const [cookies] = useCookies(['user']);
   const user = cookies.user;
 
@@ -27,7 +35,9 @@ const MarketPlace = () => {
   const [totalProjects, setTotalProjects] = useState(0);
   const [sortCriteria, setSortCriteria] = useState('priceAsc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(
+    initialCategory ? [initialCategory] : []
+  );
 
   const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(

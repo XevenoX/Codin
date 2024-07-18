@@ -21,8 +21,6 @@ export default function Categories({
   };
 
   const categories = [
-    'Java',
-    'JavaScript',
     'React',
     'NodeJS',
     'Python',
@@ -32,8 +30,8 @@ export default function Categories({
     'CSS',
     'Angular',
     'Vue',
-    'TypeScript',
     'jQuery',
+    'Java',
     'Bootstrap',
     'Sass',
     'TailwindCSS',

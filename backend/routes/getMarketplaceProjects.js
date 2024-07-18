@@ -86,8 +86,8 @@ router.get("/projects", async (req, res) => {
       query.project_labels = { $all: categoriesArray }; // 确保项目包含所有 selectedCategories
     }
 
-    console.log("Query:", JSON.stringify(query, null, 2)); // 打印查询条件
-    console.log("Sort Criteria:", JSON.stringify(sortCriteria, null, 2)); // 打印排序条件
+    // console.log("Query:", JSON.stringify(query, null, 2)); // 打印查询条件
+    // console.log("Sort Criteria:", JSON.stringify(sortCriteria, null, 2)); // 打印排序条件
 
     // 获取符合条件的项目，并关联发布者信息
     const projects = await collection

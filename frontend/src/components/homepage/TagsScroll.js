@@ -8,19 +8,28 @@ import {
   IconButton,
 } from '@mui/material';
 import { ChevronRight, ChevronLeft } from '@mui/icons-material';
-import frontEndPic from '../../pics/Tags/Frontend.png';
+import { useNavigate } from 'react-router-dom';
+import reactPic from '../../pics/Tags/React.png';
+import mongodbPic from '../../pics/Tags/mongodb.png';
+import pythonPic from '../../pics/Tags/python.png';
+import nodeJSPic from '../../pics/Tags/nodejs.png';
+import phpPic from '../../pics/Tags/php.png';
+import mysqlPic from '../../pics/Tags/sql.png';
+import vuePic from '../../pics/Tags/vue.png';
 
 const destinations = [
-  { name: 'Frontend', image: frontEndPic },
-  { name: 'Material UI', image: '/api/placeholder/300/200' },
-  { name: 'React', image: '/api/placeholder/300/200' },
-  { name: 'MongoDB', image: '/api/placeholder/300/200' },
-  { name: 'JavaScript', image: '/api/placeholder/300/200' },
-  { name: 'NodeJS', image: '/api/placeholder/300/200' },
+  { name: 'Python', image: pythonPic },
+  { name: 'PHP', image: phpPic },
+  { name: 'React', image: reactPic },
+  { name: 'MongoDB', image: mongodbPic },
+  { name: 'NodeJS', image: nodeJSPic },
+  { name: 'MySQL', image: mysqlPic },
+  { name: 'Vue', image: vuePic },
   // Add more destinations as needed
 ];
 
 const TagsScroll = () => {
+  const navigate = useNavigate();
   const scrollContainerRef = useRef(null);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -46,6 +55,10 @@ const TagsScroll = () => {
     }
   };
 
+  const handleCardClick = (name) => {
+    navigate(`/marketplace?category=${name}`);
+  };
+
   return (
     <Box sx={{ position: 'relative', py: 4 }}>
       <Typography variant="h4" component="h2" gutterBottom>
@@ -60,6 +73,7 @@ const TagsScroll = () => {
         sx={{
           display: 'flex',
           overflowX: 'auto',
+          mt: 3,
           scrollbarWidth: 'none',
           '&::-webkit-scrollbar': {
             display: 'none',
@@ -72,12 +86,12 @@ const TagsScroll = () => {
         {destinations.map((destination, index) => (
           <Card
             key={index}
-            component="a"
-            href={`/marketplace?destination=${destination.name}`}
+            onClick={() => handleCardClick(destination.name)}
             sx={{
               width: 250,
               mr: 2,
               transition: 'transform 0.3s',
+              cursor: 'pointer',
               '&:hover': {
                 transform: 'scale(1.05)',
               },
@@ -88,10 +102,10 @@ const TagsScroll = () => {
               height="140"
               image={destination.image}
               alt={destination.name}
-              sx={{ width: '150px', height: 'auto', ml: 7 }}
+              sx={{ width: '80px', height: 'auto', ml: 10 }}
             />
             <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
+              <Typography gutterBottom variant="h7" component="div">
                 {destination.name}
               </Typography>
             </CardContent>
@@ -104,7 +118,7 @@ const TagsScroll = () => {
           sx={{
             position: 'absolute',
             left: 0,
-            top: '50%',
+            top: '60%', // 向下移动 10%
             transform: 'translateY(-50%)',
             bgcolor: 'background.paper',
             '&:hover': { bgcolor: 'action.hover' },
@@ -120,7 +134,7 @@ const TagsScroll = () => {
           sx={{
             position: 'absolute',
             right: 0,
-            top: '50%',
+            top: '60%', // 向下移动 10%
             transform: 'translateY(-50%)',
             bgcolor: 'background.paper',
             '&:hover': { bgcolor: 'action.hover' },

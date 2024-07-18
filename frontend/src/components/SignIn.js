@@ -79,7 +79,7 @@ export default function SignIn({ onLogin }) {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h4">
             Sign in
           </Typography>
           <Box
@@ -122,11 +122,11 @@ export default function SignIn({ onLogin }) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              <Typography variant="h6">Sign in</Typography>
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/signup" variant="body2">
+                <Link href="/signup" variant="body3">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
