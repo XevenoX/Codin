@@ -4,6 +4,7 @@ import {
   FormControl,
   FormControlLabel,
   Radio,
+  Stack,
 } from '@mui/material';
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
@@ -48,29 +49,46 @@ const user = cookies.user;
   const plans = [
     {
       value: '1',
-      title: '5 days 1 euro',
-      features: ['Feature A', 'Feature B', 'Feature C'],
+      title: '5-Day Plan',
+      features: [
+        { title: 'Maximum Savings', description: 'Perfect for new users to explore the platform.' },
+        { title: 'Long-Term Access', description: 'Ideal for users who need quick access.' },
+        { title: 'Test the Waters', description: 'Great way to evaluate the platform.' }
+      ],
       length: 'trial',
       plan: '1',
     },
     {
       value: '5',
-      title: '1 month 5 euro',
-      features: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+      title: 'Monthly Plan',
+      features: [
+        { title: 'Maximum Savings', description: 'Cost-effective option for regular access.' },
+        { title: 'Long-Term Access', description: 'Ensures continuous access throughout the month.' },
+        { title: 'Flexibility', description: 'Suitable for users with short-term projects.' },
+        { title: 'Regular Access', description: 'Ensures uninterrupted access.' }
+      ],
       length: 'month',
       plan: '2',
     },
     {
       value: '10',
-      title: '3 months 10 euro',
-      features: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+      title: 'Quarterly Plan',
+      features: [
+        { title: 'Maximum Savings', description: 'Provides a significant discount.' },
+        { title: 'Long-Term Access', description: 'Ensures uninterrupted access for three months.' },
+        { title: 'Commitment Benefits', description: 'Perfect for users committed to multiple projects.' }
+      ],
       length: 'quarter',
       plan: '3',
     },
     {
       value: '30',
-      title: '1 year 30 euro',
-      features: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+      title: 'Annual Plan',
+      features: [
+        { title: 'Maximum Savings', description: 'Provides the best value, offering the lowest monthly cost.' },
+        { title: 'Long-Term Access', description: 'suitable for long-term planners.' },
+        { title: 'Priority Support', description: 'Enjoy enhanced customer support.' },
+      ],
       length: 'year',
       plan: '4',
     },
@@ -141,7 +159,8 @@ const user = cookies.user;
     margin: 0,
     '& li': {
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'left',
+      flexDirection: 'column',
       '& svg': {
         marginRight: 8,
       },
@@ -181,7 +200,7 @@ const user = cookies.user;
     <Box
       component="form"
       sx={{
-        width: '74%',
+        width: '80%',
         margin: '0 auto',
         '& .MuiTextField-root': {
           m: 1,
@@ -193,9 +212,14 @@ const user = cookies.user;
     >
       
         <Grid>
-          <Typography variant="h4" gutterBottom>
+          <Stack direction="column" spacing={2}>
+          <Typography variant="h4" gutterBottom align="center"> 
             choose your subscription plan
           </Typography>
+          <Typography variant="body1" gutterBottom color="grey" align="center">
+            Note: 1 month exactly 30 days
+          </Typography>
+          </Stack>
         </Grid>
         <FormControl component="fieldset">
           <RadioGroup
@@ -206,22 +230,30 @@ const user = cookies.user;
           >
             <Grid container spacing={2}>
               {plans.map((plan) => (
-                <Grid item xs={12} key={plan.plan}>
+                <Grid item xs={3} key={plan.plan}>
                   <FormControlLabel
                     value={plan.plan}
                     control={<Radio sx={{ display: 'none' }} />}
                     label={
                       <StyledCard selected={selectedPlan === plan.plan}>
                         <CardContent>
-                          <Typography variant="h5" component="div">
-                            {plan.title} test NOte: 1 month exactly 30 days
+                          <Typography variant="h5" component="div" align="center">
+                            {plan.title} 
+                          </Typography>
+                          <Typography variant="h5" component="div" align="center" color="#536493">
+                          €{plan.value} 
                           </Typography>
                           <FeatureList>
                             {plan.features.map((feature, index) => (
-                              <li key={index}>
+                              <li key={index} >
+                                <Stack direction="row" spacing={2}>
                                 <CheckIcon color="primary" />
-                                <Typography variant="body2">
-                                  {feature}
+                                <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                                {feature.title}
+                                </Typography>
+                                </Stack>
+                                <Typography variant="body4" style={{ fontSize: '0.8rem' }}>
+                                  {feature.description}
                                 </Typography>
                               </li>
                             ))}
@@ -235,8 +267,12 @@ const user = cookies.user;
             </Grid>
           </RadioGroup>
         </FormControl>
-        <Grid>
-        <PayPalScriptProvider options={initialOptions}>
+        <Grid container 
+        justifyContent="center" 
+        alignItems="center" 
+        sx={{ mt: 2 }}>
+        <Grid >
+        <PayPalScriptProvider options={initialOptions} >
           
           <PayPalButtons
             style={{
@@ -248,6 +284,7 @@ const user = cookies.user;
 
               label: 'paypal',
             }}
+            
             createOrder={async () => {
               try {
                 const response = await fetch('http://localhost:5050/paypal/orders', {
@@ -366,11 +403,9 @@ const user = cookies.user;
             }}
           />
           </PayPalScriptProvider>
+          </Grid>
         </Grid>
-        <Grid>
-          <Button onClick={saveOrder}>Send Test</Button>
-        </Grid>
-      
+        
     </Box>
   );
 }
