@@ -28,7 +28,7 @@ const MarketPlace = () => {
   const [totalProjects, setTotalProjects] = useState(0);
   const [sortCriteria, setSortCriteria] = useState('priceAsc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]); // 修改初始化
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(
@@ -47,14 +47,14 @@ const MarketPlace = () => {
     startDate,
     endDate,
     selectedCategories,
-  ]); // 添加 selectedCategories 依赖项
+  ]);
 
   async function loadProjects() {
     setLoading(true);
     try {
       const params = {
         page,
-        limit: 5,
+        limit: 5, // Ensure 5 projects per page
         sort: sortCriteria,
         search: searchTerm,
         minPrice: priceRange[0],
@@ -64,15 +64,16 @@ const MarketPlace = () => {
         user: user ? user.id : null,
         selectedCategories: selectedCategories
           .map((cat) => cat.toLowerCase())
-          .join(','), // 确保转换为小写
+          .join(','),
       };
 
-      console.log('Request parameters:', params); // 打印请求参数
+      console.log('Request parameters:', params);
 
       const res = await axios.get('/marketplace/projects', { params });
       setProjects(res.data.projects);
       setTotalPages(res.data.totalPages);
       setTotalProjects(res.data.totalProjects);
+      console.log('Projects:', res.data.projects);
     } catch (error) {
       console.error(error);
       setError(error);
@@ -91,32 +92,32 @@ const MarketPlace = () => {
 
   const handlePriceChange = (event, newPriceRange) => {
     setPriceRange(newPriceRange);
-    setPage(1);
+    setPage(1); // Reset to first page on filter change
   };
 
   const handleSelectCategories = (categories) => {
     setSelectedCategories(categories);
-    setPage(1);
+    setPage(1); // Reset to first page on filter change
   };
 
   const handleSelectStartDate = (newValue) => {
     setStartDate(newValue.format('YYYY-MM-DD'));
-    setPage(1);
+    setPage(1); // Reset to first page on filter change
   };
 
   const handleSelectEndDate = (newValue) => {
     setEndDate(newValue.format('YYYY-MM-DD'));
-    setPage(1);
+    setPage(1); // Reset to first page on filter change
   };
 
   const handleSortChange = (newCriteria) => {
     setSortCriteria(newCriteria);
-    setPage(1);
+    setPage(1); // Reset to first page on sort change
   };
 
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
-    setPage(1);
+    setPage(1); // Reset to first page on search
   };
 
   return (
@@ -155,7 +156,7 @@ const MarketPlace = () => {
             <Grid item xs={12} md={3} className="market-filters">
               <MarketFilters
                 selectedCategories={selectedCategories}
-                handleSelectCategories={handleSelectCategories} // 传递 handleSelectCategory
+                handleSelectCategories={handleSelectCategories}
                 priceRange={priceRange}
                 handlePriceChange={handlePriceChange}
                 startDate={startDate}
@@ -169,28 +170,47 @@ const MarketPlace = () => {
               xs={12}
               md={9}
               className="market-items"
-              sx={{ display: 'flex' }}
+              sx={{ display: 'flex', flexDirection: 'column' }}
             >
-              <MarketItems projects={projects} />
-              <Box display="flex" justifyContent="space-between" mt={2}>
-                <Button
-                  variant="contained"
-                  disabled={page === 1}
-                  onClick={handlePreviousPage}
-                >
-                  Previous
-                </Button>
-                <Typography>
-                  Page {page} of {totalPages}
-                </Typography>
-                <Button
-                  variant="contained"
-                  disabled={page === totalPages}
-                  onClick={handleNextPage}
-                >
-                  Next
-                </Button>
-              </Box>
+              {loading ? (
+                <CircularProgress />
+              ) : error ? (
+                <Alert severity="error">{error.message}</Alert>
+              ) : (
+                <>
+                  <MarketItems projects={projects} />
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    mt={2}
+                    mr={3}
+                    sx={{ flexDirection: 'row' }} // 修改为横向布局
+                  >
+                    <Button
+                      variant="contained"
+                      size="small" // 设置按钮大小为小
+                      disabled={page === 1}
+                      onClick={handlePreviousPage}
+                    >
+                      Previous
+                    </Button>
+                    <Typography sx={{ mx: 2 }}>
+                      {' '}
+                      {/* 添加左右边距 */}
+                      Page {page} of {totalPages}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      size="small" // 设置按钮大小为小
+                      disabled={page === totalPages}
+                      onClick={handleNextPage}
+                    >
+                      Next
+                    </Button>
+                  </Box>
+                </>
+              )}
             </Grid>
           </Grid>
         </Grid>
