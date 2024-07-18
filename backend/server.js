@@ -22,6 +22,7 @@ import contact from "./routes/contact.js";
 import { connectDB } from "./db/connection.js";
 import projectpage from "./routes/projectpage.js";
 import payment from "./routes/payment.js";
+import paypal from "./routes/paypal.js";
 
 // Load environment variables from .env file
 dotenv.config({ path: "./.env" });
@@ -71,7 +72,7 @@ app.use("/contact", contact);
 app.use("/marketplace", getMarketplaceProjects);
 app.use("/projectpage", projectpage);
 app.use("/payment",payment);
-
+app.use("/paypal",paypal);
 // 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));

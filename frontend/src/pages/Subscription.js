@@ -22,25 +22,59 @@ import { styled } from '@mui/material/styles';
 import CheckIcon from '@mui/icons-material/Check';
 import { useCookies } from 'react-cookie';
 import { CircularProgress } from '@mui/material';
-const user = { _id: '668b84861e61ca37c5498f63' };
 
+// const user = { _id: '668b84861e61ca37c5498f63' };
 
 const initialOptions = {
   clientId:
     'AQ8p-mKOE6XzJ1tmLS6ItynEuf3_W2kaz85dV4USBvtqjCrT13m-hAGiBJoIDA4c5zgMiGCqg1QtzjO5',
+  // country: 'US',
   currency: 'EUR',
+  intent: 'capture',
+  components: 'buttons',
+  'data-sdk-integration-source': 'developer-studio',
   // Add other options as needed
 };
 // const [cookies] = useCookies(['user']);
 // const user = cookies.user;
+function Message({ content }) {
+  return <p>{content}</p>;
+}
 
 export default function Subscription() {
+  const [cookies] = useCookies(['user']); 
+const user = cookies.user;
+  const [message, setMessage] = useState('');
   const plans = [
-  { value: '1', title: '5 days 1 euro', features: ["Feature A", "Feature B", "Feature C"], length:"trial", plan:"1"},
-  { value: '5', title: '1 month 5 euro', features: ["Feature A", "Feature B", "Feature C", "Feature D"], length:"month", plan: "2"},
-  { value: '10', title: '3 months 10 euro', features: ["Feature A", "Feature B", "Feature C", "Feature D"], length:"quarter", plan:"3"},
-  { value: '30', title: '1 year 30 euro',features: ["Feature A", "Feature B", "Feature C", "Feature D"], length:"year", plan: "4"},
-];
+    {
+      value: '1',
+      title: '5 days 1 euro',
+      features: ['Feature A', 'Feature B', 'Feature C'],
+      length: 'trial',
+      plan: '1',
+    },
+    {
+      value: '5',
+      title: '1 month 5 euro',
+      features: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+      length: 'month',
+      plan: '2',
+    },
+    {
+      value: '10',
+      title: '3 months 10 euro',
+      features: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+      length: 'quarter',
+      plan: '3',
+    },
+    {
+      value: '30',
+      title: '1 year 30 euro',
+      features: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+      length: 'year',
+      plan: '4',
+    },
+  ];
   // const [plans, setpPlans] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('');
   // const [selectedPlanLength, setSelectedPlanLength] = useState("");
@@ -52,7 +86,7 @@ export default function Subscription() {
   const handleChange = (event) => {
     setSelectedPlan(event.target.value);
 
-    // console.log(selectedPlan);
+    console.log(selectedPlan);
   };
   // this solves the async problem
   // useEffect(() => {
@@ -86,7 +120,7 @@ export default function Subscription() {
   // }
   useEffect(() => {
     selectedPlanRef.current = selectedPlan;
-    console.log("selectedPlan",selectedPlan);
+    console.log('selectedPlan', selectedPlan);
   }, [selectedPlan]);
 
   const StyledCard = styled(Card)(({ theme, selected }) => ({
@@ -114,35 +148,14 @@ export default function Subscription() {
     },
   });
 
-  const styles = {
-    shape: 'rect',
-
-    // layout: "vertical",
-    layout: 'horizontal',
-  };
-  const messages = {
-    amount: 100,
-
-    align: 'center',
-
-    color: 'black',
-
-    position: 'top',
-  };
-
-  const createOrder = async () => {
+  const saveOrder = async () => {
     const planValue = selectedPlanRef.current;
-    //   const planLength = selectedPlanLengthRef.current;
 
     console.log('Selected Plan:', planValue);
-    //   console.log("Selected Plan Length:", planLength);
-
-    // console.log("Selected Plan:", selectedPlan);
-    //   console.log("Selected Plan Length:", selectedPlanLength);
 
     try {
       const response = await fetch(
-        `http://localhost:5050/payment/subscription/${user._id}`,
+        `http://localhost:5050/payment/subscription/${user.id}`,
         {
           method: 'POST',
 
@@ -157,22 +170,6 @@ export default function Subscription() {
 
       const orderData = await response.json();
       console.log('orderData', orderData);
-
-      // if (!orderData.id) {
-
-      //     const errorDetail = orderData.details[0];
-
-      //     const errorMessage = errorDetail
-
-      //         ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-
-      //         : "Unexpected error occurred, please try again.";
-
-      //     throw new Error(errorMessage);
-
-      // }
-
-      // return orderData.id;
     } catch (error) {
       console.error(error);
 
@@ -194,133 +191,185 @@ export default function Subscription() {
       noValidate
       autoComplete="off"
     >
-      <Grid>
-        <Typography variant="h4" gutterBottom>
-          choose your subscription plan
-        </Typography>
-      </Grid>
-      <FormControl component="fieldset">
-        <RadioGroup
-          aria-label="subscription plans"
-          name="subscriptionPlans"
-          value={selectedPlan}
-          onChange={handleChange}
-        >
-          <Grid container spacing={2}>
-            {plans.map((plan) => (
-              <Grid item xs={12} key={plan.plan}>
-                <FormControlLabel
-                  value={plan.plan}
-                  control={<Radio sx={{ display: 'none' }} />}
-                  label={
-                    <StyledCard selected={selectedPlan === plan.plan}>
-                      <CardContent>
-                        <Typography variant="h5" component="div">
-                          {plan.title} test NOte: 1 month exactly 30 days
-                        </Typography>
-                        <FeatureList>
-                          {plan.features.map((feature, index) => (
-                            <li key={index}>
-                              <CheckIcon color="primary" />
-                              <Typography variant="body2">{feature}</Typography>
-                            </li>
-                          ))}
-                        </FeatureList>
-                      </CardContent>
-                    </StyledCard>
-                  }
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </RadioGroup>
-      </FormControl>
-      <Grid>
+      
+        <Grid>
+          <Typography variant="h4" gutterBottom>
+            choose your subscription plan
+          </Typography>
+        </Grid>
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="subscription plans"
+            name="subscriptionPlans"
+            value={selectedPlan}
+            onChange={handleChange}
+          >
+            <Grid container spacing={2}>
+              {plans.map((plan) => (
+                <Grid item xs={12} key={plan.plan}>
+                  <FormControlLabel
+                    value={plan.plan}
+                    control={<Radio sx={{ display: 'none' }} />}
+                    label={
+                      <StyledCard selected={selectedPlan === plan.plan}>
+                        <CardContent>
+                          <Typography variant="h5" component="div">
+                            {plan.title} test NOte: 1 month exactly 30 days
+                          </Typography>
+                          <FeatureList>
+                            {plan.features.map((feature, index) => (
+                              <li key={index}>
+                                <CheckIcon color="primary" />
+                                <Typography variant="body2">
+                                  {feature}
+                                </Typography>
+                              </li>
+                            ))}
+                          </FeatureList>
+                        </CardContent>
+                      </StyledCard>
+                    }
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </RadioGroup>
+        </FormControl>
+        <Grid>
         <PayPalScriptProvider options={initialOptions}>
-          <ButtonBehavior plans={plans} selectedPlan={selectedPlan}/>
-        </PayPalScriptProvider>
-      </Grid>
-      <Grid>
-        <Button onClick={createOrder}>Send Test</Button>
-      </Grid>
+          {/* <ButtonBehavior plans={plans} selectedPlan={selectedPlan}/> */}
+          <PayPalButtons
+            style={{
+              shape: 'rect',
+
+              layout: 'vertical',
+
+              color: 'gold',
+
+              label: 'paypal',
+            }}
+            createOrder={async () => {
+              try {
+                const response = await fetch('http://localhost:5050/paypal/orders', {
+                  method: 'POST',
+
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+
+                  // use the "body" param to optionally pass additional order information
+
+                  // like product ids and quantities
+
+                  body: JSON.stringify({
+                    cart: [
+                      {
+                        id: "Subscription Plan",
+
+                        quantity: "1",
+                      },
+                    ],
+                  }),
+                });
+
+                const orderData = await response.json();
+
+                if (orderData.id) {
+                  return orderData.id;
+                } else {
+                  const errorDetail = orderData?.details?.[0];
+
+                  const errorMessage = errorDetail
+                    ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
+                    : JSON.stringify(orderData);
+
+                  throw new Error(errorMessage);
+                }
+              } catch (error) {
+                console.error(error);
+
+                setMessage(`Could not initiate PayPal Checkout...${error}`);
+              }
+            }}
+            onApprove={async (
+              data,
+
+              actions
+            ) => {
+              try {
+                const response = await fetch(
+                  `/api/orders/${data.orderID}/capture`,
+
+                  {
+                    method: 'POST',
+
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  }
+                );
+
+                const orderData = await response.json();
+
+                // Three cases to handle:
+
+                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+
+                //   (2) Other non-recoverable errors -> Show a failure message
+
+                //   (3) Successful transaction -> Show confirmation or thank you message
+
+                const errorDetail = orderData?.details?.[0];
+
+                if (errorDetail?.issue === 'INSTRUMENT_DECLINED') {
+                  // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+
+                  // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
+
+                  return actions.restart();
+                } else if (errorDetail) {
+                  // (2) Other non-recoverable errors -> Show a failure message
+
+                  throw new Error(
+                    `${errorDetail.description} (${orderData.debug_id})`
+                  );
+                } else {
+                  // (3) Successful transaction -> Show confirmation or thank you message
+
+                  // Or go to another URL:  actions.redirect('thank_you.html');
+
+                  const transaction =
+                    orderData.purchase_units[0].payments.captures[0];
+
+                  setMessage(
+                    `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
+                  );
+
+                  console.log(
+                    'Capture result',
+
+                    orderData,
+
+                    JSON.stringify(orderData, null, 2)
+                  );
+                }
+              } catch (error) {
+                console.error(error);
+
+                setMessage(
+                  `Sorry, your transaction could not be processed...${error}`
+                );
+              }
+            }}
+          />
+          </PayPalScriptProvider>
+        </Grid>
+        <Grid>
+          <Button onClick={saveOrder}>Send Test</Button>
+        </Grid>
+      
     </Box>
   );
 }
 
-function ButtonBehavior({ plans, selectedPlan }) {
-  /**
-   * usePayPalScriptReducer use within PayPalScriptProvider
-   * isPending: not finished loading(default state)
-   * isResolved: successfully loaded
-   * isRejected: failed to load
-   */
-  
-  const [{ isPending }] = usePayPalScriptReducer();
-  const selectedPlanDetails = plans.find(plan => plan.plan === selectedPlan) || {};
-  console.log(selectedPlanDetails);
-  let sendamount=setAmount(plans, selectedPlan);
 
-
-  
-  console.log("amount",sendamount);
-  const paypalbuttonTransactionProps = {
-    style: { layout: 'vertical' },
-    createOrder(data, actions) {
-      return actions.order.create({
-        purchase_units: [
-          {
-            amount: {
-              value: selectedPlanDetails.value,
-            },
-          },
-        ],
-      });
-    },
-    onApprove(data, actions) {
-
-      return actions.order.capture({}).then((details) => {
-        alert(
-          'Transaction completed by' +
-            (details?.payer.name.given_name ?? 'No details')
-        );
-
-        alert('Data details: ' + JSON.stringify(data, null, 2));
-      });
-    },
-  };
-  return (
-    <>
-      {isPending ? <h2>Load Smart Payment Button...</h2> : null}
-      <PayPalButtons {...paypalbuttonTransactionProps} />
-    </>
-  );
-}
-
-function setAmount(plans, selectedPlan){
-  const selectedPlanDetails = plans.find(plan => plan.plan === selectedPlan) || {};
-  console.log(selectedPlanDetails);
-  let amount = selectedPlanDetails.value;
-
-  if(selectedPlanDetails.plan==="1"){
-    amount='1';
-    
-    // amount = plans[0].value;
-    // console.log("plans[0]",plans[0]);
-  }
-  if(selectedPlanDetails.plan==="2"){
-    amount='5';
-    // amount = plans[1].value;
-    // console.log("plans[1]",plans[1]);
-  }else if(selectedPlanDetails.plan==="3"){
-    amount='10';
-    // amount = plans[2].value;
-    // console.log("plans[2]",plans[2]);
-  }
-  else if(selectedPlanDetails.plan=="4"){
-    amount='30';
-    // amount = plans[3].value;
-    // console.log("plans[3]",plans[3]);
-  }
-console.log("setAmount",amount);
-  return amount;
-}
