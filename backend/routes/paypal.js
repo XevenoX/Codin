@@ -152,12 +152,19 @@ router.post("/orders", async (req, res) => {
     // use the cart information passed from the front-end to calculate the order amount detals
     const { cart } = req.body;
     console.log("cart", cart);
-    plans.forEach(plan => {
-        console.log(cart.quantity,plan.plan,plan);
-      if ((cart[0].quantity === plan.plan)) {
-        amount=plan.value;
-      }
-    });
+    if(cart[0].id==="Subscription Plan"){
+        plans.forEach(plan => {
+            console.log(cart.quantity,plan.plan,plan);
+          if ((cart[0].quantity === plan.plan)) {
+            amount=plan.value;
+          }
+        });
+    }
+    if(cart[0].id==="Project"){
+        amount=cart[0].quantity;
+
+
+    }
     console.log("amount", amount);
     const { jsonResponse, httpStatusCode } = await createOrder(cart);
     res.status(httpStatusCode).json(jsonResponse);

@@ -48,10 +48,16 @@ import {
 const initialOptions = {
   clientId:
     'AQ8p-mKOE6XzJ1tmLS6ItynEuf3_W2kaz85dV4USBvtqjCrT13m-hAGiBJoIDA4c5zgMiGCqg1QtzjO5',
+  // country: 'US',
   currency: 'EUR',
+  intent: 'capture',
+  components: 'buttons',
+  'data-sdk-integration-source': 'developer-studio',
   // Add other options as needed
 };
-
+function Message({ content }) {
+  return <p>{content}</p>;
+}
 
 export default function ApplicantsList({ data, budget }) {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -61,6 +67,7 @@ export default function ApplicantsList({ data, budget }) {
   const [offerOpen, setOfferOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState(Number(budget) * 1.03);
   const navigate = useNavigate();
+  const [message, setMessage] = useState('');
 
   const { id } = useParams(); //get project id
 const user={
@@ -329,7 +336,132 @@ const user={
             <Button onClick={handleOfferClose}>Cancel</Button>
             <Button onClick={handlePayed}>Submit</Button>
             <PayPalScriptProvider options={initialOptions}>
-              <ButtonBehavior />
+            <PayPalButtons
+            style={{
+              shape: 'rect',
+
+              layout: 'vertical',
+
+              color: 'gold',
+
+              label: 'paypal',
+            }}
+            createOrder={async () => {
+              try {
+                const response = await fetch('http://localhost:5050/paypal/orders', {
+                  method: 'POST',
+
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+
+                  // use the "body" param to optionally pass additional order information
+
+                  // like product ids and quantities
+
+                  body: JSON.stringify({
+                    cart: [
+                      {
+                        id: "Project",
+
+                        quantity: offerAmount,
+                        
+                        
+                      },
+                    ],
+                  }),
+                });
+
+                const orderData = await response.json();
+
+                if (orderData.id) {
+                  return orderData.id;
+                } else {
+                  const errorDetail = orderData?.details?.[0];
+
+                  const errorMessage = errorDetail
+                    ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
+                    : JSON.stringify(orderData);
+
+                  throw new Error(errorMessage);
+                }
+              } catch (error) {
+                console.error(error);
+
+                setMessage(`Could not initiate PayPal Checkout...${error}`);
+              }
+            }}
+            onApprove={async (
+              data,
+
+              actions
+            ) => {
+              try {
+                const response = await fetch(
+                  `/api/orders/${data.orderID}/capture`,
+
+                  {
+                    method: 'POST',
+
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  }
+                );
+
+                const orderData = await response.json();
+
+                // Three cases to handle:
+
+                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+
+                //   (2) Other non-recoverable errors -> Show a failure message
+
+                //   (3) Successful transaction -> Show confirmation or thank you message
+
+                const errorDetail = orderData?.details?.[0];
+
+                if (errorDetail?.issue === 'INSTRUMENT_DECLINED') {
+                  // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+
+                  // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
+
+                  return actions.restart();
+                } else if (errorDetail) {
+                  // (2) Other non-recoverable errors -> Show a failure message
+
+                  throw new Error(
+                    `${errorDetail.description} (${orderData.debug_id})`
+                  );
+                } else {
+                  // (3) Successful transaction -> Show confirmation or thank you message
+
+                  // Or go to another URL:  actions.redirect('thank_you.html');
+
+                  const transaction =
+                    orderData.purchase_units[0].payments.captures[0];
+
+                  setMessage(
+                    `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
+                  );
+
+                  console.log(
+                    'Capture result',
+
+                    orderData,
+
+                    JSON.stringify(orderData, null, 2)
+                  );
+                }
+              } catch (error) {
+                console.error(error);
+
+                setMessage(
+                  `Sorry, your transaction could not be processed...${error}`
+                );
+              }
+            }}
+          />
             </PayPalScriptProvider>
           </DialogActions>
         </Dialog>
@@ -362,53 +494,6 @@ const user={
   }
 }
 
-function ButtonBehavior({ plans, selectedPlan }) {
-  /**
-   * usePayPalScriptReducer use within PayPalScriptProvider
-   * isPending: not finished loading(default state)
-   * isResolved: successfully loaded
-   * isRejected: failed to load
-   */
-  
-  const [{ isPending }] = usePayPalScriptReducer();
-  // const selectedPlanDetails = plans.find(plan => plan.plan === selectedPlan) || {};
-  // console.log(selectedPlanDetails);
-  // let sendamount=setAmount(plans, selectedPlan);
 
-
-  
-  // console.log("amount",sendamount);
-  const paypalbuttonTransactionProps = {
-    style: { layout: 'vertical' },
-    createOrder(data, actions) {
-      return actions.order.create({
-        purchase_units: [
-          {
-            amount: {
-              value: '0.01',
-            },
-          },
-        ],
-      });
-    },
-    onApprove(data, actions) {
-
-      return actions.order.capture({}).then((details) => {
-        alert(
-          'Transaction completed by' +
-            (details?.payer.name.given_name ?? 'No details')
-        );
-
-        alert('Data details: ' + JSON.stringify(data, null, 2));
-      });
-    },
-  };
-  return (
-    <>
-      {isPending ? <h2>Load Smart Payment Button...</h2> : null}
-      <PayPalButtons {...paypalbuttonTransactionProps} />
-    </>
-  );
-}
 
 
