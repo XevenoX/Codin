@@ -21,10 +21,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { de } from 'date-fns/locale';
 import { parseISO, formatISO } from 'date-fns';
 const timeZone = 'Europe/Berlin';
-const [cookies] = useCookies(['user']); 
-const user = cookies.user;
+
 
 export default function ProjectCreate() {
+  const [cookies] = useCookies(['user']); 
+const user = cookies.user;
+
   const [projectName, setProjectName] = useState('');
   const [projectDuration, setProjectDuration] = useState('');
   const [projectApplicationDeadline, setProjectApplicationDeadline] =
