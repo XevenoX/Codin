@@ -1,21 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { Chart } from 'react-google-charts';
 import '../styles/ProjectManagementPage.css';
 
 const ProjectManagementPage = () => {
     const navigate = useNavigate();
+    const [cookie] = useCookies(['user']);
+    const currentUser = cookie.user;
+    const [userInfo, setUserInfo] = useState(null);
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
-        const getProjects = async () => {
+        const fetchUserInfo = async () => {
+            if (!currentUser) {
+                console.log('No token or user_id found in cookies');
+                setLoading(false);
+                return;
+            }
             try {
-                const res = await axios.get('/projectpage');
-                console.log('Fetched projects:', res.data); // 打印获取的数据
+                console.log('Fetching user info with ID:', currentUser.id);
+                const res = await axios.get('http://localhost:5050/userInfo/findUser', {
+                    params: {
+                        _id: currentUser.id
+                    }
+                });
+                console.log('User info response:', res.data);
+                setUserInfo(res.data);
+            } catch (err) {
+                console.error('Error fetching user info:', err);
+                setLoading(false);
+            }
+        };
+
+        fetchUserInfo();
+    }, [cookie]);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            if (!userInfo) {
+                console.log('No userInfo found');
+                setLoading(false);
+                return;
+            }
+            try {
+                console.log('Fetching projects for user:', userInfo);
+                const res = await axios.get('http://localhost:5050/projects/all', {
+                    params: {
+                        userId: userInfo._id
+                    }
+                });
+                console.log('Projects fetched:', res.data);
                 setProjects(res.data);
                 setLoading(false);
             } catch (err) {
@@ -24,11 +62,29 @@ const ProjectManagementPage = () => {
                 setLoading(false);
             }
         };
-        getProjects();
-    }, []);
 
-    const handleNavigation = (path) => {
-        navigate(path);
+        if (userInfo) {
+            fetchProjects();
+        }
+    }, [userInfo]);
+
+    const handleComplete = async (projectId) => {
+        try {
+            const response = await axios.patch(`http://localhost:5050/projects/${projectId}`, {
+                project_status: 5,
+                userId: userInfo._id
+            });
+            console.log(`Project ${projectId} completed:`, response.data);
+            alert(`Project ${projectId} completed`);
+            setProjects(projects.map(project => project._id === projectId ? { ...project, project_status: 5 } : project));
+        } catch (error) {
+            console.error('Error completing project:', error);
+            alert('Error completing project');
+        }
+    };
+
+    const handleSeeMore = (projectId) => {
+        navigate(`/project/${projectId}`);
     };
 
     if (loading) {
@@ -39,20 +95,20 @@ const ProjectManagementPage = () => {
         return <div>Error: {error.message}</div>;
     }
 
-    // 计算项目所有收入的总和，确保项目预算是有效的数字
     const totalIncome = projects.reduce((sum, project) => {
-        const income = Number(project.project_budget);
+        const income = parseFloat(project.project_budget);
         return sum + (isNaN(income) ? 0 : income);
     }, 0);
 
-    // Prepare data for the chart
     const chartData = [
         ['Date', 'Income'],
         ...projects.map(project => [
-            new Date(project.project_posttime).toLocaleDateString('en-GB', { year: 'numeric', month: 'short' }),
-            project.project_budget
+            new Date(project.project_posttime),
+            parseFloat(project.project_budget)
         ])
     ];
+
+    console.log('Chart data:', chartData);
 
     const chartOptions = {
         title: '',
@@ -67,11 +123,11 @@ const ProjectManagementPage = () => {
             <header>
                 <div className="logo">Codin.</div>
                 <nav>
-                    <button onClick={() => handleNavigation('/project-management')}>Project Management</button>
-                    <button onClick={() => handleNavigation('/marketplace')}>Marketplace</button>
+                    <button onClick={() => navigate('/project-management')}>Project Management</button>
+                    <button onClick={() => navigate('/marketplace')}>Marketplace</button>
                 </nav>
                 <div className="profile">
-                    <img src="profile-pic.png" alt="Profile" />
+                    <img src={userInfo?.avatar} alt="Profile" onClick={() => navigate(`/user/${userInfo._id}`)} />
                     <div className="notifications">
                         <span role="img" aria-label="notification">🔔</span>
                     </div>
@@ -113,30 +169,16 @@ const ProjectManagementPage = () => {
                                     <h3>{project.project_name}</h3>
                                     <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
                                     <span className="complete-before">Complete before: {new Date(project.project_deadline).toLocaleDateString()}</span>
-                                    <button className="see-more">See More</button>
-                                    <button className="complete">Complete</button>
+                                    <button className="see-more" onClick={() => handleSeeMore(project._id)}>See More</button>
+                                    <button className="complete" onClick={() => handleComplete(project._id)}>Complete</button>
                                 </div>
                             ))}
                         </div>
                     </div>
-                    <div className="project-section applied">
-                        <h2>Applied</h2>
-                        <div className="project-list">
-                            {projects.filter(project => project.project_status === 2).map(project => (
-                                <div className="project" key={project._id}>
-                                    <h3>{project.project_name}</h3>
-                                    <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
-                                    <span className="complete-before">Complete before: {new Date(project.project_deadline).toLocaleDateString()}</span>
-                                    <button className="see-more">See More</button>
-                                    <button className="withdraw">Withdraw</button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="project-section awaiting-acceptance">
+                    <div className="project-section offers-received">
                         <h2>Offers Received</h2>
                         <div className="project-list">
-                            {projects.filter(project => project.project_status === 1).map(project => (
+                            {projects.filter(project => project.project_status === 2).map(project => (
                                 <div className="project" key={project._id}>
                                     <h3>{project.project_name}</h3>
                                     <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
@@ -147,15 +189,29 @@ const ProjectManagementPage = () => {
                             ))}
                         </div>
                     </div>
+                    <div className="project-section applied">
+                        <h2>Applied</h2>
+                        <div className="project-list">
+                            {projects.filter(project => project.project_status === 1).map(project => (
+                                <div className="project" key={project._id}>
+                                    <h3>{project.project_name}</h3>
+                                    <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
+                                    <span className="complete-before">Complete before: {new Date(project.project_deadline).toLocaleDateString()}</span>
+                                    <button className="see-more" onClick={() => handleSeeMore(project._id)}>See More</button>
+                                    <button className="withdraw">Withdraw</button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                     <div className="project-section completed">
-                        <h2>Complete</h2>
+                        <h2>Completed</h2>
                         <div className="project-list">
                             {projects.filter(project => project.project_status === 5).map(project => (
                                 <div className="project" key={project._id}>
                                     <h3>{project.project_name}</h3>
                                     <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
-                                    <span className="completed-at">Completed at: {new Date(project.project_completetime).toLocaleDateString()}</span>
-                                    <button className="see-more">See More</button>
+                                    <span className="completed-at">Completed at: {new Date(project.project_deadline).toLocaleDateString()}</span>
+                                    <button className="see-more" onClick={() => handleSeeMore(project._id)}>See More</button>
                                 </div>
                             ))}
                         </div>

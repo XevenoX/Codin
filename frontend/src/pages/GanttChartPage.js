@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 import '../styles/GanttChartPage.css';
 
 const convertToGermanDate = (dateString) => {
@@ -12,13 +13,52 @@ const GanttChartPage = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [cookies] = useCookies(['token', 'user_id']);
+    const [userInfo, setUserInfo] = useState(null);
 
+    // 获取用户信息
     useEffect(() => {
-        axios.defaults.baseURL =
-            process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050';
-        const getProjects = async () => {
+        const fetchUserInfo = async () => {
             try {
-                const res = await axios.get('/projectpage');
+                console.log('Fetching user info with ID:', cookies.user_id);
+                const res = await axios.get('http://localhost:5050/userInfo/findUser', {
+                    headers: {
+                        'Authorization': `Bearer ${cookies.token}`
+                    },
+                    params: {
+                        _id: cookies.user_id
+                    }
+                });
+                console.log('User info response:', res.data);
+                setUserInfo(res.data);
+            } catch (err) {
+                console.error('Error fetching user info:', err);
+                setLoading(false);
+            }
+        };
+        if (cookies.token && cookies.user_id) {
+            fetchUserInfo();
+        } else {
+            console.log('No token or user_id found in cookies');
+            setLoading(false);
+        }
+    }, [cookies]);
+
+    // 获取项目列表
+    useEffect(() => {
+        const fetchProjects = async () => {
+            if (!userInfo) {
+                console.log('No userInfo found');
+                setLoading(false);
+                return;
+            }
+            try {
+                console.log('Fetching projects for user:', userInfo);
+                const res = await axios.get('http://localhost:5050/projects/all', {
+                    params: {
+                        userId: userInfo._id
+                    }
+                });
                 const projects = res.data;
                 const chartData = [
                     [
@@ -34,14 +74,14 @@ const GanttChartPage = () => {
                     ]
                 ];
 
-                projects.forEach((project, index) => {
+                projects.forEach((project) => {
                     chartData.push([
                         project._id.toString(),
                         project.project_name,
-                        project.project_status === 1 ? 'Open' : 
-                            project.project_status === 2 ? 'Awaiting Acceptance' : 
-                            project.project_status === 3 ? 'In Progress' : 
-                            project.project_status === 5 ? 'Complete' : '',
+                        project.project_status === 1 ? 'Open' :
+                            project.project_status === 2 ? 'Awaiting Acceptance' :
+                                project.project_status === 3 ? 'In Progress' :
+                                    project.project_status === 5 ? 'Complete' : '',
                         convertToGermanDate(project.project_posttime),
                         convertToGermanDate(project.project_deadline),
                         null,
@@ -60,8 +100,11 @@ const GanttChartPage = () => {
                 setLoading(false);
             }
         };
-        getProjects();
-    }, []);
+
+        if (userInfo) {
+            fetchProjects();
+        }
+    }, [userInfo]);
 
     const options = {
         height: 400,
@@ -100,7 +143,7 @@ const GanttChartPage = () => {
                     <button onClick={() => window.history.back()}>Back</button>
                 </nav>
                 <div className="profile">
-                    <img src="/profile-pic.png" alt="Profile" />
+                    <img src={userInfo?.avatar} alt="Profile" />
                     <div className="notifications">
                         <span role="img" aria-label="notification">🔔</span>
                     </div>
