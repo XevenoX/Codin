@@ -55,7 +55,7 @@ export default function Categories({
   };
 
   return (
-    <Card sx={{ width: '100%' }}>
+    <Card sx={{ width: '100%', bgcolor: '#f0f0f0' }}>
       <FormControl component="fieldset" sx={{ m: 2 }}>
         <FormLabel component="legend">
           <Typography

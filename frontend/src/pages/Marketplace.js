@@ -131,7 +131,11 @@ const MarketPlace = () => {
   return (
     <Box
       className="marketplace"
-      sx={{ display: 'flex', justifyContent: 'center' }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+      }}
     >
       <Box
         className="marketplace-container"
