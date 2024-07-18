@@ -227,6 +227,7 @@ export default function ProjectDetailPublisher() {
     return <Typography>No project details found</Typography>;
   }
 
+  const isPaid = projectDetails.paid;
   return (
     <Box
       component="form"
@@ -240,7 +241,9 @@ export default function ProjectDetailPublisher() {
         <Grid>
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
+
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick("project_name", projectDetails.project_name)
                 }
@@ -257,6 +260,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     "project_duration",
@@ -276,6 +280,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     "project_deadline",
@@ -299,6 +304,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     "project_budget",
@@ -318,6 +324,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     "project_labels",
@@ -346,6 +353,7 @@ export default function ProjectDetailPublisher() {
         <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
             <ButtonBase
+            style={{ visibility: isPaid ? 'hidden' : 'visible' }}
               onClick={() =>
                 handleEditClick(
                   "project_description",
@@ -363,6 +371,7 @@ export default function ProjectDetailPublisher() {
 
           <Stack direction="row" spacing={2}>
             <ButtonBase
+            style={{ visibility: isPaid ? 'hidden' : 'visible' }}
               onClick={() =>
                 handleEditClick("project_skills", projectDetails.project_skills)
               }
