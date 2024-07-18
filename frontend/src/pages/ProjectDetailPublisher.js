@@ -85,6 +85,7 @@ export default function ProjectDetailPublisher() {
     useState(true);
   const [editLabels, setEditLabels] = useState({});
 
+
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
@@ -335,7 +336,7 @@ export default function ProjectDetailPublisher() {
           </Stack>
         </Grid>
       </Grid>
-      <ApplicantsList data={projectDetails.applicants} />
+      <ApplicantsList data={projectDetails.applicants} budget={projectDetails.project_budget} />
 
       <Grid>
         <Stack direction="column" spacing={2}>

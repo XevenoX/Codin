@@ -126,6 +126,60 @@ router.get("/checkSubscription/:id", async (req, res) => {
   }
 });
 
+router.post("/project/:id", async (req, res) => {
+  const db = getDB();
+  const { id } = req.params; //project id
+  // console.log(req.body);
+  
+  // do it later
+  // const order = await createOrder(selectedPlan);
+  //check newest subscription
+  
+  
+
+
+
+  try {
+    let newDocument = {
+      project_id: new ObjectId(id),
+      time: new Date(),
+      amount:req.body.value,
+      publisher_id:new ObjectId(req.body._id),
+    };
+    
+    let collection = await db.collection("payedProjects");
+    
+    let payment = await collection.insertOne(newDocument);
+    console.log(payment);
+
+    let updates ={
+      payed:payment.insertedId
+    };
+    
+    let result = await db.collection("projects").updateOne({ _id: new ObjectId(id) }, { $set: updates });
+    res.status(201).json({ result });
+    // let query = { _id: new ObjectId(id) };
+    // console.log(id);
+    // const update = {
+    //   payed:true,
+    // }
+  
+    // const result = await db.collection("projects").updateOne({ _id: new ObjectId(id) }, { $set: updates });
+    // let newDocument = {
+    //   user_id: new ObjectId(req.body._id),
+    //   start: start,
+    //   end: end,
+    // };
+    // let collection = await db.collection("subscriptions");
+    // let result = await collection.insertOne(newDocument);
+    // res.status(201).json({ result }); // to get the id of just stored new project
+    // console.log(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error adding record");
+  }
+});
+
 // use the orders api to create an order
 
 function createOrder(data) {

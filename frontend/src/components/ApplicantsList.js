@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -30,14 +31,71 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
-export default function ApplicantsList({ data }) {
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  usePayPalScriptReducer,
+} from '@paypal/react-paypal-js';
+
+
+const initialOptions = {
+  clientId:
+    'AQ8p-mKOE6XzJ1tmLS6ItynEuf3_W2kaz85dV4USBvtqjCrT13m-hAGiBJoIDA4c5zgMiGCqg1QtzjO5',
+  currency: 'EUR',
+  // Add other options as needed
+};
+
+
+export default function ApplicantsList({ data, budget }) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [sortBy, setSortBy] = useState('rating'); // set default sorting method
   const [sortOrder, setSortOrder] = useState('desc');
   const [showCompare, setShowCompare] = useState(false);
+  const [offerOpen, setOfferOpen] = useState(false);
+  const [offerAmount, setOfferAmount] = useState(Number(budget) * 1.03);
   const navigate = useNavigate();
+
+  const { id } = useParams(); //get project id
+const user={
+  _id:"668a5888c8ffc377f5295970",
+};
+  const handlePayed = async () =>{
+    const requestBody = {
+      value: offerAmount,
+      _id: user._id,
+    };
+    
+    try {
+      const response = await fetch(
+        `http://localhost:5050/payment/project/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update project");
+      }
+
+      const data = await response.json();
+
+    } catch (error) {
+      console.error("Error updating project:", error);
+    }
+
+    handleOfferClose();
+  };
 
   const handleSortingChange = (event) => {
     setSortBy(event.target.value);
@@ -60,6 +118,20 @@ export default function ApplicantsList({ data }) {
   const handleCompare = () => {
     setShowCompare(true);
   };
+  const handleOfferOpen = () => {
+    console.log('offerAmount', offerAmount);
+    // setOfferAmount();
+    setOfferOpen(true);
+  };
+
+  const handleOfferClose = () => {
+    setOfferOpen(false);
+  };
+
+  const handleOfferAmountChange = () => {
+    setOfferAmount();
+  };
+
   const handleSeeMoreClick = (item) => {
     navigate(`/developerhomepage/${item._id}`);
   };
@@ -88,7 +160,7 @@ export default function ApplicantsList({ data }) {
   });
 
   const selectedData = data.filter((item) => selectedItems.includes(item._id));
-
+  const selectedApplicant = selectedData[0];
   if (data.length > 0) {
     return (
       <React.Fragment>
@@ -134,9 +206,7 @@ export default function ApplicantsList({ data }) {
               <ImageListItem key={item._id}>
                 <Card sx={{ minWidth: 180 }}>
                   <CardContent sx={{ width: '100%' }}>
-                    <Link
-                      to={`/developerhomepage/${item._id}`}
-                    >
+                    <Link to={`/developerhomepage/${item._id}`}>
                       <Typography variant="h5" component="div">
                         {item.name}
                       </Typography>
@@ -179,7 +249,12 @@ export default function ApplicantsList({ data }) {
                     />
                   </CardContent>
                   <CardActions>
-                    <Button size="contained" onClick={() => handleSeeMoreClick(item)}>See More</Button>
+                    <Button
+                      size="contained"
+                      onClick={() => handleSeeMoreClick(item)}
+                    >
+                      See More
+                    </Button>
                   </CardActions>
                 </Card>
               </ImageListItem>
@@ -189,11 +264,17 @@ export default function ApplicantsList({ data }) {
             <Button
               variant="contained"
               onClick={handleCompare}
-              disabled={selectedItems.length === 0}
+              disabled={selectedItems.length === 0 || selectedItems.length > 3}
             >
               Compare
             </Button>
-            <Button variant="contained">Offer</Button>
+            <Button
+              variant="contained"
+              onClick={handleOfferOpen}
+              disabled={selectedItems.length !== 1}
+            >
+              Offer
+            </Button>
           </Grid>
           {showCompare && (
             <ImageList
@@ -236,6 +317,22 @@ export default function ApplicantsList({ data }) {
             </ImageList>
           )}
         </Box>
+        <Dialog open={offerOpen} onClose={handleOfferClose}>
+          <DialogTitle>Make an Offer</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure to hire {selectedApplicant?.name}? You have to pay{' '}
+              {offerAmount} to get to the next stage
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleOfferClose}>Cancel</Button>
+            <Button onClick={handlePayed}>Submit</Button>
+            <PayPalScriptProvider options={initialOptions}>
+              <ButtonBehavior />
+            </PayPalScriptProvider>
+          </DialogActions>
+        </Dialog>
       </React.Fragment>
     );
   } else {
@@ -264,3 +361,54 @@ export default function ApplicantsList({ data }) {
     );
   }
 }
+
+function ButtonBehavior({ plans, selectedPlan }) {
+  /**
+   * usePayPalScriptReducer use within PayPalScriptProvider
+   * isPending: not finished loading(default state)
+   * isResolved: successfully loaded
+   * isRejected: failed to load
+   */
+  
+  const [{ isPending }] = usePayPalScriptReducer();
+  // const selectedPlanDetails = plans.find(plan => plan.plan === selectedPlan) || {};
+  // console.log(selectedPlanDetails);
+  // let sendamount=setAmount(plans, selectedPlan);
+
+
+  
+  // console.log("amount",sendamount);
+  const paypalbuttonTransactionProps = {
+    style: { layout: 'vertical' },
+    createOrder(data, actions) {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: '0.01',
+            },
+          },
+        ],
+      });
+    },
+    onApprove(data, actions) {
+
+      return actions.order.capture({}).then((details) => {
+        alert(
+          'Transaction completed by' +
+            (details?.payer.name.given_name ?? 'No details')
+        );
+
+        alert('Data details: ' + JSON.stringify(data, null, 2));
+      });
+    },
+  };
+  return (
+    <>
+      {isPending ? <h2>Load Smart Payment Button...</h2> : null}
+      <PayPalButtons {...paypalbuttonTransactionProps} />
+    </>
+  );
+}
+
+
