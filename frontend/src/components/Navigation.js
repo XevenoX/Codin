@@ -3,7 +3,6 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Avatar from '@mui/material/Avatar';
@@ -13,8 +12,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
+import Typography from '@mui/material/Typography';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import codinLogo from '../pics/Codin-Logo.png'; // 替换为你的 logo 图片路径
 
 export default function Navigation({ user, onLogout }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,8 +30,17 @@ export default function Navigation({ user, onLogout }) {
     setAnchorEl(null);
   };
 
-  const handleProfile = () => {
-    navigate('/profile');
+  const handleMyHomepage = () => {
+    console.log('User object:', user); // Add this line to debug
+    if (user) {
+      const role = user.role;
+      const userId = user._id;
+      if (role === 'publisher') {
+        navigate(`/publisherhomepage/${userId}`);
+      } else if (role === 'developer') {
+        navigate(`/developerhomepage/${userId}`);
+      }
+    }
     handleClose();
   };
 
@@ -56,12 +66,18 @@ export default function Navigation({ user, onLogout }) {
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: 'space-between', width: '53%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: 'auto' }}>
-            <Typography variant="h6" component="div" sx={{ mr: 10 }}>
-              <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-                Codin.
-              </Link>
-            </Typography>
-            <Typography variant="h6" component="div" sx={{ mr: 2 }}>
+            <Box
+              component={Link}
+              to="/"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                textDecoration: 'none',
+              }}
+            >
+              <img src={codinLogo} alt="Logo" style={{ height: '40px' }} />
+            </Box>
+            <Typography variant="h6" component="div" sx={{ ml: 20 }}>
               <Link
                 to="/marketplace"
                 style={{ textDecoration: 'none', color: 'inherit' }}
@@ -119,8 +135,8 @@ export default function Navigation({ user, onLogout }) {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleProfile}>
-                <Avatar /> Profile
+              <MenuItem onClick={handleMyHomepage}>
+                <Avatar /> My Homepage
               </MenuItem>
               <MenuItem onClick={handleSubscription}>
                 <Avatar /> Subscription

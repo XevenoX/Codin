@@ -42,7 +42,15 @@ export default function SignIn({ onLogin }) {
         setEmailError(false);
         setCookie('user', data.user, { path: '/' });
         onLogin(data.user);
-        navigate('/'); // 跳转到首页或其他页面
+
+        // 根据用户角色导航
+        if (data.user.role === 'publisher') {
+          navigate(`/publisherhomepage/${data.user._id}`);
+        } else if (data.user.role === 'developer') {
+          navigate(`/developerhomepage/${data.user._id}`);
+        } else {
+          navigate('/'); // 默认跳转到首页
+        }
       } else {
         console.log('Login failed:', data.message);
         // 登录失败

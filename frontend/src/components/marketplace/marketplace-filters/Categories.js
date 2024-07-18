@@ -10,7 +10,7 @@ import {
   Collapse,
 } from '@mui/material';
 
-export default function LongSelect({
+export default function Categories({
   selectedCategories,
   handleSelectCategories,
 }) {

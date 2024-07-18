@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PriceSlider from '../components/marketplace/marketplace-filters/PriceSlider';
 import { Typography } from '@mui/material';
-import Category from '../components/marketplace/marketplace-filters/Category';
 import dayjs from 'dayjs';
 import SortByMenu from '../components/marketplace/SortByMenu';
 import MarketHeader from '../components/marketplace/marketplace-header/MarketHeader';

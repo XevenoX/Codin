@@ -7,33 +7,42 @@ import {
   Typography,
   IconButton,
 } from '@mui/material';
-import { ChevronRight } from '@mui/icons-material';
+import { ChevronRight, ChevronLeft } from '@mui/icons-material';
+import frontEndPic from '../../pics/Tags/Frontend.png';
 
 const destinations = [
-  { name: 'Frontend', properties: 1750, image: '/api/placeholder/300/200' },
-  { name: 'Material UI', properties: 724, image: '/api/placeholder/300/200' },
-  { name: 'React', properties: 719, image: '/api/placeholder/300/200' },
-  { name: 'MongoDB', properties: 25021, image: '/api/placeholder/300/200' },
-  { name: 'JavaScript', properties: 757, image: '/api/placeholder/300/200' },
-  { name: 'NodeJS', properties: 561, image: '/api/placeholder/300/200' },
+  { name: 'Frontend', image: frontEndPic },
+  { name: 'Material UI', image: '/api/placeholder/300/200' },
+  { name: 'React', image: '/api/placeholder/300/200' },
+  { name: 'MongoDB', image: '/api/placeholder/300/200' },
+  { name: 'JavaScript', image: '/api/placeholder/300/200' },
+  { name: 'NodeJS', image: '/api/placeholder/300/200' },
   // Add more destinations as needed
 ];
 
 const TagsScroll = () => {
   const scrollContainerRef = useRef(null);
   const [showRightArrow, setShowRightArrow] = useState(true);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } =
         scrollContainerRef.current;
       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+      setShowLeftArrow(scrollLeft > 10);
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
     }
   };
 
@@ -79,18 +88,32 @@ const TagsScroll = () => {
               height="140"
               image={destination.image}
               alt={destination.name}
+              sx={{ width: '150px', height: 'auto', ml: 7 }}
             />
             <CardContent>
               <Typography gutterBottom variant="h6" component="div">
                 {destination.name}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {destination.properties} properties
-              </Typography>
             </CardContent>
           </Card>
         ))}
       </Box>
+      {showLeftArrow && (
+        <IconButton
+          onClick={scrollLeft}
+          sx={{
+            position: 'absolute',
+            left: 0,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            bgcolor: 'background.paper',
+            '&:hover': { bgcolor: 'action.hover' },
+            boxShadow: 2,
+          }}
+        >
+          <ChevronLeft />
+        </IconButton>
+      )}
       {showRightArrow && (
         <IconButton
           onClick={scrollRight}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid'; // 确保使用正确的 Grid 组件
 import PriceSlider from './PriceSlider';
 import DateRange from './DateRange';
-import LongSelect from './LongSelect';
+import Categories from './Categories';
 
 const MarketFilters = ({
   selectedCategories, // 修改为 selectedCategories
@@ -42,7 +42,7 @@ const MarketFilters = ({
         />
       </Grid>
       <Grid item sx={gridItemStyle}>
-        <LongSelect
+        <Categories
           selectedCategories={selectedCategories} // 传递 selectedCategories
           handleSelectCategories={handleSelectCategories} // 传递 handleSelectCategory
         />

@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage';
@@ -35,8 +34,14 @@ function App() {
           <Route path="/" element={<Homepage onLogin={handleLogin} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/marketplace" element={<MarketPlace />} />
-          <Route path="/publisherhomepage" element={<PublisherHomepage />} />
-          <Route path="/developerhomepage" element={<DeveloperHomepage />} />
+          <Route
+            path="/publisherhomepage/:id"
+            element={<PublisherHomepage />}
+          />
+          <Route
+            path="/developerhomepage/:id"
+            element={<DeveloperHomepage />}
+          />
           <Route path="/project" element={<ProjectCreate />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route
