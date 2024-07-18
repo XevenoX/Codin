@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post("/", (req, res) => {
   // delete the cookie which includes JWT
+  console.log("Running signOut route");
   res.cookie("token", "", {
     httpOnly: true,
     expires: new Date(0), // expire now

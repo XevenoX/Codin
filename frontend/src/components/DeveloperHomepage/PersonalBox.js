@@ -5,11 +5,12 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AvatarUpload from '../AvatarUpload';
 import { useCookies } from 'react-cookie';
+import { format } from "date-fns";
 import axios from "axios";
 
-const PersonalBox = ({ userInfo, setUserInfo }) => {
+const PersonalBox = ({ userInfo, setUserInfo, subscription }) => {
     // cookie
-    const [cookies] = useCookies(['user']); // 读取 'user' cookie
+    const [cookies] = useCookies(['user']); 
     const currentUser = cookies.user;
     const attributesToDisplay = { work_status: 'Work Status', website: 'Website', location: 'Location', school: 'School', skills: 'Skills' };
     const [tempUserInfo, setTempUserInfo] = useState(userInfo);
@@ -54,8 +55,19 @@ const PersonalBox = ({ userInfo, setUserInfo }) => {
                 <AvatarUpload userInfo={userInfo} width={'200px'} height={'200px'} variant={'circle'} />
             </Box>
             <Stack direction='column' sx={{ alignItems: 'center' }}>
-                <Typography variant="h5" component="div" align="left" sx={{ fontWeight: 'bold' }}>{userInfo.name}</Typography>
+                <Typography component="div" align="left" sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{userInfo.name}</Typography>
                 <Typography variant="body1" component="div" align="left" sx={{ color: 'grey' }}>{userInfo.email}</Typography>
+                {subscription.status ?
+                    <Typography variant="body1" component="div" align="left" sx={{ color: 'grey' }}>
+                        subscribed until {format(
+                            new Date(subscription.end_time),
+                            "dd/MM/yyyy"
+                        )}
+                    </Typography> :
+                    <Typography variant="body1" component="div" align="left" sx={{ color: 'grey' }}>
+                        not subscribed yet
+                    </Typography>
+                }
             </Stack>
 
             <Grid container spacing={2}>

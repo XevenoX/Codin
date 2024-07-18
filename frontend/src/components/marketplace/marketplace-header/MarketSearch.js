@@ -20,12 +20,16 @@ const MarketSearch = ({ onSearch }) => {
       className="market-search"
       sx={{ display: 'flex', flexDirection: 'row' }}
     >
-      <Grid item sx={{ display: 'flex', alignItems: 'flex-start', mr: 1 }}>
+      <Grid
+        item
+        sx={{ display: 'flex', alignItems: 'flex-start', mr: 1, mt: 1 }}
+      >
         <TextField
           label="Search"
           variant="outlined"
           value={searchTerm}
           onChange={handleSearchChange}
+          sx={{ width: 300, height: 20 }}
         />
       </Grid>
       <Grid
