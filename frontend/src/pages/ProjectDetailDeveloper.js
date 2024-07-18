@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import ApplyContactButton from "../components/ApplyContactButton";
 import { useCookies } from 'react-cookie';
 import Button from "@mui/material/Button";
@@ -14,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
+import { useParams, useNavigate } from 'react-router-dom';
 import Avatar from "@mui/material/Avatar";
 import BusinessIcon from "@mui/icons-material/Business";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -47,7 +46,7 @@ export default function ProjectDetailDeveloper() {
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [subscription, setSubscription] = useState(false);
+  
   useEffect(() => {
     const fetchProjectDetails = async () => {
       // const id = "667c3472880c0b162d2e1fd9"; //a test project in database
@@ -65,6 +64,7 @@ export default function ProjectDetailDeveloper() {
         const data = await response.json();
         setProjectDetails(data);
         console.log(data);
+        
 
         
       } catch (error) {
@@ -73,34 +73,11 @@ export default function ProjectDetailDeveloper() {
         setLoading(false);
       }
     };
-    const fetchSubscription = async () => {
-      console.log("user._id",user.id);
-      try{
-      const response = await fetch(
-        `http://localhost:5050/payment/checkSubscription/${user.id}`
-      ); // Adjust the URL according to your API endpoint
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
-      console.log("newest",result);
-      console.log("new Date(result) - new Date() > 0",new Date(result.newest) - new Date() );
-      let isSubscribed=false;
-      if(new Date(result.newest) - new Date() > 0){
-         isSubscribed = true;
-      };
-      console.log("isSubscribed",isSubscribed);
-      setSubscription(isSubscribed);
-      
-    }catch (error) {
-      console.error("Failed to fetch subscription details:", error);
-    } finally {
-      setLoading(false);
-    }
-    };
+
+    
 
     fetchProjectDetails();
-    fetchSubscription();
+
     
   }, []);
 
@@ -127,15 +104,11 @@ export default function ProjectDetailDeveloper() {
       noValidate
       autoComplete="off"
     >
-      <Grid>
-        <IconButton aria-label="arrow-back">
-          <ArrowBackIcon />
-        </IconButton>
-      </Grid>
+
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Stack direction="row" spacing={2} alignItems="center" mt={2}>
-            <Avatar sx={{ width: 100, height: 100 }} variant="rounded"></Avatar>
+            <Avatar sx={{ width: 100, height: 100 }} variant="rounded" src={projectDetails.avatar} alt="Logo"></Avatar>
             <Typography noWrap variant="h4">
               {projectDetails.project_name}
             </Typography>
@@ -184,7 +157,7 @@ export default function ProjectDetailDeveloper() {
             <Typography noWrap variant="h3">
               € {projectDetails.project_budget}
             </Typography>
-            <ApplyContactButton user={user} projectDetails={projectDetails} subscription={subscription} />
+            <ApplyContactButton user={user} projectDetails={projectDetails} />
           </Stack>
         </Grid>
         <Grid>

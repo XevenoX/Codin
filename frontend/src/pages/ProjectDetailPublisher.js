@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ApplicantsList from '../components/ApplicantsList';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -64,10 +64,11 @@ const initialLabels = {
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
-  // const [cookies] = useCookies(['user']);
-  // const user = cookies.user;
+  const [cookies] = useCookies(['user']);
+  const user = cookies.user;
 
   const { id } = useParams(); //get project id
+  const navigate = useNavigate();
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -96,6 +97,9 @@ export default function ProjectDetailPublisher() {
         }
         const data = await response.json();
         console.log(data);
+        if(data.project_status!=1||user.role!=""){
+          navigate(`/projectdetail/developer/${data._id}`);
+        }
         setProjectDetails(data);
       } catch (error) {
         console.error('Failed to fetch project details:', error);
@@ -226,6 +230,7 @@ export default function ProjectDetailPublisher() {
     return <Typography>No project details found</Typography>;
   }
 
+  const isPaid = projectDetails.paid;
   return (
     <Box
       component="form"
@@ -239,7 +244,9 @@ export default function ProjectDetailPublisher() {
         <Grid>
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
+
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick('project_name', projectDetails.project_name)
                 }
@@ -256,6 +263,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     'project_duration',
@@ -275,6 +283,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     'project_deadline',
@@ -298,6 +307,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     'project_budget',
@@ -317,6 +327,7 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
+              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     'project_labels',
@@ -348,6 +359,7 @@ export default function ProjectDetailPublisher() {
         <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
             <ButtonBase
+            style={{ visibility: isPaid ? 'hidden' : 'visible' }}
               onClick={() =>
                 handleEditClick(
                   'project_description',
@@ -365,6 +377,7 @@ export default function ProjectDetailPublisher() {
 
           <Stack direction="row" spacing={2}>
             <ButtonBase
+            style={{ visibility: isPaid ? 'hidden' : 'visible' }}
               onClick={() =>
                 handleEditClick('project_skills', projectDetails.project_skills)
               }

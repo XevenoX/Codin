@@ -133,7 +133,7 @@ router.get("/checkSubscription/:id", async (req, res) => {
 router.post("/project/:id", async (req, res) => {
   const db = getDB();
   const { id } = req.params; //project id
-  // console.log(req.body);
+  console.log("what payment info posted to backend",req.body);
   
   // do it later
   // const order = await createOrder(selectedPlan);
@@ -148,20 +148,23 @@ router.post("/project/:id", async (req, res) => {
       project_id: new ObjectId(id),
       time: new Date(),
       amount:req.body.value,
-      publisher_id:new ObjectId(req.body._id),
     };
     
-    let collection = await db.collection("payedProjects");
+    let collection = await db.collection("paidProjects");
     
     let payment = await collection.insertOne(newDocument);
     console.log(payment);
 
     let updates ={
-      payed:payment.insertedId
+      paid:req.body.payPalData.id,
+      chosen_applicant:new ObjectId(req.body.chosen_applicant[0]),
+      project_status:2, //set status to awaiting acceptance
     };
     
     let result = await db.collection("projects").updateOne({ _id: new ObjectId(id) }, { $set: updates });
     res.status(201).json({ result });
+
+
     // let query = { _id: new ObjectId(id) };
     // console.log(id);
     // const update = {
@@ -184,92 +187,7 @@ router.post("/project/:id", async (req, res) => {
   }
 });
 
-// use the orders api to create an order
 
-
-// createOrder route
-
-router.post("/orders", async (req, res) => {
-
-  try {
-
-    // use the cart information passed from the front-end to calculate the order amount detals
-
-    const { cart } = req.body;
-
-    const { jsonResponse, httpStatusCode } = await createOrder(cart);
-
-    res.status(httpStatusCode).json(jsonResponse);
-
-  } catch (error) {
-
-    console.error("Failed to create order:", error);
-
-    res.status(500).json({ error: "Failed to create order." });
-
-  }
-
-});
-function createOrder(data) {
-  // create accessToken using your clientID and clientSecret
-  //change to automated generate later
-  const accessToken =
-    "A21AALwFKYtpwWtMIMUVyxUfjYMHGxSeyfaVWkB74ZVcSB9imCf7eYnCsJXLVKlhZ1yp3ZWD9Ja3eyXoCYP8x2psudoI6_3IA";
-
-  // for the full stack example, please see the Standard Integration guide
-
-  // https://developer.paypal.com/docs/multiparty/checkout/standard/integrate/
-
-  return fetch("https://api-m.sandbox.paypal.com/v2/checkout/orders", {
-    method: "POST",
-
-    headers: {
-      "Content-Type": "application/json",
-
-      Authorization: `Bearer ${accessToken}`,
-    },
-
-    body: JSON.stringify({
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "EUR",
-
-            value: data.value,
-          },
-
-          reference_id: "d9f80740-38f0-11e8-b467-0ed5f89f718b",
-        },
-      ],
-
-      intent: "CAPTURE",
-
-      payment_source: {
-        paypal: {
-          experience_context: {
-            payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
-
-            payment_method_selected: "PAYPAL",
-
-            brand_name: "Codin",
-
-            locale: "de-DE",
-
-            landing_page: "LOGIN",
-
-            shipping_preference: "GET_FROM_FILE",
-
-            user_action: "PAY_NOW",
-
-            return_url: "https://example.com/returnUrl",
-
-            cancel_url: "https://example.com/cancelUrl",
-          },
-        },
-      },
-    }),
-  }).then((response) => response.json());
-}
 
 function calculatePayment(plan) {
   if (plan === plans[0].plan) {
