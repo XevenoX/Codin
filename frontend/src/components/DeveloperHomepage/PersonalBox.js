@@ -4,9 +4,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AvatarUpload from '../AvatarUpload';
+import { useCookies } from 'react-cookie';
 import axios from "axios";
 
 const PersonalBox = ({ userInfo, setUserInfo }) => {
+    // cookie
+    const [cookies] = useCookies(['user']); // 读取 'user' cookie
+    const currentUser = cookies.user;
     const attributesToDisplay = { work_status: 'Work Status', website: 'Website', location: 'Location', school: 'School', skills: 'Skills' };
     const [tempUserInfo, setTempUserInfo] = useState(userInfo);
     const [isEditing, setIsEditing] = useState(false);
@@ -67,9 +71,11 @@ const PersonalBox = ({ userInfo, setUserInfo }) => {
                                 </IconButton>
                             </Box>
                         ) : (
-                            <IconButton onClick={handleEditClick}>
-                                <EditIcon />
-                            </IconButton>
+                            currentUser.email === userInfo.email && (
+                                <IconButton onClick={handleEditClick}>
+                                    <EditIcon />
+                                </IconButton>
+                            )
                         )}
                     </Box>
                 </Grid>

@@ -18,9 +18,9 @@ const projectSchema = new mongoose.Schema(
         project_budget: { type: Double, required: true },
         // project label: list, chosen from predefined labels stored on frontend
         project_labels: { type: [String], required: false },
-        // candidates and the chosen developer
-        applicants: [{ type: mongoose.Types.ObjectId, ref: 'User', required: false }],
-        chosen_applicants: { type: mongoose.Types.ObjectId, ref: 'User', required: false },
+        // candidates and the chosen developer: applicantId, motivation, apply_time
+        applicants: [{ type: mongoose.Types.object, required: false }],
+        chosen_applicants: { type: mongoose.Types.object, required: false },
         //status: 1-open,2-awaiting acceptence,3-in progress,4-awaiting confirm,5-complete,6-failure
         project_status: { type: Number, required: true, enum: [1, 2, 3, 4, 5, 6], default: 1 },
     },

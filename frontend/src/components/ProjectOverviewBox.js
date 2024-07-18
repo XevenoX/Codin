@@ -3,6 +3,9 @@ import { Avatar, Grid, Paper, Typography, Button, Card } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
 
 const ProjectOverviewBox = ({ projectInfo }) => {
+    const isValidDate = (date) => {
+        return date instanceof Date && !isNaN(date);
+    };
 
     return (
         <div className="overview">
@@ -47,7 +50,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                 <Grid container direction="column" className="task-info">
                                     <Grid item>
                                         <Typography
-                                            variant="subtitle2"
                                             sx={{
                                                 fontSize: 10,
                                                 fontWeight: 'light',
@@ -59,18 +61,25 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                                 WebkitBoxOrient: 'vertical',
                                             }}
                                         >
-                                            Posted {formatDistanceToNow(new Date(projectInfo.project_posttime), { addSuffix: true })} •&nbsp;
-                                            {projectInfo.project_status === 1 && (
-                                                <text>
-                                                    Close {formatDistanceToNow(new Date(projectInfo.project_deadline), { addSuffix: true })} •&nbsp;
-                                                </text>
+                                            {/* check if the date  valid before rendoring */}
+                                            {isValidDate(projectInfo.project_posttime) && (
+                                                <Typography variant="body2">
+                                                    Posted {formatDistanceToNow(projectInfo.project_posttime, { addSuffix: true })} •&nbsp;
+                                                </Typography>
                                             )}
-                                            {projectInfo.project_status === 5 && (
-                                                <text>
-                                                    Completed {formatDistanceToNow(new Date(projectInfo.project_completetime), { addSuffix: true })} •&nbsp;
-                                                </text>
+                                            {projectInfo.project_status === 1 && isValidDate(projectInfo.project_deadline) && (
+                                                <Typography variant="body2">
+                                                    Close {formatDistanceToNow(projectInfo.project_deadline, { addSuffix: true })} •&nbsp;
+                                                </Typography>
                                             )}
-                                            {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
+                                            {projectInfo.project_status === 5 && isValidDate(projectInfo.project_completetime) && (
+                                                <Typography variant="body2">
+                                                    Completed {formatDistanceToNow(projectInfo.project_completetime, { addSuffix: true })} •&nbsp;
+                                                </Typography>
+                                            )}
+                                            <Typography variant="body2">
+                                                {projectInfo.applicants ? projectInfo.applicants.length : 0} applications received
+                                            </Typography>
                                         </Typography>
                                     </Grid>
                                     <Grid item className="task-title">
@@ -103,7 +112,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                                 }}
                             >
                                 <Typography
-                                    variant="body1"
                                     sx={{ fontWeight: 'bold', fontSize: 28 }}
                                 >
                                     $ {projectInfo.project_budget}
@@ -112,7 +120,6 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                         </Grid>
                         <Grid item sx={{ height: '30%', overflow: 'hidden' }}>
                             <Typography
-                                variant="body2"
                                 sx={{
                                     margin: 0.5,
                                     overflow: 'hidden',
@@ -130,13 +137,12 @@ const ProjectOverviewBox = ({ projectInfo }) => {
                             {projectInfo.project_labels && projectInfo.project_labels.length > 0 && projectInfo.project_labels.map((label, index) => (
                                 <React.Fragment key={label}>
                                     <Typography
-                                        variant="body2"
                                         sx={{ fontWeight: 'light', color: 'blue' }}
                                     >
                                         {label}
                                     </Typography>
                                     {index < projectInfo.project_labels.length - 1 && (
-                                        <Typography variant="body2" sx={{ fontWeight: 'light' }}>
+                                        <Typography sx={{ fontWeight: 'light' }}>
                                             &middot;
                                         </Typography>
                                     )}

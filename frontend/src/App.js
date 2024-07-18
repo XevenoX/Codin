@@ -32,8 +32,8 @@ function App() {
             <Route path="/" element={<Homepage onLogin={handleLogin} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/marketplace" element={<MarketPlace />} />
-            <Route path="/publisherhomepage" element={<PublisherHomepage />} />
-            <Route path="/developerhomepage" element={<DeveloperHomepage />} />
+            <Route path="/publisherhomepage/:id" element={<PublisherHomepage />} />
+            <Route path="/developerhomepage/:id" element={<DeveloperHomepage />} />
             <Route path="/project" element={<ProjectCreate />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/project-management" element={<ProjectManagementPage />} />  {/* 添加新的路由 */}
