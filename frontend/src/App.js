@@ -16,6 +16,7 @@ import { CookiesProvider, useCookies } from 'react-cookie';
 import ProjectManagementPage from './pages/ProjectManagementPage';
 import CompanyProjectManagementPage from './pages/CompanyProjectManagementPage'; // Company view
 import GanttChartPage from './pages/GanttChartPage'; // import GanttChartPage
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 function App() {
@@ -32,23 +33,18 @@ function App() {
             <Route path="/" element={<Homepage onLogin={handleLogin} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/marketplace" element={<MarketPlace />} />
-            <Route path="/publisherhomepage/:id" element={<PublisherHomepage />} />
-            <Route path="/developerhomepage/:id" element={<DeveloperHomepage />} />
-            <Route path="/project" element={<ProjectCreate />} />
-            <Route path="/subscription" element={<Subscription />} />
-            <Route path="/project-management" element={<ProjectManagementPage />} />  {/* 添加新的路由 */}
-            <Route path="/company-project-management" element={<CompanyProjectManagementPage />} /> {/* Company 视角 */}
-            <Route path="/gantt-chart" element={<GanttChartPage />} /> {/* 添加新的路由 */}
-
-            <Route
-              path="/projectdetail/publisher/:id"
-              element={<ProjectDetailPublisher />}
-            />
-            <Route
-              path="/projectdetail/developer/:id"
-              element={<ProjectDetailDeveloper />}
-
-            />
+            {/* protected route, only login user can visit these pages */}
+            <Route element={<ProtectedRoute isLogin={cookies.user} />}>
+              <Route path="/subscription" element={<Subscription />} />
+              <Route path="/publisherhomepage/:id" element={<PublisherHomepage />} />
+              <Route path="/developerhomepage/:id" element={<DeveloperHomepage />} />
+              <Route path="/project" element={<ProjectCreate />} />
+              <Route path="/project-management" element={<ProjectManagementPage />} />  {/* 添加新的路由 */}
+              <Route path="/company-project-management" element={<CompanyProjectManagementPage />} /> {/* Company 视角 */}
+              <Route path="/gantt-chart" element={<GanttChartPage />} /> {/* 添加新的路由 */}
+              <Route path="/projectdetail/publisher/:id" element={<ProjectDetailPublisher />} />
+              <Route path="/projectdetail/developer/:id" element={<ProjectDetailDeveloper />} />
+            </Route>
           </Route>
         </Routes>
       </Router>

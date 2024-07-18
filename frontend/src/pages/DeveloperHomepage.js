@@ -9,6 +9,7 @@ import axios from "axios";
 
 const DeveloperHomepage = () => {
     const [userInfo, setUserInfo] = useState(null);
+    const [subscription, setSubscription] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const _id = useParams();
@@ -27,10 +28,40 @@ const DeveloperHomepage = () => {
         }
     }
 
+    const fetchSubscription = async () => {
+        try {
+            const response = await fetch(
+                `http://localhost:5050/payment/checkSubscription/${userInfo._id}`
+            );
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const result = await response.json();
+            console.log("newest", result);
+            console.log("new Date(result) - new Date() > 0", new Date(result.newest) - new Date());
+            let isSubscribed = false;
+            if (new Date(result.newest) - new Date() > 0) {
+                isSubscribed = true;
+            };
+            console.log("isSubscribed", isSubscribed);
+            setSubscription({ status: isSubscribed, end_time: new Date(result.newest) });
+        } catch (error) {
+            console.error("Failed to fetch subscription details:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        axios.defaults.baseURL = "http://localhost:5050"
-        loadUserInfo().catch((e) => console.log(e))
+        axios.defaults.baseURL = "http://localhost:5050";
+        loadUserInfo().catch((e) => console.log(e));
     }, []);
+
+    useEffect(() => {
+        if (userInfo) {
+            fetchSubscription();
+        }
+    }, [userInfo]);
 
     if (loading) {
         return (
@@ -51,7 +82,7 @@ const DeveloperHomepage = () => {
     return (
         <Box sx={{ display: 'flex', height: '85%', backgroundColor: 'white' }}>
             <Box sx={{ flex: 1 }}>
-                <PersonalBox userInfo={userInfo} setUserInfo={setUserInfo} />
+                <PersonalBox userInfo={userInfo} setUserInfo={setUserInfo} subscription={subscription} />
             </Box>
             <Box sx={{ flex: 2, display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{
