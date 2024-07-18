@@ -99,7 +99,7 @@ export default function ApplyContactButton({ user, projectDetails}) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: user.applicantId,
+          userId: user.id,
           message: contactMessage,
           projectId: projectDetails._id,
           publisher_id: projectDetails.publisher_id,
@@ -123,9 +123,10 @@ export default function ApplyContactButton({ user, projectDetails}) {
 
   useEffect(() => {
     // Check if user has already applied
+    console.log("projectDetails.applicants",projectDetails.applicants);
     if (Array.isArray(projectDetails.applicants)) {
       const isApplied = projectDetails.applicants.some(
-        (applicant) => applicant.applicantId.toString() === user._id
+        (applicant) => applicant.toString() === user.id
       );
       setAlreadyApplied(isApplied);
     }
@@ -167,7 +168,7 @@ export default function ApplyContactButton({ user, projectDetails}) {
 
 
     
-  }, [projectDetails.applicants, user.applicantId]);
+  }, [projectDetails.applicants, user.id]);
   console.log('alreadyApplied', alreadyApplied);
   console.log("test Subscrption",subscription);
 
