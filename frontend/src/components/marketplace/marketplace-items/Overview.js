@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import { useNavigate } from 'react-router-dom';
+import Avatar from '@mui/material/Avatar'; // 引入 MUI 的 Avatar 组件
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -170,19 +171,42 @@ const Overview = ({ project }) => {
             container
             direction="column"
             xs={3}
-            spacing={3}
-            sx={{ height: '100%' }}
+            spacing={2}
+            sx={{
+              height: '100%',
+              alignItems: 'center',
+              justifyContent: 'center', // 确保头像和按钮在垂直方向上居中对齐
+            }}
           >
-            <Grid item sx={{ flexGrow: 1 }}>
-              <Paper sx={{ height: '100%' }}>
-                <Typography>Avatar</Typography>
-              </Paper>
+            <Grid
+              item
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexGrow: 1,
+              }}
+            >
+              <Avatar
+                alt="Avatar"
+                src={project.avatar}
+                sx={{ width: 100, height: 90 }} // 设置头像大小并添加上边距
+              />
             </Grid>
-            <Grid item sx={{ flexGrow: 0 }}>
+            <Grid
+              item
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexGrow: 0,
+              }}
+            >
               <Button
                 variant="contained"
                 fullWidth
                 onClick={handleSeeMoreClick}
+                sx={{ mt: 1, mb: 1 }}
               >
                 See More
               </Button>

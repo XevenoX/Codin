@@ -34,7 +34,7 @@ const MarketHeader = ({ onSortChange, onSearch, totalProjects }) => {
         <Grid item>
           <StillOpeningProjects totalProjects={totalProjects} />
         </Grid>
-        <Grid item sx={{ marginBottom: '18px' }}>
+        <Grid item sx={{ marginBottom: '18px', ml: 6 }}>
           <MarketSearch onSearch={onSearch} />
         </Grid>
         <Grid item>

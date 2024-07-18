@@ -13,24 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color="inherit" href="/">
-        Codin.
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import signInPic from '../pics/Signin.png';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 export default function SignIn({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -54,23 +38,27 @@ export default function SignIn({ onLogin }) {
 
       const data = await response.json();
 
+      console.log(data.user);
+      console.log(response.ok);
+
       if (response.ok) {
         // 登录成功
         setError('');
         setEmailError(false);
         setCookie('user', data.user, { path: '/' });
         onLogin(data.user);
-        console.log(data.user);
 
         // 根据用户角色导航
         if (data.user.role === 'publisher') {
+          console.log('Its a developer');
+          console.log(data.user);
           navigate(`/publisherhomepage/${data.user.id}`);
         } else if (data.user.role === 'developer') {
           navigate(`/developerhomepage/${data.user.id}`);
         } else {
+          console.log('Neither publisher nor developer!');
           navigate('/'); // 默认跳转到首页
         }
-
       } else {
         console.log('Login failed:', data.message);
         // 登录失败
@@ -96,12 +84,29 @@ export default function SignIn({ onLogin }) {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+          <Box
+            sx={{
+              height: 'auto',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexGrow: 1,
+            }}
+          >
+            <Avatar
+              src={signInPic}
+              sx={{
+                m: 1,
+                height: 90,
+                width: 'auto',
+              }}
+            ></Avatar>
+          </Box>
+          <Box>
+            <Typography component="h1" variant="h4">
+              Sign in
+            </Typography>
+          </Box>
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -135,28 +140,24 @@ export default function SignIn({ onLogin }) {
               onChange={(e) => setPassword(e.target.value)}
               error={emailError}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              <Typography variant="h6">Sign in</Typography>
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/signup" variant="body2">
+                <Link href="/signup" variant="body3">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </div>
   );

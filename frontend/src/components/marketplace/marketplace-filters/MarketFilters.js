@@ -1,13 +1,12 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid'; // 确保使用正确的 Grid 组件
-import Category from './Category';
 import PriceSlider from './PriceSlider';
 import DateRange from './DateRange';
-import LongSelect from './LongSelect';
+import Categories from './Categories';
 
 const MarketFilters = ({
-  category,
-  handleSelectCategory,
+  selectedCategories, // 修改为 selectedCategories
+  handleSelectCategories,
   priceRange,
   handlePriceChange,
   startDate,
@@ -29,12 +28,6 @@ const MarketFilters = ({
       }}
     >
       <Grid item sx={gridItemStyle}>
-        <Category
-          category={category}
-          handleSelectCategory={handleSelectCategory}
-        />
-      </Grid>
-      <Grid item sx={gridItemStyle}>
         <PriceSlider
           priceRange={priceRange}
           handlePriceChange={handlePriceChange}
@@ -49,7 +42,10 @@ const MarketFilters = ({
         />
       </Grid>
       <Grid item sx={gridItemStyle}>
-        <LongSelect />
+        <Categories
+          selectedCategories={selectedCategories} // 传递 selectedCategories
+          handleSelectCategories={handleSelectCategories} // 传递 handleSelectCategory
+        />
       </Grid>
     </Grid>
   );

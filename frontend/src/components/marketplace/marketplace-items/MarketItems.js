@@ -18,11 +18,15 @@ const MarketItems = ({ projects }) => {
         alignItems: 'flex-start',
       }}
     >
-      {projects.map((project) => (
-        <Grid item key={project._id} sx={gridItemStyle}>
-          <Overview project={project} />
-        </Grid>
-      ))}
+      {projects.length > 0 ? (
+        projects.map((project) => (
+          <Grid item key={project._id} sx={gridItemStyle}>
+            <Overview project={project} />
+          </Grid>
+        ))
+      ) : (
+        <Typography variant="h6">No projects found.</Typography>
+      )}
     </Grid>
   );
 };
