@@ -8,7 +8,7 @@ import axios from "axios";
 
 const OverviewTab = ({ userInfo, setUserInfo }) => {
     // cookie
-    const [cookies] = useCookies(['user']); // 读取 'user' cookie
+    const [cookies] = useCookies(['user']);
     const currentUser = cookies.user;
     const attributesToDisplay = { industry: 'Industry', website: 'Website', organization_size: 'Organization Size', specialities: 'Specialities' };
 

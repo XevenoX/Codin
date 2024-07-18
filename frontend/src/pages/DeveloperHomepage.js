@@ -37,16 +37,13 @@ const DeveloperHomepage = () => {
                 throw new Error('Network response was not ok');
             }
             const result = await response.json();
-            // console.log("newest", result);
-            // console.log("new Date(result) - new Date() > 0", new Date(result.newest) - new Date());
             let isSubscribed = false;
             if (new Date(result.newest) - new Date() > 0) {
                 isSubscribed = true;
             };
-            // console.log("isSubscribed", isSubscribed);
             setSubscription({ status: isSubscribed, end_time: new Date(result.newest) });
         } catch (error) {
-            // console.error("Failed to fetch subscription details:", error);
+            console.error("Failed to fetch subscription details:", error);
         } finally {
             setLoading(false);
         }

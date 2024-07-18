@@ -43,6 +43,28 @@ router.get("/findUser", async (req, res) => {
   }
 });
 
+// Load user avatar based on id
+router.get("/loadAvatar", async (req, res) => {
+  try {
+    const { _id } = req.query;
+    if (!_id) {
+      return res.status(400).send("Either email or objectid is required");
+    }
+    const db = getDB();
+    const collection = db.collection("users");
+    let query = {};
+    query._id = new ObjectId(_id);
+    const user = await collection.findOne(query);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.status(200).json(user.avatar);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 // update publisher info
 router.post("/publisherUpdate", async (req, res) => {
   try {
