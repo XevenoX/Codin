@@ -148,7 +148,7 @@ const user = cookies.user;
     },
   });
 
-  const saveOrder = async () => {
+  const saveOrder = async (orderData) => {
     const planValue = selectedPlanRef.current;
 
     console.log('Selected Plan:', planValue);
@@ -273,6 +273,7 @@ const user = cookies.user;
                 });
 
                 const orderData = await response.json();
+                console.log("orderData",orderData);
 
                 if (orderData.id) {
                   return orderData.id;
@@ -298,7 +299,7 @@ const user = cookies.user;
             ) => {
               try {
                 const response = await fetch(
-                  `/api/orders/${data.orderID}/capture`,
+                  `http://localhost:5050/paypal/orders/${data.orderID}/capture`,
 
                   {
                     method: 'POST',
@@ -352,6 +353,8 @@ const user = cookies.user;
 
                     JSON.stringify(orderData, null, 2)
                   );
+                  saveOrder(orderData);
+                  
                 }
               } catch (error) {
                 console.error(error);
