@@ -1,69 +1,70 @@
-import React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import InputAdornment from "@mui/material/InputAdornment";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Rating from "@mui/material/Rating";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import InputAdornment from '@mui/material/InputAdornment';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Rating from '@mui/material/Rating';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import BusinessIcon from "@mui/icons-material/Business";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import HourglassTopIcon from "@mui/icons-material/HourglassTop";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Stack from "@mui/material/Stack";
+} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import BusinessIcon from '@mui/icons-material/Business';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Stack from '@mui/material/Stack';
 
-import IconButton from "@mui/material/IconButton";
-import { Paper } from "@mui/material";
-import Chip from "@mui/material/Chip";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { CircularProgress } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import { Paper } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
 
-export default function ApplyContactButton({ user, projectDetails }) {
-  console.log("user:", user);
+export default function ApplyContactButton({ user, projectDetails,subscription }) {
+  console.log('user:', user);
   console.log(projectDetails);
   const [openDialog, setOpenDialog] = useState(false);
-  const [motivation, setMotivation] = useState("");
+  const [motivation, setMotivation] = useState('');
   const [alreadyApplied, setAlreadyApplied] = useState(false);
   const [alreadyPassedDeadline, setAlreadyPassedDeadline] = useState(true);
-  const [subscription, setSubscription] = useState(false);
+  // const [subscription, setSubscription] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
-  const [contactMessage, setContactMessage] = useState("");
+  const [contactMessage, setContactMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const handleApply = async () => {
     try {
       let response = await fetch(`http://localhost:5050/applyProject`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           projectId: projectDetails._id,
-          applicantId: user.applicantId,
+          applicantId: user._id,
           motivation: motivation,
         }),
       });
       if (response.status === 200) {
-        alert("Successfully applied to the project");
+        alert('Successfully applied to the project');
         // update local state or refetch project details
         window.location.reload();
       }
     } catch (error) {
-      console.error("Error applying to the project:", error);
-      alert("Failed to apply to the project");
+      console.error('Error applying to the project:', error);
+      alert('Failed to apply to the project');
     }
   };
 
@@ -73,7 +74,7 @@ export default function ApplyContactButton({ user, projectDetails }) {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setMotivation("");
+    setMotivation('');
   };
 
   const handleMotivationChange = (event) => {
@@ -86,32 +87,32 @@ export default function ApplyContactButton({ user, projectDetails }) {
 
   const handleContactClose = () => {
     setContactDialogOpen(false);
-    setContactMessage("");
+    setContactMessage('');
   };
 
   const handleContactSend = async () => {
     try {
       let response = await fetch(`http://localhost:5050/contact`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId: user.applicantId,
           message: contactMessage,
           projectId: projectDetails._id,
-          publisher_id:projectDetails.publisher_id,
+          publisher_id: projectDetails.publisher_id,
         }),
       });
       if (response.status === 200) {
-        alert("Message sent successfully");
+        alert('Message sent successfully');
         handleContactClose();
       } else {
-        alert("Failed to send the message");
+        alert('Failed to send the message');
       }
     } catch (error) {
-      console.error("Error sending message:", error);
-      alert("Failed to send the message");
+      console.error('Error sending message:', error);
+      alert('Failed to send the message');
     }
   };
 
@@ -123,23 +124,21 @@ export default function ApplyContactButton({ user, projectDetails }) {
     // Check if user has already applied
     if (Array.isArray(projectDetails.applicants)) {
       const isApplied = projectDetails.applicants.some(
-        (applicant) => applicant.applicantId.toString() === user.applicantId
+        (applicant) => applicant.applicantId.toString() === user._id
       );
       setAlreadyApplied(isApplied);
     }
     //check deadline
-    if(new Date(projectDetails.project_deadline)-new Date()>0){
+    if (new Date(projectDetails.project_deadline) - new Date() > 0) {
       setAlreadyPassedDeadline(false);
-
     }
-  }, [projectDetails.applicants, user.applicantId]);
-  console.log("alreadyApplied", alreadyApplied);
 
-  useEffect(() => {
-    // Calculate subscription status
-    const isSubscribed = new Date(user.subscription) - new Date() > 0;
-    setSubscription(isSubscribed);
-  }, [user.subscription]);
+    
+  }, [projectDetails.applicants, user.applicantId]);
+  console.log('alreadyApplied', alreadyApplied);
+  console.log("test Subscrption",subscription);
+
+
   // replace with date later
   if (subscription) {
     return (
@@ -150,11 +149,17 @@ export default function ApplyContactButton({ user, projectDetails }) {
         <Button
           variant="contained"
           onClick={alreadyApplied ? null : handleOpenDialog}
-          disabled={alreadyApplied||alreadyPassedDeadline}
-        > 
-          {alreadyApplied ? "Already Applied" : (alreadyPassedDeadline ? "Passed Deadline":"Apply Now")}
+          disabled={alreadyApplied || alreadyPassedDeadline}
+        >
+          {alreadyApplied
+            ? 'Already Applied'
+            : alreadyPassedDeadline
+            ? 'Passed Deadline'
+            : 'Apply Now'}
         </Button>
-        <Button variant="contained" onClick={handleContactClick}>Contact</Button>
+        <Button variant="contained" onClick={handleContactClick}>
+          Contact
+        </Button>
 
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>Apply for the Project</DialogTitle>
@@ -168,10 +173,10 @@ export default function ApplyContactButton({ user, projectDetails }) {
               rows={4}
               maxLength={100}
               style={{
-                width: "100%",
-                padding: "8px",
-                marginTop: "8px",
-                marginBottom: "8px",
+                width: '100%',
+                padding: '8px',
+                marginTop: '8px',
+                marginBottom: '8px',
               }}
               placeholder="Enter your motivation here..."
             />
@@ -184,14 +189,10 @@ export default function ApplyContactButton({ user, projectDetails }) {
           </DialogActions>
         </Dialog>
 
-
-
         <Dialog open={contactDialogOpen} onClose={handleContactClose}>
           <DialogTitle>Contact</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Please enter your message:
-            </DialogContentText>
+            <DialogContentText>Please enter your message:</DialogContentText>
             <TextField
               autoFocus
               margin="dense"
@@ -205,7 +206,9 @@ export default function ApplyContactButton({ user, projectDetails }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleContactClose}>Cancel</Button>
-            <Button onClick={handleContactSend} disabled={!contactMessage}>Send</Button>
+            <Button onClick={handleContactSend} disabled={!contactMessage}>
+              Send
+            </Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>
@@ -217,7 +220,7 @@ export default function ApplyContactButton({ user, projectDetails }) {
           subscribe and see how many people have applied for the task
         </Typography>
         <Button variant="contained" disabled>
-          Apply Now{" "}
+          Apply Now{' '}
         </Button>
         <Button variant="contained" disabled>
           Contact
@@ -225,7 +228,7 @@ export default function ApplyContactButton({ user, projectDetails }) {
         <Typography noWrap variant="h5" color="black">
           only members! please
         </Typography>
-        <Link to={"/subscription"}>
+        <Link to={'/subscription'}>
           <Typography noWrap variant="h5" color="red">
             subscribe
           </Typography>

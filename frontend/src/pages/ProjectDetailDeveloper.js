@@ -42,8 +42,8 @@ export default function ProjectDetailDeveloper() {
     // applicantId: "667c33a8c6d615bee2e0ba0e",
     // applicantId: "668b843e1e61ca37c5498f62",  //test developer: candidate 1  
     // subscription: "2024-09-01T22:00:00.000+00:00",    //activated 
-    applicantId: "668b84861e61ca37c5498f63",  //test developer: candidate 2
-    subscription: "2024-09-01T22:00:00.000+00:00",    //activated
+    _id: "668b84861e61ca37c5498f63",  //test developer: candidate 2
+    // subscription: "2024-09-01T22:00:00.000+00:00",    //activated
     // applicantId: "668b916896511d11d3954842",  //test developer: candidate 3
     // subscription: "2024-09-01T22:00:00.000+00:00",    //activated
     // applicantId: "668b917e96511d11d3954843",  //test developer: candidate 4
@@ -66,7 +66,7 @@ export default function ProjectDetailDeveloper() {
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [subscription, setSubscription] = useState(false);
   useEffect(() => {
     const fetchProjectDetails = async () => {
       // const id = "667c3472880c0b162d2e1fd9"; //a test project in database
@@ -84,14 +84,43 @@ export default function ProjectDetailDeveloper() {
         const data = await response.json();
         setProjectDetails(data);
         console.log(data);
+
+        
       } catch (error) {
         console.error("Failed to fetch project details:", error);
       } finally {
         setLoading(false);
       }
     };
+    const fetchSubscription = async () => {
+      console.log("user._id",user._id);
+      try{
+      const response = await fetch(
+        `http://localhost:5050/payment/checkSubscription/${user._id}`
+      ); // Adjust the URL according to your API endpoint
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      console.log("newest",result);
+      console.log("new Date(result) - new Date() > 0",new Date(result.newest) - new Date() );
+      let isSubscribed=false;
+      if(new Date(result.newest) - new Date() > 0){
+         isSubscribed = true;
+      };
+      console.log("isSubscribed",isSubscribed);
+      setSubscription(isSubscribed);
+      
+    }catch (error) {
+      console.error("Failed to fetch subscription details:", error);
+    } finally {
+      setLoading(false);
+    }
+    };
 
     fetchProjectDetails();
+    fetchSubscription();
+    
   }, []);
 
   if (loading) {
@@ -174,7 +203,7 @@ export default function ProjectDetailDeveloper() {
             <Typography noWrap variant="h3">
               € {projectDetails.project_budget}
             </Typography>
-            <ApplyContactButton user={user} projectDetails={projectDetails} />
+            <ApplyContactButton user={user} projectDetails={projectDetails} subscription={subscription} />
           </Stack>
         </Grid>
         <Grid>
