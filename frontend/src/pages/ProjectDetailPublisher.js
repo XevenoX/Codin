@@ -64,8 +64,8 @@ const initialLabels = {
 
 export default function ProjectDetailPublisher() {
   //Todo: replace by session subscription
-  // const [cookies] = useCookies(['user']);
-  // const user = cookies.user;
+  const [cookies] = useCookies(['user']);
+  const user = cookies.user;
 
   const { id } = useParams(); //get project id
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ export default function ProjectDetailPublisher() {
         }
         const data = await response.json();
         console.log(data);
-        if(data.project_status!=1){
+        if(data.project_status!=1||user.role!=""){
           navigate(`/projectdetail/developer/${data._id}`);
         }
         setProjectDetails(data);

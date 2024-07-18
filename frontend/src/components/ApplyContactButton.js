@@ -30,11 +30,13 @@ import { Paper } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
 export default function ApplyContactButton({ user, projectDetails}) {
   console.log('user:', user);
   console.log(projectDetails);
+  const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [motivation, setMotivation] = useState('');
   const [alreadyApplied, setAlreadyApplied] = useState(false);
@@ -174,102 +176,107 @@ export default function ApplyContactButton({ user, projectDetails}) {
 
 
   // replace with date later
-  if(projectDetails.project_status==1){
-    if (subscription) {
-      return (
-        <React.Fragment>
-          <Typography noWrap variant="caption" color="grey">
-            {projectDetails.applicants.length} people have applied for the task
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={alreadyApplied ? null : handleOpenDialog}
-            disabled={alreadyApplied || alreadyPassedDeadline}
-          >
-            {alreadyApplied
-              ? 'Already Applied'
-              : alreadyPassedDeadline
-              ? 'Passed Deadline'
-              : 'Apply Now'}
-          </Button>
-          <Button variant="contained" onClick={handleContactClick}>
-            Contact
-          </Button>
-  
-          <Dialog open={openDialog} onClose={handleCloseDialog}>
-            <DialogTitle>Apply for the Project</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Please provide your motivation (max 100 characters):
-              </DialogContentText>
-              <textarea
-                value={motivation}
-                onChange={handleMotivationChange}
-                rows={4}
-                maxLength={100}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  marginTop: '8px',
-                  marginBottom: '8px',
-                }}
-                placeholder="Enter your motivation here..."
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDialog}>Cancel</Button>
-              <Button onClick={handleApply} disabled={!motivation}>
-                Submit
-              </Button>
-            </DialogActions>
-          </Dialog>
-  
-          <Dialog open={contactDialogOpen} onClose={handleContactClose}>
-            <DialogTitle>Contact</DialogTitle>
-            <DialogContent>
-              <DialogContentText>Please enter your message:</DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Message"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={contactMessage}
-                onChange={handleContactMessageChange}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleContactClose}>Cancel</Button>
-              <Button onClick={handleContactSend} disabled={!contactMessage}>
-                Send
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <Typography noWrap variant="caption" color="grey">
-            subscribe and see how many people have applied for the task
-          </Typography>
-          <Button variant="contained" disabled>
-            Apply Now{' '}
-          </Button>
-          <Button variant="contained" disabled>
-            Contact
-          </Button>
-          <Typography noWrap variant="h5" color="black">
-            only members! please
-          </Typography>
-          <Link to={'/subscription'}>
-            <Typography noWrap variant="h5" color="red">
-              subscribe
+  if(user.id==projectDetails.publisher_id){
+    navigate(`/projectdetail/publisher/${projectDetails._id}`);
+
+  }else{
+    if(projectDetails.project_status==1){
+      if (subscription) {
+        return (
+          <React.Fragment>
+            <Typography noWrap variant="caption" color="grey">
+              {projectDetails.applicants.length} people have applied for the task
             </Typography>
-          </Link>
-        </React.Fragment>
-      );
+            <Button
+              variant="contained"
+              onClick={alreadyApplied ? null : handleOpenDialog}
+              disabled={alreadyApplied || alreadyPassedDeadline}
+            >
+              {alreadyApplied
+                ? 'Already Applied'
+                : alreadyPassedDeadline
+                ? 'Passed Deadline'
+                : 'Apply Now'}
+            </Button>
+            <Button variant="contained" onClick={handleContactClick}>
+              Contact
+            </Button>
+    
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+              <DialogTitle>Apply for the Project</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please provide your motivation (max 100 characters):
+                </DialogContentText>
+                <textarea
+                  value={motivation}
+                  onChange={handleMotivationChange}
+                  rows={4}
+                  maxLength={100}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    marginTop: '8px',
+                    marginBottom: '8px',
+                  }}
+                  placeholder="Enter your motivation here..."
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialog}>Cancel</Button>
+                <Button onClick={handleApply} disabled={!motivation}>
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
+    
+            <Dialog open={contactDialogOpen} onClose={handleContactClose}>
+              <DialogTitle>Contact</DialogTitle>
+              <DialogContent>
+                <DialogContentText>Please enter your message:</DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Message"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={contactMessage}
+                  onChange={handleContactMessageChange}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleContactClose}>Cancel</Button>
+                <Button onClick={handleContactSend} disabled={!contactMessage}>
+                  Send
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <React.Fragment>
+            <Typography noWrap variant="caption" color="grey">
+              subscribe and see how many people have applied for the task
+            </Typography>
+            <Button variant="contained" disabled>
+              Apply Now{' '}
+            </Button>
+            <Button variant="contained" disabled>
+              Contact
+            </Button>
+            <Typography noWrap variant="h5" color="black">
+              only members! please
+            </Typography>
+            <Link to={'/subscription'}>
+              <Typography noWrap variant="h5" color="red">
+                subscribe
+              </Typography>
+            </Link>
+          </React.Fragment>
+        );
+      }
     }
   }
 }

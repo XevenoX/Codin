@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import ApplyContactButton from "../components/ApplyContactButton";
 import { useCookies } from 'react-cookie';
 import Button from "@mui/material/Button";
@@ -14,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
+import { useParams, useNavigate } from 'react-router-dom';
 import Avatar from "@mui/material/Avatar";
 import BusinessIcon from "@mui/icons-material/Business";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
