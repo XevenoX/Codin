@@ -6,7 +6,9 @@ import { Double, ObjectId } from "mongodb";
 import paypal from "paypal-rest-sdk";
 
 import dotenv from "dotenv";
+const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT = 8888 } = process.env;
 
+const base = "https://api-m.sandbox.paypal.com";
 // Load environmental variables
 dotenv.config({ path: "./.env" });
 
@@ -64,6 +66,7 @@ router.get("/subscription/plans", async (req, res) => {
       .send("Internal Server Error, Failed to fetch subscription plans");
   }
 });
+
 router.post("/subscription/:id", async (req, res) => {
   const db = getDB();
   // console.log(req.body.plan);
@@ -72,8 +75,9 @@ router.post("/subscription/:id", async (req, res) => {
   // do it later
   // const order = await createOrder(selectedPlan);
   //check newest subscription
+  console.log("/subscription/:id, req.params",req.params);
   let collection = await db.collection("subscriptions");
-  let query = { user_id: new ObjectId(req.body.id) };
+  let query = { user_id: new ObjectId(req.params) };
   // let user = await collection.findOne(query);
   const subscriptionHistory = await collection.find(query).toArray();
   console.log(subscriptionHistory);
@@ -88,7 +92,7 @@ router.post("/subscription/:id", async (req, res) => {
 
   try {
     let newDocument = {
-      user_id: new ObjectId(req.body.id),
+      user_id: new ObjectId(req.params),
       start: start,
       end: end,
     };
@@ -112,11 +116,11 @@ router.get("/checkSubscription/:id", async (req, res) => {
     let query = { user_id: new ObjectId(id) };
 
     const subscriptionHistory = await collection.find(query).toArray();
-    console.log(subscriptionHistory);
+    console.log("subscriptionHistory",subscriptionHistory);
 
-    let newest = new Date("2000-09-01T22:00:00.000+00:00");
+    let defaultDate = new Date("2000-09-01T22:00:00.000+00:00");
 
-    newest = calculateStart(newest, subscriptionHistory);
+    let newest = calculateStart(defaultDate, subscriptionHistory);
 
     console.log("newest", newest);
     res.status(200).json({ newest });
@@ -182,6 +186,30 @@ router.post("/project/:id", async (req, res) => {
 
 // use the orders api to create an order
 
+
+// createOrder route
+
+router.post("/orders", async (req, res) => {
+
+  try {
+
+    // use the cart information passed from the front-end to calculate the order amount detals
+
+    const { cart } = req.body;
+
+    const { jsonResponse, httpStatusCode } = await createOrder(cart);
+
+    res.status(httpStatusCode).json(jsonResponse);
+
+  } catch (error) {
+
+    console.error("Failed to create order:", error);
+
+    res.status(500).json({ error: "Failed to create order." });
+
+  }
+
+});
 function createOrder(data) {
   // create accessToken using your clientID and clientSecret
   //change to automated generate later
@@ -268,20 +296,31 @@ function calculateEnd(start, length) {
   return end;
 }
 function calculateStart(newest, subscriptionHistory) {
-  let start = newest;
+  let start = calculateNewest(newest,subscriptionHistory);
+  console.log("start before setting",start);
+console.log("newest - new Date() > 0",start - new Date() > 0);
+    
+    if (start - new Date() > 0) {
+      // start = newest;
+    } else {
+      start = new Date();
+    }
+    return start;
+
+}
+
+function calculateNewest(newest, subscriptionHistory){
+  // let start = newest;
+  console.log("subscriptionHistory in calculateNewest",subscriptionHistory);
   if (subscriptionHistory) {
     for (let subscription of subscriptionHistory) {
       if (new Date(subscription.end) - newest > 0) {
         newest = new Date(subscription.end);
       }
     }
-    if (newest - new Date() > 0) {
-      start = newest;
-    } else {
-      start = new Date();
-    }
-    return start;
-  }
+    console.log("calculateNewest",newest);
+return newest;
+}
 }
 
 export default router;
