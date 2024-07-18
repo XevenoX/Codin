@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ApplicantsList from "../components/ApplicantsList";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -69,6 +69,7 @@ export default function ProjectDetailPublisher() {
   // const user = cookies.user;
 
   const { id } = useParams(); //get project id
+  const navigate = useNavigate();
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -98,6 +99,9 @@ export default function ProjectDetailPublisher() {
         }
         const data = await response.json();
         console.log(data);
+        if(data.project_status!=1){
+          navigate(`/projectdetail/developer/${data._id}`);
+        }
         setProjectDetails(data);
       } catch (error) {
         console.error("Failed to fetch project details:", error);

@@ -47,7 +47,7 @@ export default function ProjectDetailDeveloper() {
 
   const [projectDetails, setProjectDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [subscription, setSubscription] = useState(false);
+  
   useEffect(() => {
     const fetchProjectDetails = async () => {
       // const id = "667c3472880c0b162d2e1fd9"; //a test project in database
@@ -73,34 +73,10 @@ export default function ProjectDetailDeveloper() {
         setLoading(false);
       }
     };
-    const fetchSubscription = async () => {
-      console.log("user._id",user.id);
-      try{
-      const response = await fetch(
-        `http://localhost:5050/payment/checkSubscription/${user.id}`
-      ); // Adjust the URL according to your API endpoint
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
-      console.log("newest",result);
-      console.log("new Date(result) - new Date() > 0",new Date(result.newest) - new Date() );
-      let isSubscribed=false;
-      if(new Date(result.newest) - new Date() > 0){
-         isSubscribed = true;
-      };
-      console.log("isSubscribed",isSubscribed);
-      setSubscription(isSubscribed);
-      
-    }catch (error) {
-      console.error("Failed to fetch subscription details:", error);
-    } finally {
-      setLoading(false);
-    }
-    };
+    
 
     fetchProjectDetails();
-    fetchSubscription();
+
     
   }, []);
 
@@ -184,7 +160,7 @@ export default function ProjectDetailDeveloper() {
             <Typography noWrap variant="h3">
               € {projectDetails.project_budget}
             </Typography>
-            <ApplyContactButton user={user} projectDetails={projectDetails} subscription={subscription} />
+            <ApplyContactButton user={user} projectDetails={projectDetails} />
           </Stack>
         </Grid>
         <Grid>
