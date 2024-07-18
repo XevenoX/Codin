@@ -4,7 +4,6 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-// Get projects with pagination and sorting
 router.get("/projects", async (req, res) => {
   const {
     page = 1,
@@ -13,9 +12,9 @@ router.get("/projects", async (req, res) => {
     search = "",
     minPrice = 0,
     maxPrice = 3000,
-    startDate, // 新增的开始日期
-    endDate, // 新增的结束日期
-    selectedCategories, // 修改为 selectedCategories
+    startDate,
+    endDate,
+    selectedCategories,
   } = req.query;
 
   const sortCriteria = {};
@@ -38,7 +37,7 @@ router.get("/projects", async (req, res) => {
   }
 
   try {
-    const db = getDB(); // 使用 getDB 函数获取数据库连接
+    const db = getDB();
     const collection = db.collection("projects");
 
     const query = {
@@ -49,15 +48,13 @@ router.get("/projects", async (req, res) => {
     };
 
     if (search) {
-      query.project_name = { $regex: search, $options: "i" }; // 添加搜索条件，忽略大小写
+      query.project_name = { $regex: search, $options: "i" };
     }
 
-    // 添加日期过滤条件
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
 
-      // 计算项目的开始日期（project_start = project_deadline - project_duration + 1）
       query.$expr = {
         $and: [
           {
@@ -78,18 +75,16 @@ router.get("/projects", async (req, res) => {
       };
     }
 
-    // 添加类别过滤条件，使用 $all 和正则表达式忽略大小写
     if (selectedCategories) {
       const categoriesArray = selectedCategories
         .split(",")
         .map((cat) => new RegExp(cat, "i"));
-      query.project_labels = { $all: categoriesArray }; // 确保项目包含所有 selectedCategories
+      query.project_labels = { $all: categoriesArray };
     }
 
-    // console.log("Query:", JSON.stringify(query, null, 2)); // 打印查询条件
-    // console.log("Sort Criteria:", JSON.stringify(sortCriteria, null, 2)); // 打印排序条件
+    // console.log("Query:", JSON.stringify(query, null, 2));
+    // console.log("Sort Criteria:", JSON.stringify(sortCriteria, null, 2));
 
-    // 获取符合条件的项目，并关联发布者信息
     const projects = await collection
       .aggregate([
         { $match: query },
@@ -106,7 +101,7 @@ router.get("/projects", async (req, res) => {
             path: "$publisherDetails",
             preserveNullAndEmptyArrays: true,
           },
-        }, // 展开数组，保留空值
+        },
         {
           $project: {
             _id: 1,
@@ -124,8 +119,8 @@ router.get("/projects", async (req, res) => {
             project_status: 1,
             avatar: {
               $ifNull: ["$publisherDetails.avatar", "default-avatar-url"],
-            }, // 使用默认 avatar
-            publisher_name: "$publisherDetails.name", // 可选，添加发布者的名字
+            },
+            publisher_name: "$publisherDetails.name",
           },
         },
         { $sort: sortCriteria },

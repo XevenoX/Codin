@@ -44,19 +44,6 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: "1mb" }));
 app.use(bodyParser.urlencoded({ limit: "1mb", extended: true }));
 
-// Ensure database connection before handling routes
-// app.use(async (req, res, next) => {
-//   try {
-//     if (!getDB()) {
-//       await connectDB();
-//     }
-//     next();
-//   } catch (err) {
-//     console.error("Database connection error:", err);
-//     res.status(500).json({ error: "Database connection error" });
-//   }
-// });
-
 // Define routes
 app.use("/", homepage);
 app.use("/signUp", signUp);
@@ -71,9 +58,8 @@ app.use("/updateProject", updateProject);
 app.use("/contact", contact);
 app.use("/marketplace", getMarketplaceProjects);
 app.use("/projectpage", projectpage);
-app.use("/payment",payment);
-app.use("/paypal",paypal);
-// 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
+app.use("/payment", payment);
+app.use("/paypal", paypal);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });

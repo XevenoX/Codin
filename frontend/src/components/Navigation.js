@@ -34,7 +34,7 @@ export default function Navigation({ user, onLogout }) {
     console.log('User object:', user); // Add this line to debug
     if (user) {
       const role = user.role;
-      const userId = user._id;
+      const userId = user.id;
       if (role === 'publisher') {
         navigate(`/publisherhomepage/${userId}`);
       } else if (role === 'developer') {

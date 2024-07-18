@@ -137,7 +137,7 @@ const TagsScroll = () => {
           sx={{
             position: 'absolute',
             right: 0,
-            top: '60%', // 向下移动 10%
+            top: '60%', // move it lower
             transform: 'translateY(-50%)',
             bgcolor: 'background.paper',
             '&:hover': { bgcolor: 'action.hover' },

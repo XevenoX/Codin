@@ -5,7 +5,7 @@ import DateRange from './DateRange';
 import Categories from './Categories';
 
 const MarketFilters = ({
-  selectedCategories, // 修改为 selectedCategories
+  selectedCategories,
   handleSelectCategories,
   priceRange,
   handlePriceChange,
@@ -43,8 +43,8 @@ const MarketFilters = ({
       </Grid>
       <Grid item sx={gridItemStyle}>
         <Categories
-          selectedCategories={selectedCategories} // 传递 selectedCategories
-          handleSelectCategories={handleSelectCategories} // 传递 handleSelectCategory
+          selectedCategories={selectedCategories}
+          handleSelectCategories={handleSelectCategories}
         />
       </Grid>
     </Grid>

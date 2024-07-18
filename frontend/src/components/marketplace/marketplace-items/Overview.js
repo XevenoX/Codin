@@ -49,9 +49,9 @@ const Overview = ({ project }) => {
           width: 675,
           height: 200,
           flexGrow: 1,
-          display: 'flex', // 使用 flex 布局
-          alignItems: 'center', // 垂直居中
-          justifyContent: 'center', // 水平居中
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         }}
@@ -175,7 +175,7 @@ const Overview = ({ project }) => {
             sx={{
               height: '100%',
               alignItems: 'center',
-              justifyContent: 'center', // 确保头像和按钮在垂直方向上居中对齐
+              justifyContent: 'center',
             }}
           >
             <Grid
@@ -190,7 +190,7 @@ const Overview = ({ project }) => {
               <Avatar
                 alt="Avatar"
                 src={project.avatar}
-                sx={{ width: 100, height: 90 }} // 设置头像大小并添加上边距
+                sx={{ width: 100, height: 90 }}
               />
             </Grid>
             <Grid

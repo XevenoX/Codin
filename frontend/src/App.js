@@ -52,14 +52,11 @@ function App() {
               path="/project-management"
               element={<ProjectManagementPage />}
             />{' '}
-            {/* 添加新的路由 */}
             <Route
               path="/company-project-management"
               element={<CompanyProjectManagementPage />}
             />{' '}
-            {/* Company 视角 */}
             <Route path="/gantt-chart" element={<GanttChartPage />} />{' '}
-            {/* 添加新的路由 */}
             <Route
               path="/projectdetail/publisher/:id"
               element={<ProjectDetailPublisher />}

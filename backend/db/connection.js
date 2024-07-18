@@ -11,7 +11,7 @@ const connectDB = async () => {
     await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // 设置连接超时时间为5秒
+      serverSelectionTimeoutMS: 5000,
     });
     console.log("Successfully connected to MongoDB using mongoose!");
   } catch (err) {
@@ -22,7 +22,7 @@ const connectDB = async () => {
 
 const getDB = () => {
   if (mongoose.connection.readyState !== 1) {
-    return null; // 返回 null 而不是抛出错误
+    return null;
   }
   return mongoose.connection.db;
 };

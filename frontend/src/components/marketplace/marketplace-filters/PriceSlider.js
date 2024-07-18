@@ -22,8 +22,8 @@ export default function PriceSlider({ priceRange, handlePriceChange }) {
             value={priceRange}
             onChange={handlePriceChange}
             valueLabelDisplay="auto"
-            min={0} // 设置最小值
-            max={3000} // 设置最大值
+            min={0}
+            max={3000}
           />
         </Box>
       </Box>
