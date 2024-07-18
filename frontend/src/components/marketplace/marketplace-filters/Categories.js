@@ -9,6 +9,7 @@ import {
   Button,
   Collapse,
 } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 export default function Categories({
   selectedCategories,
@@ -56,7 +57,14 @@ export default function Categories({
   return (
     <Card sx={{ width: '100%' }}>
       <FormControl component="fieldset" sx={{ m: 2 }}>
-        <FormLabel component="legend">Category</FormLabel>
+        <FormLabel component="legend">
+          <Typography
+            color="textPrimary"
+            sx={{ fontSize: 16, fontWeight: 'bold' }}
+          >
+            Categories
+          </Typography>
+        </FormLabel>
         {initialCategories.map((cat) => (
           <FormControlLabel
             key={cat}

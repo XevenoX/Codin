@@ -193,12 +193,13 @@ const MarketPlace = () => {
                     justifyContent="center"
                     alignItems="center"
                     mt={2}
-                    mr={3}
+                    mr={8}
+                    mb={6}
                     sx={{ flexDirection: 'row' }} // 修改为横向布局
                   >
                     <Button
                       variant="contained"
-                      size="small" // 设置按钮大小为小
+                      size="large" // 设置按钮大小为小
                       disabled={page === 1}
                       onClick={handlePreviousPage}
                     >
@@ -211,7 +212,7 @@ const MarketPlace = () => {
                     </Typography>
                     <Button
                       variant="contained"
-                      size="small" // 设置按钮大小为小
+                      size="large" // 设置按钮大小为小
                       disabled={page === totalPages}
                       onClick={handleNextPage}
                     >

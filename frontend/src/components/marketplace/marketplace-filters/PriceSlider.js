@@ -10,17 +10,22 @@ export default function PriceSlider({ priceRange, handlePriceChange }) {
   return (
     <Card>
       <Box sx={{ width: '80%', m: 1 }}>
-        <Typography variant="body1">
-          Your price is {minPrice}-{maxPrice}
-        </Typography>
-        <Slider
-          getAriaLabel={() => 'Price Range'}
-          value={priceRange}
-          onChange={handlePriceChange}
-          valueLabelDisplay="auto"
-          min={0} // 设置最小值
-          max={3000} // 设置最大值
-        />
+        <Box sx={{ ml: 1 }}>
+          <Typography sx={{ fontSize: 16, fontWeight: 'bold' }}>
+            Your price is <br />
+            {minPrice}€ - {maxPrice}€:
+          </Typography>
+        </Box>
+        <Box sx={{ ml: 2 }}>
+          <Slider
+            getAriaLabel={() => 'Price Range'}
+            value={priceRange}
+            onChange={handlePriceChange}
+            valueLabelDisplay="auto"
+            min={0} // 设置最小值
+            max={3000} // 设置最大值
+          />
+        </Box>
       </Box>
     </Card>
   );

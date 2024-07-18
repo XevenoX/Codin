@@ -20,7 +20,7 @@ export default function DateRange({
       <Box sx={{ m: 1 }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Grid spacing={2} container sx={{ display: 'flex' }}>
-            <Typography sx={{ pl: 1, pt: 1 }} variant="body1">
+            <Typography sx={{ pl: 1, pt: 1, fontSize: 16, fontWeight: 'bold' }}>
               Task Start
             </Typography>
             <Grid item>
@@ -30,7 +30,7 @@ export default function DateRange({
                 renderInput={(params) => <TextField {...params} size="small" />}
               />
             </Grid>
-            <Typography sx={{ pl: 1, pt: 1 }} variant="body1">
+            <Typography sx={{ pl: 1, pt: 1, fontSize: 16, fontWeight: 'bold' }}>
               Task End
             </Typography>
             <Grid item>

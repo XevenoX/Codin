@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
+import signInPic from '../pics/Signin.png';
 
 export default function SignIn({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -76,12 +77,29 @@ export default function SignIn({ onLogin }) {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h4">
-            Sign in
-          </Typography>
+          <Box
+            sx={{
+              height: 'auto',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexGrow: 1,
+            }}
+          >
+            <Avatar
+              src={signInPic}
+              sx={{
+                m: 1,
+                height: 90,
+                width: 'auto',
+              }}
+            ></Avatar>
+          </Box>
+          <Box>
+            <Typography component="h1" variant="h4">
+              Sign in
+            </Typography>
+          </Box>
           <Box
             component="form"
             onSubmit={handleSubmit}
