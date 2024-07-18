@@ -45,6 +45,7 @@ router.get("/projects", async (req, res) => {
         $gte: parseInt(minPrice),
         $lte: parseInt(maxPrice),
       },
+      project_status: 1,
     };
 
     if (search) {
