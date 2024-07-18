@@ -48,7 +48,10 @@ const AvatarUpload = ({ userInfo, width, height, variant }) => {
         reader.onloadend = async () => {
             const base64data = reader.result;
             const compressedBase64 = await compressImage(base64data, 1000, 1000);
-            axios.post('/userInfo/updateAvatar', { email: userInfo.email, avatar: compressedBase64 })
+            axios.post('/userInfo/updateAvatar', { email: userInfo.email, avatar: compressedBase64 }, {
+                maxContentLength: 1 * 1024 * 1024,
+                maxBodyLength: 1 * 1024 * 1024,
+            })
                 .catch(error => {
                     console.error("There was an error uploading the image!", error);
                 });
