@@ -201,13 +201,13 @@ export default function Navigation({ user, onLogout }) {
                     currentUser.role === 'developer'
                       ? '/project-management'
                       : currentUser.role === 'publisher'
-                      ? '/company-project-management'
-                      : '#'
+                        ? '/company-project-management'
+                        : '#'
                   }
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   {currentUser.role === 'developer' ||
-                  currentUser.role === 'publisher'
+                    currentUser.role === 'publisher'
                     ? 'Project Management'
                     : 'Not Authorized'}
                 </Link>
@@ -313,13 +313,14 @@ export default function Navigation({ user, onLogout }) {
                 </ListItemIcon>
                 <ListItemText>My Homepage</ListItemText>
               </MenuItem>
-              <MenuItem onClick={handleSubscription}>
-                <ListItemIcon>
-                  <SubscriptionsRoundedIcon fontSize="medium" color="primary" />
-                </ListItemIcon>
-                <ListItemText>Subscription</ListItemText>
-              </MenuItem>
-
+              {currentUser.role === 'developer' && (
+                <MenuItem onClick={handleSubscription}>
+                  <ListItemIcon>
+                    <SubscriptionsRoundedIcon fontSize="medium" color="primary" />
+                  </ListItemIcon>
+                  <ListItemText>Subscription</ListItemText>
+                </MenuItem>
+              )}
               <Divider />
               <MenuItem onClick={handleSignOut}>
                 <ListItemIcon>
