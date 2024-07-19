@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install nm packages
-RUN npm install
+RUN npm install --force
 
 # Expose the port that the server will listen on
 EXPOSE 3000
