@@ -373,7 +373,7 @@ export default function ApplicantsList({ data, budget }) {
                             {
                               id: 'Project',
 
-                              quantity: offerAmount,
+                              quantity: Math.round(offerAmount),
                             },
                           ],
                         }),
@@ -381,6 +381,7 @@ export default function ApplicantsList({ data, budget }) {
                     );
 
                     const orderData = await response.json();
+                    console.log(orderData);
 
                     if (orderData.id) {
                       return orderData.id;

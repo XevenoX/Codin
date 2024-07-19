@@ -123,12 +123,16 @@ router.post("/rate", async (req, res) => {
     let query = { _id: new ObjectId(projectId) };
     let project = await collection.findOne(query);
     let rated_for = project.project_publisher;
+    if (rated_by === rated_for) {
+      rated_for = project.chosen_applicants;
+    }
     console.log("rated_for:" + rated_for);
+
     console.log(project);
     const feedback = {
       project_id: new ObjectId(projectId),
       rated_by: new ObjectId(rated_by),
-      rated_for: project.project_publisher,
+      rated_for,
       rating,
       comment,
       rated_date: new Date(),

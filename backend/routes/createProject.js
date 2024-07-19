@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
       // project_posttime: req.body.posttime,
       project_posttime: now,
       applicants: req.body.applicants,
-      chosen_applicants: req.body.chosen_applicants,
+      //chosen_applicants: req.body.chosen_applicants,
     };
     let collection = await db.collection("projects");
     let result = await collection.insertOne(newDocument);
