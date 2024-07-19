@@ -107,25 +107,21 @@ router.post("/updateMessageStatus", async (req, res) => {
 router.post("/addNewMessage", async (req, res) => {
     try {
         const { project_id, message_to, message_type, unread } = req.body;
-
+        console.log(project_id, message_to, message_type, unread);
         // verify if there is any missing data
         if (!project_id || !message_to || !message_type || unread === undefined) {
             return res.status(400).send("All fields are required");
         }
-
         const db = getDB();
         const messagesCollection = db.collection("messages");
-
         const newMessage = {
             project_id: new ObjectId(project_id),
             message_to: new ObjectId(message_to),
             message_type,
             unread,
         };
-
         const result = await messagesCollection.insertOne(newMessage);
-
-        if (result.insertedCount === 1) {
+        if (result.insertedId) {
             res.status(201).send("Message added successfully");
         } else {
             res.status(500).send("Failed to add message");
