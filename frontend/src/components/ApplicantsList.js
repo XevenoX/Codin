@@ -37,7 +37,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import { FUNDING } from '@paypal/react-paypal-js';
 import {
   PayPalScriptProvider,
   PayPalButtons,
@@ -209,7 +209,7 @@ export default function ApplicantsList({ data, budget }) {
         </Grid>
 
         <Box>
-          <ImageList sx={{ width: '75%', height: 450 }}>
+          <ImageList sx={{ width: '1000px', height: 450 }}>
             {sortedData.map((item) => (
               <ImageListItem key={item._id}>
                 <Card sx={{ minWidth: 180 }}>
@@ -292,13 +292,13 @@ export default function ApplicantsList({ data, budget }) {
           </Grid>
           {showCompare && (
             <ImageList
-              sx={{ width: '75%', height: 450, mt: 2, spacing: 4 }}
+              sx={{ width: '75%', height: 300, mt: 2, spacing: 4, ml: 20 }}
               cols={3}
               rowHeight={350}
             >
               {selectedData.map((item) => (
                 <ImageListItem key={item._id}>
-                  <Card sx={{ backgroundColor: '#e6f2ff' }}>
+                  <Card sx={{ backgroundColor: '#e6f2ff', height: '300px' }}>
                     <CardContent>
                       <Typography variant="h5" component="div">
                         {item.name}
@@ -341,7 +341,7 @@ export default function ApplicantsList({ data, budget }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleOfferClose}>Cancel</Button>
-            <Button onClick={handlePayed}>Submit</Button>
+
             <PayPalScriptProvider options={initialOptions}>
               <PayPalButtons
                 style={{
@@ -353,6 +353,7 @@ export default function ApplicantsList({ data, budget }) {
 
                   label: 'paypal',
                 }}
+                fundingsource={FUNDING.PAYPAL}
                 createOrder={async () => {
                   try {
                     const response = await fetch(

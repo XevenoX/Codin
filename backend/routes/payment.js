@@ -75,7 +75,7 @@ router.post("/subscription/:id", async (req, res) => {
   // do it later
   // const order = await createOrder(selectedPlan);
   //check newest subscription
-  console.log("/subscription/:id, req.params",req.params);
+  console.log("/subscription/:id, req.params", req.params);
   let collection = await db.collection("subscriptions");
   let query = { user_id: new ObjectId(req.params) };
   // let user = await collection.findOne(query);
@@ -116,7 +116,7 @@ router.get("/checkSubscription/:id", async (req, res) => {
     let query = { user_id: new ObjectId(id) };
 
     const subscriptionHistory = await collection.find(query).toArray();
-    console.log("subscriptionHistory",subscriptionHistory);
+    console.log("subscriptionHistory", subscriptionHistory);
 
     let defaultDate = new Date("2000-09-01T22:00:00.000+00:00");
 
@@ -133,44 +133,41 @@ router.get("/checkSubscription/:id", async (req, res) => {
 router.post("/project/:id", async (req, res) => {
   const db = getDB();
   const { id } = req.params; //project id
-  console.log("what payment info posted to backend",req.body);
-  
+  console.log("what payment info posted to backend", req.body);
+
   // do it later
   // const order = await createOrder(selectedPlan);
   //check newest subscription
-  
-  
-
-
 
   try {
     let newDocument = {
       project_id: new ObjectId(id),
       time: new Date(),
-      amount:req.body.value,
+      amount: req.body.value,
     };
-    
+
     let collection = await db.collection("paidProjects");
-    
+
     let payment = await collection.insertOne(newDocument);
     console.log(payment);
 
-    let updates ={
-      paid:req.body.payPalData.id,
-      chosen_applicant:new ObjectId(req.body.chosen_applicant[0]),
-      project_status:2, //set status to awaiting acceptance
+    let updates = {
+      paid: req.body.payPalData.id,
+      chosen_applicants: new ObjectId(req.body.chosen_applicant[0]),
+      project_status: 2, //set status to awaiting acceptance
     };
-    
-    let result = await db.collection("projects").updateOne({ _id: new ObjectId(id) }, { $set: updates });
-    res.status(201).json({ result });
 
+    let result = await db
+      .collection("projects")
+      .updateOne({ _id: new ObjectId(id) }, { $set: updates });
+    res.status(201).json({ result });
 
     // let query = { _id: new ObjectId(id) };
     // console.log(id);
     // const update = {
     //   payed:true,
     // }
-  
+
     // const result = await db.collection("projects").updateOne({ _id: new ObjectId(id) }, { $set: updates });
     // let newDocument = {
     //   user_id: new ObjectId(req.body._id),
@@ -186,8 +183,6 @@ router.post("/project/:id", async (req, res) => {
     res.status(500).send("Error adding record");
   }
 });
-
-
 
 function calculatePayment(plan) {
   if (plan === plans[0].plan) {
@@ -214,31 +209,30 @@ function calculateEnd(start, length) {
   return end;
 }
 function calculateStart(newest, subscriptionHistory) {
-  let start = calculateNewest(newest,subscriptionHistory);
-  console.log("start before setting",start);
-console.log("newest - new Date() > 0",start - new Date() > 0);
-    
-    if (start - new Date() > 0) {
-      // start = newest;
-    } else {
-      start = new Date();
-    }
-    return start;
+  let start = calculateNewest(newest, subscriptionHistory);
+  console.log("start before setting", start);
+  console.log("newest - new Date() > 0", start - new Date() > 0);
 
+  if (start - new Date() > 0) {
+    // start = newest;
+  } else {
+    start = new Date();
+  }
+  return start;
 }
 
-function calculateNewest(newest, subscriptionHistory){
+function calculateNewest(newest, subscriptionHistory) {
   // let start = newest;
-  console.log("subscriptionHistory in calculateNewest",subscriptionHistory);
+  console.log("subscriptionHistory in calculateNewest", subscriptionHistory);
   if (subscriptionHistory) {
     for (let subscription of subscriptionHistory) {
       if (new Date(subscription.end) - newest > 0) {
         newest = new Date(subscription.end);
       }
     }
-    console.log("calculateNewest",newest);
-return newest;
-}
+    console.log("calculateNewest", newest);
+    return newest;
+  }
 }
 
 export default router;
