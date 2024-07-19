@@ -313,7 +313,7 @@ export default function Navigation({ user, onLogout }) {
                 </ListItemIcon>
                 <ListItemText>My Homepage</ListItemText>
               </MenuItem>
-              {currentUser.role === 'developer' && (
+              {currentUser && currentUser.role === 'developer' && (
                 <MenuItem onClick={handleSubscription}>
                   <ListItemIcon>
                     <SubscriptionsRoundedIcon fontSize="medium" color="primary" />
