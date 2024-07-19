@@ -1,172 +1,175 @@
 /* ProjectManagementPage.css */
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f8f8f8;
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .nav {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .nav button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .profile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  
-  .notifications span {
-    font-size: 24px;
-  }
-  
-  .dashboard {
-    display: flex;
-    justify-content: space-between; /* 将元素分布在两端 */
-    align-items: flex-start;
-    padding: 20px;
-  }
-  
-  .graph {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 800px;
-    height: 400px;
-  }
-  
-  .graph-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-left: 20px;
-  }
-  
-  .value {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .amount {
-    font-size: 24px;
-    color: #4caf50;
-  }
-  
-  .stats {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-left: auto; /* 将元素推向右边 */
-  }
-  
-  .stat {
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-    width: 300px; /* 增加宽度 */
-    margin-bottom: 20px; /* 增加间距 */
-  }
-  
-  .stat .label {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .stat .date, .stat .amount {
-    font-size: 18px;
-  }
-  
-  .stat.on-the-way .amount {
-    color: red; /* 设置红色 */
-  }
-  
-  .projects-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .project-section {
-    background-color: #f8f8f8;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .project-section h2 {
-    margin-bottom: 10px;
-  }
-  
-  .project-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .project {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-  }
-  
-  .project h3 {
-    margin: 0;
-    font-size: 18px;
-  }
-  
-  .project .company, .project .complete-before, .project .response-before, .project .completed-at {
-    font-size: 14px;
-  }
-  
-  .project button {
-    align-self: flex-start;
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    background-color: #4caf50;
-    color: #ffffff;
-    border-radius: 4px;
-    margin-top: 5px;
-  }
-  
-  .project button.complete {
-    background-color: #f44336;
-  }
-  
-  .project button.accept {
-    background-color: #4caf50;
-  }
-  
-  .project button.reject {
-    background-color: #f44336;
-  }
-  
-  .project button.withdraw {
-    background-color: #f44336;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.notifications span {
+  font-size: 24px;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.graph {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 800px;
+  height: 400px;
+}
+
+.graph-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 20px;
+}
+
+.value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.amount {
+  font-size: 24px;
+  color: #4caf50;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.stat {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  width: 300px;
+  margin-bottom: 20px;
+}
+
+.stat .label {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.stat .date,
+.stat .amount {
+  font-size: 18px;
+}
+
+.stat.on-the-way .amount {
+  color: red;
+}
+
+.projects-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.project-section {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.project-section h2 {
+  margin-bottom: 10px;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.project h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.project .company,
+.project .complete-before,
+.project .response-before,
+.project .completed-at {
+  font-size: 14px;
+}
+
+.project button {
+  align-self: flex-start;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #4caf50;
+  color: #ffffff;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.project button.complete {
+  background-color: #f44336;
+}
+
+.project button.accept {
+  background-color: #4caf50;
+}
+
+.project button.reject {
+  background-color: #f44336;
+}
+
+.project button.withdraw {
+  background-color: #f44336;
+}

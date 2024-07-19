@@ -78,12 +78,12 @@ const GanttChartPage = () => {
             project.project_status === 1
               ? 'Open'
               : project.project_status === 2
-              ? 'Awaiting Acceptance'
-              : project.project_status === 3
-              ? 'In Progress'
-              : project.project_status === 5
-              ? 'Complete'
-              : '',
+                ? 'Awaiting Acceptance'
+                : project.project_status === 3
+                  ? 'In Progress'
+                  : project.project_status === 5
+                    ? 'Complete'
+                    : '',
             convertToGermanDate(project.project_posttime),
             convertToGermanDate(project.project_deadline),
             null,
@@ -114,6 +114,7 @@ const GanttChartPage = () => {
       trackHeight: 30,
       labelStyle: {
         width: 300,
+        fontSize: 0
       },
       palette: [
         { color: '#FF6347', dark: '#FF4500', light: '#FFA07A' }, // Open
@@ -148,20 +149,6 @@ const GanttChartPage = () => {
 
   return (
     <div>
-      <header>
-        <div className="logo">Codin.</div>
-        <nav>
-          <button onClick={() => window.history.back()}>Back</button>
-        </nav>
-        <div className="profile">
-          <img src={userInfo?.avatar} alt="Profile" />
-          <div className="notifications">
-            <span role="img" aria-label="notification">
-              🔔
-            </span>
-          </div>
-        </div>
-      </header>
       <main className="main-content">
         <div className="sidebar">
           <button className="post-new-project">Post New Project</button>
