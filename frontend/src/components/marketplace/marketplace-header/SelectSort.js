@@ -33,8 +33,6 @@ export default function SelectSort({ onSortChange }) {
           <MenuItem value="oldest">Oldest</MenuItem>
           <MenuItem value="shortestDuration">Shortest Duration</MenuItem>
           <MenuItem value="longestDuration">Longest Duration</MenuItem>
-          <MenuItem value="fewestApplicants">Fewest Applicants</MenuItem>
-          <MenuItem value="mostApplicants">Most Applicants</MenuItem>
         </Select>
       </FormControl>
     </div>

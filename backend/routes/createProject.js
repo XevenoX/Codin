@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
       project_skills: req.body.projectSkills,
       project_budget: new Double(parseFloat(req.body.projectBudget)),
       project_deadline: new Date(req.body.projectApplicationDeadline), //transform
-      project_duration: req.body.projectDuration,
+      project_duration: Number(req.body.projectDuration),
       project_publisher: new ObjectId(req.body.projectPublisher),
       project_labels: req.body.projectLabels,
       project_status: 1,

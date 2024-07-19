@@ -97,7 +97,7 @@ export default function ProjectDetailPublisher() {
         }
         const data = await response.json();
         console.log(data);
-        if(data.project_status!=1||user.role!=""){
+        if (data.project_status != 1 || user.role != 'publisher') {
           navigate(`/projectdetail/developer/${data._id}`);
         }
         setProjectDetails(data);
@@ -240,231 +240,261 @@ export default function ProjectDetailPublisher() {
       noValidate
       autoComplete="off"
     >
-      <Grid>
-        <Grid>
+      <Box>
+        <Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, mb: 8 }}>
+            <Stack direction="column" spacing={2}>
+              <Stack direction="row" spacing={2}>
+                <ButtonBase
+                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                  onClick={() =>
+                    handleEditClick('project_name', projectDetails.project_name)
+                  }
+                >
+                  <Typography color="grey">[edit]</Typography>
+                </ButtonBase>
+                <Grid>
+                  <BusinessIcon color="primary" />
+                </Grid>
+                <Typography noWrap variant="h5">
+                  <Box component="span" fontWeight="fontWeightBold">
+                    Project Name:
+                  </Box>{' '}
+                  {projectDetails.project_name}
+                </Typography>
+              </Stack>
+
+              <Stack direction="row" spacing={2}>
+                <ButtonBase
+                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                  onClick={() =>
+                    handleEditClick(
+                      'project_duration',
+                      projectDetails.project_duration
+                    )
+                  }
+                >
+                  <Typography color="grey">[edit]</Typography>
+                </ButtonBase>
+                <Grid>
+                  <AccessTimeIcon color="primary" />
+                </Grid>
+                <Typography noWrap variant="h5">
+                  <Box component="span" fontWeight="fontWeightBold">
+                    Duration:
+                  </Box>{' '}
+                  {projectDetails.project_duration}
+                  {' Days'}
+                </Typography>
+              </Stack>
+
+              <Stack direction="row" spacing={2}>
+                <ButtonBase
+                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                  onClick={() =>
+                    handleEditClick(
+                      'project_deadline',
+                      projectDetails.project_deadline
+                    )
+                  }
+                >
+                  <Typography color="grey">[edit]</Typography>
+                </ButtonBase>
+                <Grid>
+                  <HourglassTopIcon color="primary" />
+                </Grid>
+                <Typography noWrap variant="h5">
+                  <Box component="span" fontWeight="fontWeightBold">
+                    Appliable before:{' '}
+                  </Box>{' '}
+                  {format(
+                    new Date(projectDetails.project_deadline),
+                    'dd/MM/yyyy HH:mm:ss'
+                  )}
+                </Typography>
+              </Stack>
+
+              <Stack direction="row" spacing={2}>
+                <ButtonBase
+                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                  onClick={() =>
+                    handleEditClick(
+                      'project_budget',
+                      projectDetails.project_budget
+                    )
+                  }
+                >
+                  <Typography color="grey">[edit]</Typography>
+                </ButtonBase>
+                <Grid>
+                  <EuroIcon color="primary" />
+                </Grid>
+                <Typography noWrap variant="h5">
+                  <Box component="span" fontWeight="fontWeightBold">
+                    Budget:{' '}
+                  </Box>{' '}
+                  {projectDetails.project_budget} Euro
+                </Typography>
+              </Stack>
+
+              <Stack direction="row" spacing={2}>
+                <ButtonBase
+                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                  onClick={() =>
+                    handleEditClick(
+                      'project_labels',
+                      projectDetails.project_labels
+                    )
+                  }
+                >
+                  <Typography color="grey">[edit]</Typography>
+                </ButtonBase>
+                <Grid>
+                  <BookmarkIcon color="primary" />
+                </Grid>
+                <Typography noWrap variant="h5">
+                  <Box component="span" fontWeight="fontWeightBold">
+                    Labels:{' '}
+                  </Box>{' '}
+                  {Object.values(projectDetails.project_labels).join(', ')}
+                </Typography>
+              </Stack>
+            </Stack>
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 8 }}>
+          <Box>
+            <ApplicantsList
+              data={projectDetails.applicants}
+              budget={projectDetails.project_budget}
+            />
+          </Box>
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 8 }}>
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
-
               <ButtonBase
-              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
-                onClick={() =>
-                  handleEditClick('project_name', projectDetails.project_name)
-                }
-              >
-                <Typography color="grey">[edit]</Typography>
-              </ButtonBase>
-              <Grid>
-                <BusinessIcon color="primary" />
-              </Grid>
-              <Typography noWrap variant="h5">
-                {projectDetails.project_name}
-              </Typography>
-            </Stack>
-
-            <Stack direction="row" spacing={2}>
-              <ButtonBase
-              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
-                    'project_duration',
-                    projectDetails.project_duration
+                    'project_description',
+                    projectDetails.project_description
                   )
                 }
               >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
-              <Grid>
-                <AccessTimeIcon color="primary" />
-              </Grid>
-              <Typography noWrap variant="h5">
-                Duration: {projectDetails.project_duration} Days
+              <Typography noWrap variant="h5" sx={{ fontWeight: 'bold' }}>
+                Description
               </Typography>
             </Stack>
+            <Typography variant="h6">
+              {projectDetails.project_description}
+            </Typography>
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
-              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
+                style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
-                    'project_deadline',
-                    projectDetails.project_deadline
+                    'project_skills',
+                    projectDetails.project_skills
                   )
                 }
               >
                 <Typography color="grey">[edit]</Typography>
               </ButtonBase>
-              <Grid>
-                <HourglassTopIcon color="primary" />
-              </Grid>
-              <Typography noWrap variant="h5">
-                Appliable before:{' '}
-                {format(
-                  new Date(projectDetails.project_deadline),
-                  'dd/MM/yyyy HH:mm:ss'
-                )}
+              <Typography noWrap variant="h5" sx={{ fontWeight: 'bold' }}>
+                Skills
               </Typography>
             </Stack>
-
-            <Stack direction="row" spacing={2}>
-              <ButtonBase
-              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
-                onClick={() =>
-                  handleEditClick(
-                    'project_budget',
-                    projectDetails.project_budget
-                  )
-                }
-              >
-                <Typography color="grey">[edit]</Typography>
-              </ButtonBase>
-              <Grid>
-                <EuroIcon color="primary" />
-              </Grid>
-              <Typography noWrap variant="h5">
-                Budget: {projectDetails.project_budget}
-              </Typography>
-            </Stack>
-
-            <Stack direction="row" spacing={2}>
-              <ButtonBase
-              style={{ visibility: isPaid ? 'hidden' : 'visible' }}
-                onClick={() =>
-                  handleEditClick(
-                    'project_labels',
-                    projectDetails.project_labels
-                  )
-                }
-              >
-                <Typography color="grey">[edit]</Typography>
-              </ButtonBase>
-              <Grid>
-                <BookmarkIcon color="primary" />
-              </Grid>
-              <Typography noWrap variant="h5">
-                Labels:
-              </Typography>
-              <Typography noWrap variant="h5">
-                {Object.values(projectDetails.project_labels).join(', ')}
-              </Typography>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
-      <ApplicantsList
-        data={projectDetails.applicants}
-        budget={projectDetails.project_budget}
-      />
-
-      <Grid>
-        <Stack direction="column" spacing={2}>
-          <Stack direction="row" spacing={2}>
-            <ButtonBase
-            style={{ visibility: isPaid ? 'hidden' : 'visible' }}
-              onClick={() =>
-                handleEditClick(
-                  'project_description',
-                  projectDetails.project_description
-                )
-              }
-            >
-              <Typography color="grey">[edit]</Typography>
-            </ButtonBase>
-            <Typography noWrap variant="h5">
-              Description
+            <Typography variant="h6">
+              {projectDetails.project_skills}
             </Typography>
           </Stack>
-          <Typography>{projectDetails.project_description}</Typography>
-
-          <Stack direction="row" spacing={2}>
-            <ButtonBase
-            style={{ visibility: isPaid ? 'hidden' : 'visible' }}
-              onClick={() =>
-                handleEditClick('project_skills', projectDetails.project_skills)
-              }
-            >
-              <Typography color="grey">[edit]</Typography>
-            </ButtonBase>
-            <Typography noWrap variant="h5">
-              Skills
-            </Typography>
-          </Stack>
-          <Typography>{projectDetails.project_skills}</Typography>
-        </Stack>
-      </Grid>
-
-      <Modal open={isModalOpen} onClose={handleModalClose}>
-        <Box sx={{ ...modalStyle }}>
-          <Typography variant="h6" component="h2">
-            Edit {editField.replace('_', ' ')}
-          </Typography>
-          {editField === 'project_deadline' ? (
-            <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
-              <DateTimePicker
-                label="Application Deadline*"
-                inputFormat="yyyy/MM/dd HH:mm:ss"
-                minDateTime={new Date()}
-                value={editValue}
-                onChange={handleDateChange}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    sx={{ mt: 2, mb: 2 }}
-                    variant="outlined"
-                    error={!!errorMessage}
-                    helperText={errorMessage}
-                  />
-                )}
-              />
-            </LocalizationProvider>
-          ) : editField === 'project_labels' ? (
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Select Labels</FormLabel>
-              <FormGroup>
-                <Grid container spacing={2}>
-                  {Object.keys(initialLabels)
-                    .sort()
-                    .map((label) => (
-                      <Grid item xs={3} key={label}>
-                        <FormControlLabel
-                          key={label}
-                          control={
-                            <Checkbox
-                              checked={editLabels[label] || false}
-                              onChange={handleCheckboxChange(label)}
-                              name={label}
-                            />
-                          }
-                          label={label}
-                        />
-                      </Grid>
-                    ))}
-                </Grid>
-              </FormGroup>
-            </FormControl>
-          ) : (
-            <TextField
-              fullWidth
-              variant="outlined"
-              value={editValue}
-              onChange={handleInputChange}
-              sx={{ mt: 2, mb: 2 }}
-              error={!!errorMessage}
-              helperText={errorMessage}
-            />
-          )}
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Save
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleModalClose}
-          >
-            Cancel
-          </Button>
         </Box>
-      </Modal>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Modal open={isModalOpen} onClose={handleModalClose}>
+            <Box sx={{ ...modalStyle }}>
+              <Typography variant="h6" component="h2">
+                Edit {editField.replace('_', ' ')}
+              </Typography>
+              {editField === 'project_deadline' ? (
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
+                  <DateTimePicker
+                    label="Application Deadline*"
+                    inputFormat="yyyy/MM/dd HH:mm:ss"
+                    minDateTime={new Date()}
+                    value={editValue}
+                    onChange={handleDateChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        sx={{ mt: 2, mb: 2 }}
+                        variant="outlined"
+                        error={!!errorMessage}
+                        helperText={errorMessage}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              ) : editField === 'project_labels' ? (
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Select Labels</FormLabel>
+                  <FormGroup>
+                    <Grid container spacing={2}>
+                      {Object.keys(initialLabels)
+                        .sort()
+                        .map((label) => (
+                          <Grid item xs={3} key={label}>
+                            <FormControlLabel
+                              key={label}
+                              control={
+                                <Checkbox
+                                  checked={editLabels[label] || false}
+                                  onChange={handleCheckboxChange(label)}
+                                  name={label}
+                                />
+                              }
+                              label={label}
+                            />
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </FormGroup>
+                </FormControl>
+              ) : (
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={editValue}
+                  onChange={handleInputChange}
+                  sx={{ mt: 2, mb: 2 }}
+                  error={!!errorMessage}
+                  helperText={errorMessage}
+                />
+              )}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Save
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleModalClose}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Modal>
+        </Box>
+      </Box>
     </Box>
   );
 }

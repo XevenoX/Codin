@@ -8,7 +8,7 @@ export default function PriceSlider({ priceRange, handlePriceChange }) {
   const [minPrice, maxPrice] = priceRange;
 
   return (
-    <Card>
+    <Card sx={{ bgcolor: '#f0f0f0' }}>
       <Box sx={{ width: '80%', m: 1 }}>
         <Box sx={{ ml: 1 }}>
           <Typography sx={{ fontSize: 16, fontWeight: 'bold' }}>
@@ -22,8 +22,8 @@ export default function PriceSlider({ priceRange, handlePriceChange }) {
             value={priceRange}
             onChange={handlePriceChange}
             valueLabelDisplay="auto"
-            min={0} // 设置最小值
-            max={3000} // 设置最大值
+            min={0}
+            max={3000}
           />
         </Box>
       </Box>

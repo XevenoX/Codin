@@ -14,25 +14,24 @@ import { useState } from 'react';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import axios from 'axios'; // 引入 axios
+import axios from 'axios';
 import signUpPic from '../pics/Signup.png';
 
 export default function SignUpComponent() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('developer'); // 默认值设置为 developer
-  const [error, setError] = useState(''); // 用于保存错误信息
-  const navigate = useNavigate(); // 引入 useNavigate
+  const [role, setRole] = useState('developer');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError(''); // 重置错误状态
+    setError('');
 
     try {
       let response;
 
-      // 使用 axios 发送 POST 请求
       response = await axios.post('http://localhost:5050/signUp', {
         name,
         email,
@@ -48,14 +47,12 @@ export default function SignUpComponent() {
       const result = response.data;
       console.log('User created:', result);
 
-      // 清空表单
       setName('');
       setEmail('');
       setPassword('');
-      setRole('developer'); // 重置为默认角色
+      setRole('developer');
 
-      // 注册成功后重定向到首页
-      navigate('/'); // 重定向到首页
+      navigate('/');
     } catch (error) {
       console.error('A problem occurred with your axios operation: ', error);
       if (error.response && error.response.data && error.response.data.error) {
@@ -107,8 +104,8 @@ export default function SignUpComponent() {
               <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
-                value={role} // 设置当前选中的值
-                onChange={(e) => setRole(e.target.value)} // 处理选择变化
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
               >
                 <FormControlLabel
                   label="I am looking for a developer"
@@ -144,8 +141,8 @@ export default function SignUpComponent() {
                 autoComplete="email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
-                error={error === 'User already exists'} // 如果有错误信息，将此字段设置为错误
-                helperText={error === 'User already exists' ? error : ''} // 显示错误信息
+                error={error === 'User already exists'}
+                helperText={error === 'User already exists' ? error : ''}
               />
             </Grid>
             <Grid item xs={12}>

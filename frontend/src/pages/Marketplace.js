@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PriceSlider from '../components/marketplace/marketplace-filters/PriceSlider';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import SortByMenu from '../components/marketplace/SortByMenu';
 import MarketHeader from '../components/marketplace/marketplace-header/MarketHeader';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -132,7 +131,11 @@ const MarketPlace = () => {
   return (
     <Box
       className="marketplace"
-      sx={{ display: 'flex', justifyContent: 'center' }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+      }}
     >
       <Box
         className="marketplace-container"
@@ -195,11 +198,11 @@ const MarketPlace = () => {
                     mt={2}
                     mr={8}
                     mb={6}
-                    sx={{ flexDirection: 'row' }} // 修改为横向布局
+                    sx={{ flexDirection: 'row' }}
                   >
                     <Button
                       variant="contained"
-                      size="large" // 设置按钮大小为小
+                      size="large"
                       disabled={page === 1}
                       onClick={handlePreviousPage}
                     >
@@ -207,12 +210,11 @@ const MarketPlace = () => {
                     </Button>
                     <Typography sx={{ mx: 2 }}>
                       {' '}
-                      {/* 添加左右边距 */}
                       Page {page} of {totalPages}
                     </Typography>
                     <Button
                       variant="contained"
-                      size="large" // 设置按钮大小为小
+                      size="large"
                       disabled={page === totalPages}
                       onClick={handleNextPage}
                     >

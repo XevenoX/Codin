@@ -24,7 +24,7 @@ import projectpage from "./routes/projectpage.js";
 import payment from "./routes/payment.js";
 import paypal from "./routes/paypal.js";
 import message from "./routes/message.js";
-import projectRoutes from './routes/projectRoutes.js'; 
+import projectRoutes from "./routes/projectRoutes.js";
 
 // Load environment variables from .env file
 dotenv.config({ path: "./.env" });
@@ -46,19 +46,6 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: "1mb" }));
 app.use(bodyParser.urlencoded({ limit: "1mb", extended: true }));
 
-// Ensure database connection before handling routes
-// app.use(async (req, res, next) => {
-//   try {
-//     if (!getDB()) {
-//       await connectDB();
-//     }
-//     next();
-//   } catch (err) {
-//     console.error("Database connection error:", err);
-//     res.status(500).json({ error: "Database connection error" });
-//   }
-// });
-
 // Define routes
 app.use("/", homepage);
 app.use("/signUp", signUp);
@@ -76,8 +63,7 @@ app.use("/projectpage", projectpage);
 app.use("/payment", payment);
 app.use("/paypal", paypal);
 app.use("/message", message);
-app.use('/projects', projectRoutes);
-// 处理所有未匹配的 GET 请求。请求都返回前端的 index.html
+app.use("/projects", projectRoutes);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });

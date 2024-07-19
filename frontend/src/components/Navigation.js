@@ -1,5 +1,15 @@
 // Navigation.js
-import { Tooltip, Divider, Badge, Avatar, Menu, Toolbar, IconButton, AppBar, Box } from '@mui/material';
+import {
+  Tooltip,
+  Divider,
+  Badge,
+  Avatar,
+  Menu,
+  Toolbar,
+  IconButton,
+  AppBar,
+  Box,
+} from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import codinLogo from '../pics/Codin-Logo.png';
 import MenuItem from '@mui/material/MenuItem';
@@ -77,8 +87,8 @@ export default function Navigation({ user, onLogout }) {
 
   async function loadAvatar() {
     try {
-      const res = await axios.get("/userInfo/loadAvatar", {
-        params: { _id: currentUser.id }  //replace this after having user session
+      const res = await axios.get('/userInfo/loadAvatar', {
+        params: { _id: currentUser.id }, //replace this after having user session
       });
       setAvatar(res.data);
     } catch (error) {
@@ -88,8 +98,8 @@ export default function Navigation({ user, onLogout }) {
 
   async function loadMessages() {
     try {
-      const res = await axios.get("/message/findUnreadMessage", {
-        params: { _id: currentUser.id }
+      const res = await axios.get('/message/findUnreadMessage', {
+        params: { _id: currentUser.id },
       });
       setMessages(res.data);
     } catch (error) {
@@ -99,10 +109,10 @@ export default function Navigation({ user, onLogout }) {
 
   async function markMessageAsRead(messageId) {
     try {
-      await axios.post("/message/updateMessageStatus", { messageId });
-      setMessages(messages.filter(message => message._id !== messageId));
+      await axios.post('/message/updateMessageStatus', { messageId });
+      setMessages(messages.filter((message) => message._id !== messageId));
     } catch (error) {
-      console.error("Error updating message status:", error);
+      console.error('Error updating message status:', error);
     }
   }
 
@@ -118,16 +128,16 @@ export default function Navigation({ user, onLogout }) {
       let isSubscribed = false;
       if (new Date(result.newest) - new Date() > 0) {
         isSubscribed = true;
-      };
+      }
       setSubscription(isSubscribed);
     } catch (error) {
-      console.error("Failed to fetch subscription details:", error);
+      console.error('Failed to fetch subscription details:', error);
     }
   };
 
   useEffect(() => {
     if (currentUser) {
-      axios.defaults.baseURL = "http://localhost:5050";
+      axios.defaults.baseURL = 'http://localhost:5050';
       loadAvatar();
       loadMessages();
       fetchSubscription();
@@ -155,7 +165,14 @@ export default function Navigation({ user, onLogout }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar variant="dense" sx={{ justifyContent: 'space-between', width: '73%', maxHeight: '35px' }}>
+        <Toolbar
+          variant="dense"
+          sx={{
+            justifyContent: 'space-between',
+            width: '73%',
+            maxHeight: '35px',
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', width: 'auto' }}>
             <Box
               component={Link}
@@ -180,18 +197,28 @@ export default function Navigation({ user, onLogout }) {
             {currentUser && (
               <Typography variant="h6" component="div" sx={{ ml: 20 }}>
                 <Link
-                  to="/project-management"
+                  to={
+                    currentUser.role === 'developer'
+                      ? '/project-management'
+                      : currentUser.role === 'publisher'
+                      ? '/company-project-management'
+                      : '#'
+                  }
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  Project Management
+                  {currentUser.role === 'developer' ||
+                  currentUser.role === 'publisher'
+                    ? 'Project Management'
+                    : 'Not Authorized'}
                 </Link>
               </Typography>
             )}
-
           </Box>
-          <Box sx={{
-            display: currentUser ? 'block' : 'none', //  only display when logged in
-          }}>
+          <Box
+            sx={{
+              display: currentUser ? 'block' : 'none', //  only display when logged in
+            }}
+          >
             <Tooltip title="Messages">
               <IconButton
                 size="large"
@@ -214,9 +241,19 @@ export default function Navigation({ user, onLogout }) {
             >
               {messages.map((message) => (
                 <MenuItem key={message._id}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', maxWidth: 300 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      maxWidth: 300,
+                    }}
+                  >
                     <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="body2" sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}
+                      >
                         {renderMessageContent(message)}
                       </Typography>
                     </Box>
@@ -242,13 +279,19 @@ export default function Navigation({ user, onLogout }) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-                {(subscription) ? (
-                  <Badge badgeContent='V' color="warning"
+                {subscription ? (
+                  <Badge
+                    badgeContent="V"
+                    color="warning"
                     anchorOrigin={{
                       vertical: 'bottom',
                       horizontal: 'right',
-                    }}>
-                    <Avatar sx={{ width: 40, height: 40 }} src={avatar}></Avatar>
+                    }}
+                  >
+                    <Avatar
+                      sx={{ width: 40, height: 40 }}
+                      src={avatar}
+                    ></Avatar>
                   </Badge>
                 ) : (
                   <Avatar sx={{ width: 40, height: 40 }} src={avatar}></Avatar>
@@ -266,17 +309,16 @@ export default function Navigation({ user, onLogout }) {
             >
               <MenuItem onClick={handleMyHomepage}>
                 <ListItemIcon>
-                  <HomeRounded fontSize='medium' color='primary' />
+                  <HomeRounded fontSize="medium" color="primary" />
                 </ListItemIcon>
                 <ListItemText>My Homepage</ListItemText>
               </MenuItem>
               <MenuItem onClick={handleSubscription}>
                 <ListItemIcon>
-                  <SubscriptionsRoundedIcon fontSize='medium' color='primary' />
+                  <SubscriptionsRoundedIcon fontSize="medium" color="primary" />
                 </ListItemIcon>
                 <ListItemText>Subscription</ListItemText>
               </MenuItem>
-
 
               <Divider />
               <MenuItem onClick={handleSignOut}>

@@ -15,6 +15,7 @@ import CompanyProjectManagementPage from './pages/CompanyProjectManagementPage';
 import GanttChartPage from './pages/GanttChartPage';
 import Navigation from './components/Navigation';
 import ProtectedRoute from './components/ProtectedRoute';
+import Footer from './components/Footer.js';
 
 function App() {
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
@@ -51,14 +52,11 @@ function App() {
               path="/project-management"
               element={<ProjectManagementPage />}
             />{' '}
-            {/* 添加新的路由 */}
             <Route
               path="/company-project-management"
               element={<CompanyProjectManagementPage />}
             />{' '}
-            {/* Company 视角 */}
             <Route path="/gantt-chart" element={<GanttChartPage />} />{' '}
-            {/* 添加新的路由 */}
             <Route
               path="/projectdetail/publisher/:id"
               element={<ProjectDetailPublisher />}
@@ -69,6 +67,7 @@ function App() {
             />
           </Route>
         </Routes>
+        <Footer />
       </Router>
     </CookiesProvider>
   );

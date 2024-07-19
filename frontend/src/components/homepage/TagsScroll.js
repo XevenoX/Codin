@@ -89,7 +89,10 @@ const TagsScroll = () => {
             onClick={() => handleCardClick(destination.name)}
             sx={{
               width: 250,
+              height: 'auto',
               mr: 2,
+              mt: 1,
+              mb: 1,
               transition: 'transform 0.3s',
               cursor: 'pointer',
               '&:hover': {
@@ -102,7 +105,7 @@ const TagsScroll = () => {
               height="140"
               image={destination.image}
               alt={destination.name}
-              sx={{ width: '80px', height: 'auto', ml: 10 }}
+              sx={{ width: '80px', height: 'auto', ml: 10, mt: 2 }}
             />
             <CardContent>
               <Typography gutterBottom variant="h7" component="div">
@@ -134,7 +137,7 @@ const TagsScroll = () => {
           sx={{
             position: 'absolute',
             right: 0,
-            top: '60%', // 向下移动 10%
+            top: '60%', // move it lower
             transform: 'translateY(-50%)',
             bgcolor: 'background.paper',
             '&:hover': { bgcolor: 'action.hover' },

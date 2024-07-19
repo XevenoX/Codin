@@ -73,12 +73,12 @@ export default function ApplicantsList({ data, budget }) {
     _id: '668a5888c8ffc377f5295970',
   };
   const handlePayed = async (data) => {
-    console.log("handlePayed",data);
+    console.log('handlePayed', data);
     const requestBody = {
       value: offerAmount,
       _id: user._id,
-      payPalData:data,
-      chosen_applicant:selectedItems,
+      payPalData: data,
+      chosen_applicant: selectedItems,
     };
 
     try {
@@ -487,8 +487,8 @@ export default function ApplicantsList({ data, budget }) {
           sx={{ marginBottom: '20px' }}
         >
           <Grid item>
-            <Typography noWrap variant="h5">
-              Applications
+            <Typography noWrap variant="h5" sx={{ fontWeight: 'bold' }}>
+              Applications:
             </Typography>
           </Grid>
           <Grid item></Grid>

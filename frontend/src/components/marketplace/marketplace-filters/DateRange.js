@@ -16,7 +16,7 @@ export default function DateRange({
   handleSelectEndDate,
 }) {
   return (
-    <Card sx={{ width: '100%' }}>
+    <Card sx={{ width: '100%', bgcolor: '#f0f0f0' }}>
       <Box sx={{ m: 1 }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Grid spacing={2} container sx={{ display: 'flex' }}>

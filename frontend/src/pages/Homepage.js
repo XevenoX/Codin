@@ -3,7 +3,8 @@ import { Box } from '@mui/material';
 import SignIn from '../components/SignIn';
 import TagsScroll from '../components/homepage/TagsScroll';
 import ServiceIntroduction from '../components/homepage/ServiceIntroduction';
-import homepageThemeImage from '../pics/Homepage-Theme.jpg'; // 引入背景图片
+import FrequentlyAskedQuestions from '../components/homepage/FrequentlyAskedQuestions';
+import homepageThemeImage from '../pics/Homepage-Theme.jpg';
 
 const Homepage = ({ onLogin }) => {
   return (
@@ -17,7 +18,7 @@ const Homepage = ({ onLogin }) => {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             width: '100%',
-            height: '60vh', // 你可以根据需要调整高度
+            height: '60vh',
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -27,13 +28,18 @@ const Homepage = ({ onLogin }) => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Box sx={{ width: { xs: '65%' } }}>
+          <Box sx={{ width: { xs: '65%' }, height: 'auto' }}>
             <TagsScroll />
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Box sx={{ width: '60%' }}>
             <ServiceIntroduction />
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Box sx={{ width: '60%' }}>
+            <FrequentlyAskedQuestions />
           </Box>
         </Box>
       </Box>

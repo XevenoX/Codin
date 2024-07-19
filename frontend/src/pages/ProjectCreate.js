@@ -22,10 +22,9 @@ import { de } from 'date-fns/locale';
 import { parseISO, formatISO } from 'date-fns';
 const timeZone = 'Europe/Berlin';
 
-
 export default function ProjectCreate() {
-  const [cookies] = useCookies(['user']); 
-const user = cookies.user;
+  const [cookies] = useCookies(['user']);
+  const user = cookies.user;
 
   const [projectName, setProjectName] = useState('');
   const [projectDuration, setProjectDuration] = useState('');
@@ -66,7 +65,6 @@ const user = cookies.user;
     useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
 
-
   const getBerlinDate = () => {
     return new Date();
   };
@@ -76,7 +74,11 @@ const user = cookies.user;
 
   useEffect(() => {
     setIsProjectNameValid(projectName !== '');
-    setIsBudgetValid(!isNaN(projectBudget) && projectBudget !== '');
+    setIsBudgetValid(
+      !isNaN(projectBudget) &&
+        projectBudget !== '' &&
+        Number(projectBudget) <= 3000
+    );
     setIsDurationValid(
       !isNaN(projectDuration) &&
         projectDuration !== '' &&
@@ -123,7 +125,7 @@ const user = cookies.user;
           projectBudget,
           projectApplicationDeadline: isoDate,
           projectDuration,
-          projectPublisher:user.id,
+          projectPublisher: user.id,
           projectLabels: Object.keys(projectLabels).filter(
             (label) => projectLabels[label] === 1
           ),
@@ -156,152 +158,177 @@ const user = cookies.user;
     setisApplicationDeadlineValid(isValid);
   };
 
- if(user.role=="publisher"){
-  return (
-    <Container
-      component="project-create"
-      maxWidth="xl"
-      sx={{ marginLeft: '15%', marginRight: '15%', marginTop: '50px' }}
-    >
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-        sx={{ display: 'flex', flexWrap: 'wrap' }}
+  if (user.role == 'publisher') {
+    return (
+      <Container
+        component="project-create"
+        maxWidth="xl"
+        sx={{ marginLeft: '15%', marginRight: '15%', marginTop: '50px' }}
       >
-        <Box sx={{ width: '100%', m: 1 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                id="project-name"
-                name="project-name"
-                label="Project Name*"
-                type="project_name"
-                variant="outlined"
-                onChange={(e) => setProjectName(e.target.value)}
-                value={projectName}
-                error={!isProjectNameValid}
-                helperText={
-                  !isProjectNameValid &&
-                  'please type in the name of your project'
-                }
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                id="project-duration"
-                label="Duration (days)*"
-                type="project_duration"
-                variant="outlined"
-                onChange={(e) => setProjectDuration(e.target.value)}
-                value={projectDuration}
-                error={!isDurationValid}
-                helperText={
-                  !isDurationValid && 'Duration must be doable within 4 weeks'
-                }
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
-                <DateTimePicker
-                  label="Application Deadline*"
-                  inputFormat="yyyy/MM/dd HH:mm:ss"
-                  minDateTime={today}
-                  value={projectApplicationDeadline}
-                  onChange={handleDeadlineChange}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      fullWidth
-                      sx={{ m: 1, width: '100%' }}
-                      variant="outlined"
-                      error={!isApplicationDeadlineValid}
-                      helperText={
-                        !isApplicationDeadlineValid
-                          ? 'Deadline must be in the future'
-                          : ''
-                      }
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                id="project-budget"
-                label="Project Budget* Note that a 3% service fee will be added, use point instead of comma"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">€</InputAdornment>
-                  ),
-                }}
-                type="project_budget"
-                variant="outlined"
-                onChange={(e) => setProjectBudget(e.target.value)}
-                value={projectBudget}
-                error={!isBudgetValid}
-              />
-            </Grid>
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          onSubmit={handleSubmit}
+          sx={{ display: 'flex', flexWrap: 'wrap' }}
+        >
+          <Box sx={{ width: '100%', m: 1 }}>
+            <Box container spacing={2}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+                <Box>
+                  <Typography variant="h4" sx={{ marginBottom: '20px' }}>
+                    Create Project
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box item xs={12}>
+                  <TextField
+                    fullWidth
+                    sx={{ mt: 6, width: '1000px' }}
+                    id="project-name"
+                    name="project-name"
+                    label="Project Name*"
+                    type="project_name"
+                    variant="outlined"
+                    onChange={(e) => setProjectName(e.target.value)}
+                    value={projectName}
+                    error={!isProjectNameValid}
+                    helperText={
+                      !isProjectNameValid &&
+                      'please type in the name of your project'
+                    }
+                  />
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box xs={4}>
+                  <TextField
+                    fullWidth
+                    sx={{ mt: 8, width: '1000px' }}
+                    id="project-duration"
+                    label="Duration (days)*"
+                    type="project_duration"
+                    variant="outlined"
+                    onChange={(e) => setProjectDuration(e.target.value)}
+                    value={projectDuration}
+                    error={!isDurationValid}
+                    helperText={
+                      !isDurationValid &&
+                      'Duration must be doable within 4 weeks'
+                    }
+                  />
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box xs={4}>
+                  <TextField
+                    sx={{ mt: 8, width: '1000px' }}
+                    id="project-budget"
+                    label="Project Budget* Note that a 3% service fee will be added, use point instead of comma"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">€</InputAdornment>
+                      ),
+                    }}
+                    type="project_budget"
+                    variant="outlined"
+                    onChange={(e) => setProjectBudget(e.target.value)}
+                    value={projectBudget}
+                    error={!isBudgetValid}
+                    helperText={
+                      !isBudgetValid && 'Budget must be lower equal 3000 Euro'
+                    }
+                  />
+                </Box>
+              </Box>
 
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                id="project-description"
-                label="Description"
-                multiline
-                rows={4}
-                type="project_description"
-                defaultValue="Please describe your project in detail!"
-                variant="outlined"
-                onChange={(e) => setProjectDescription(e.target.value)}
-                value={projectDescription}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                sx={{ m: 1 }}
-                id="project-skills-description"
-                label="Skills required"
-                multiline
-                rows={4}
-                type="project_skills"
-                defaultValue="Please describe the skills an applicant should bring! Note: You could also mention skills that are not included in our labels"
-                variant="outlined"
-                onChange={(e) => setProjectSkills(e.target.value)}
-                value={projectSkills}
-              />
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <LabelCheckboxList
-              projectLabels={projectLabels}
-              handleCheckboxChange={handleCheckboxChange}
-            />
-          </Grid>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-            <Button
-              sx={{ m: 1, width: '25ch' }}
-              variant="contained"
-              type="submit"
-              disabled={!isFormValid}
-            >
-              save and publish
-            </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box>
+                  <TextField
+                    sx={{ mt: 8, width: '1000px' }}
+                    id="project-description"
+                    label="Description"
+                    multiline
+                    rows={4}
+                    type="project_description"
+                    defaultValue="Please describe your project in detail!"
+                    variant="outlined"
+                    onChange={(e) => setProjectDescription(e.target.value)}
+                    value={projectDescription}
+                  />
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box item xs={12}>
+                  <TextField
+                    sx={{ mb: 8, mt: 8, width: '1000px' }}
+                    id="project-skills-description"
+                    label="Skills required"
+                    multiline
+                    rows={4}
+                    type="project_skills"
+                    defaultValue="Please describe the skills an applicant should bring! Note: You could also mention skills that are not included in our labels"
+                    variant="outlined"
+                    onChange={(e) => setProjectSkills(e.target.value)}
+                    value={projectSkills}
+                  />
+                </Box>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box sx={{ width: '1000px', mb: 8, ml: 10 }}>
+                <LabelCheckboxList
+                  projectLabels={projectLabels}
+                  handleCheckboxChange={handleCheckboxChange}
+                />
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box xs={4} sx={{ mb: 8 }}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
+                  <DateTimePicker
+                    label="Application Deadline*"
+                    inputFormat="yyyy/MM/dd HH:mm:ss"
+                    minDateTime={today}
+                    value={projectApplicationDeadline}
+                    onChange={handleDeadlineChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        sx={{ m: 1, width: '100%' }}
+                        variant="outlined"
+                        error={!isApplicationDeadlineValid}
+                        helperText={
+                          !isApplicationDeadlineValid
+                            ? 'Deadline must be in the future'
+                            : ''
+                        }
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box sx={{ mb: 8 }}>
+                <Button
+                  sx={{ m: 1, width: '200px', height: '50px' }}
+                  variant="contained"
+                  type="submit"
+                  disabled={!isFormValid}
+                >
+                  save and publish
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Container>
-  );
- }
+      </Container>
+    );
+  }
 }
 
 function LabelCheckboxList({ projectLabels, handleCheckboxChange }) {
