@@ -97,10 +97,11 @@ export default function ProjectDetailPublisher() {
         }
         const data = await response.json();
         console.log(data);
+
+        setProjectDetails(data);
         if (data.project_status != 1 || user.role != 'publisher') {
           navigate(`/projectdetail/developer/${data._id}`);
         }
-        setProjectDetails(data);
       } catch (error) {
         console.error('Failed to fetch project details:', error);
       } finally {
@@ -230,7 +231,6 @@ export default function ProjectDetailPublisher() {
     return <Typography>No project details found</Typography>;
   }
 
-  const isPaid = projectDetails.paid;
   return (
     <Box
       component="form"
@@ -246,7 +246,6 @@ export default function ProjectDetailPublisher() {
             <Stack direction="column" spacing={2}>
               <Stack direction="row" spacing={2}>
                 <ButtonBase
-                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                   onClick={() =>
                     handleEditClick('project_name', projectDetails.project_name)
                   }
@@ -266,7 +265,6 @@ export default function ProjectDetailPublisher() {
 
               <Stack direction="row" spacing={2}>
                 <ButtonBase
-                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                   onClick={() =>
                     handleEditClick(
                       'project_duration',
@@ -290,7 +288,6 @@ export default function ProjectDetailPublisher() {
 
               <Stack direction="row" spacing={2}>
                 <ButtonBase
-                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                   onClick={() =>
                     handleEditClick(
                       'project_deadline',
@@ -305,7 +302,7 @@ export default function ProjectDetailPublisher() {
                 </Grid>
                 <Typography noWrap variant="h5">
                   <Box component="span" fontWeight="fontWeightBold">
-                    Appliable before:{' '}
+                    Finish before:{' '}
                   </Box>{' '}
                   {format(
                     new Date(projectDetails.project_deadline),
@@ -316,7 +313,6 @@ export default function ProjectDetailPublisher() {
 
               <Stack direction="row" spacing={2}>
                 <ButtonBase
-                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                   onClick={() =>
                     handleEditClick(
                       'project_budget',
@@ -339,7 +335,6 @@ export default function ProjectDetailPublisher() {
 
               <Stack direction="row" spacing={2}>
                 <ButtonBase
-                  style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                   onClick={() =>
                     handleEditClick(
                       'project_labels',
@@ -375,7 +370,6 @@ export default function ProjectDetailPublisher() {
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
               <ButtonBase
-                style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     'project_description',
@@ -395,7 +389,6 @@ export default function ProjectDetailPublisher() {
 
             <Stack direction="row" spacing={2}>
               <ButtonBase
-                style={{ visibility: isPaid ? 'hidden' : 'visible' }}
                 onClick={() =>
                   handleEditClick(
                     'project_skills',

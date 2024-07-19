@@ -3,26 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import '../styles/CompanyProjectManagementPage.css';
+import RatingDialog from '../components/RatingDialog';
 
 const CompanyProjectManagementPage = () => {
   const navigate = useNavigate();
-  const [cookies] = useCookies(['token', 'user_id']);
+  const [cookie] = useCookies(['user']);
+  const currentUser = cookie.user;
   const [userInfo, setUserInfo] = useState(null);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+
   // 获取用户信息
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        console.log('Fetching user info with ID:', cookies.user_id);
         const res = await axios.get('http://localhost:5050/userInfo/findUser', {
-          headers: {
-            Authorization: `Bearer ${cookies.token}`,
-          },
           params: {
-            _id: cookies.user_id,
+            _id: currentUser.id,
           },
         });
         console.log('User info response:', res.data);
@@ -32,13 +33,13 @@ const CompanyProjectManagementPage = () => {
         setLoading(false);
       }
     };
-    if (cookies.token && cookies.user_id) {
+    if (currentUser.id) {
       fetchUserInfo();
     } else {
       console.log('No token or user_id found in cookies');
       setLoading(false);
     }
-  }, [cookies]);
+  }, []);
 
   // 获取项目列表
   useEffect(() => {
@@ -89,11 +90,31 @@ const CompanyProjectManagementPage = () => {
   };
 
   const handleComplete = (projectId) => {
-    updateProjectStatus(projectId, 5);
+    setSelectedProjectId(projectId); // Set the selected project ID
+    setRatingDialogOpen(true); // Open the rating dialog
   };
 
   const handleSeeMore = (projectId) => {
     navigate(`/project/${projectId}`);
+  };
+
+  const handleRatingSubmit = async (rating, comment) => {
+    try {
+      await axios.post('http://localhost:5050/projects/rate', {
+        projectId: selectedProjectId,
+        rating,
+        comment,
+        rated_by: userInfo._id, // the one who comments
+        rated_for:
+          projects.find((p) => p._id === selectedProjectId)
+            ?.chosen_applicants || 'Unknown', // the one being commented
+      });
+      alert('Rating submitted');
+      updateProjectStatus(selectedProjectId, 5);
+      setRatingDialogOpen(false); // close the popup
+    } catch (error) {
+      alert('Error submitting rating');
+    }
   };
 
   if (loading) {
@@ -140,7 +161,9 @@ const CompanyProjectManagementPage = () => {
                     </span>
                     <button
                       className="see-more"
-                      onClick={() => handleSeeMore(project._id)}
+                      onClick={() =>
+                        navigate(`/projectdetail/publisher/${project._id}`)
+                      }
                     >
                       See More
                     </button>
@@ -171,7 +194,9 @@ const CompanyProjectManagementPage = () => {
                     </span>
                     <button
                       className="see-more"
-                      onClick={() => handleSeeMore(project._id)}
+                      onClick={() =>
+                        navigate(`/projectdetail/developer/${project._id}`)
+                      }
                     >
                       See More
                     </button>
@@ -196,7 +221,9 @@ const CompanyProjectManagementPage = () => {
                     </span>
                     <button
                       className="see-more"
-                      onClick={() => handleSeeMore(project._id)}
+                      onClick={() =>
+                        navigate(`/projectdetail/publisher/${project._id}`)
+                      }
                     >
                       See More
                     </button>
@@ -227,7 +254,9 @@ const CompanyProjectManagementPage = () => {
                     </span>
                     <button
                       className="see-more"
-                      onClick={() => handleSeeMore(project._id)}
+                      onClick={() =>
+                        navigate(`/projectdetail/publisher/${project._id}`)
+                      }
                     >
                       See More
                     </button>
@@ -236,6 +265,11 @@ const CompanyProjectManagementPage = () => {
             </div>
           </div>
         </div>
+        <RatingDialog
+          open={ratingDialogOpen}
+          onClose={() => setRatingDialogOpen(false)}
+          onSubmit={handleRatingSubmit}
+        />
       </main>
     </div>
   );

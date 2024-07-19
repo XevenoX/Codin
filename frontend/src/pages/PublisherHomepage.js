@@ -3,55 +3,55 @@ import { Container, CircularProgress, Alert } from '@mui/material';
 import ProfileBox from '../components/PublisherHomepage/ProfileBox';
 import TabContainer from '../components/PublisherHomepage/Tab/TabContainer';
 import { useParams } from 'react-router-dom';
-import axios from "axios";
+import axios from 'axios';
 
 const PublisherHomepage = () => {
-    const [userInfo, setUserInfo] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const _id = useParams();
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const _id = useParams();
 
-    async function loadUserInfo() {
-        try {
-            const res = await axios.get("/userInfo/findUser", {
-                params: { _id: _id } //replace this after having user session
-            });
-            setUserInfo(res.data);
-        } catch (error) {
-            console.error(error);
-            setError(error);
-        } finally {
-            setLoading(false);
-        }
+  async function loadUserInfo() {
+    try {
+      const res = await axios.get('/userInfo/findUser', {
+        params: { _id: _id }, //replace this after having user session
+      });
+      setUserInfo(res.data);
+    } catch (error) {
+      console.error(error);
+      setError(error);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    useEffect(() => {
-        axios.defaults.baseURL = "http://localhost:5050"
-        loadUserInfo().catch((e) => console.log(e))
-    }, []);
+  useEffect(() => {
+    axios.defaults.baseURL = 'http://localhost:5050';
+    loadUserInfo().catch((e) => console.log(e));
+  }, []);
 
-    if (loading) {
-        return (
-            <Container>
-                <CircularProgress />
-            </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Container>
-                <Alert severity="error">Error loading user info: {error.message}</Alert>
-            </Container>
-        );
-    }
-
+  if (loading) {
     return (
-        <Container>
-            <ProfileBox userInfo={userInfo} setUserInfo={setUserInfo} />
-            <TabContainer userInfo={userInfo} setUserInfo={setUserInfo} />
-        </Container >
+      <Container>
+        <CircularProgress />
+      </Container>
     );
-}
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Alert severity="error">Error loading user info: {error.message}</Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <ProfileBox userInfo={userInfo} setUserInfo={setUserInfo} />
+      <TabContainer userInfo={userInfo} setUserInfo={setUserInfo} />
+    </Container>
+  );
+};
 
 export default PublisherHomepage;

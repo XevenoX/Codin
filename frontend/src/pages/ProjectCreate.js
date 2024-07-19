@@ -289,7 +289,7 @@ export default function ProjectCreate() {
               <Box xs={4} sx={{ mb: 8 }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns} locale={de}>
                   <DateTimePicker
-                    label="Application Deadline*"
+                    label="Project Deadline*"
                     inputFormat="yyyy/MM/dd HH:mm:ss"
                     minDateTime={today}
                     value={projectApplicationDeadline}
