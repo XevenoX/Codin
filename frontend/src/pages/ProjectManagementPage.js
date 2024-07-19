@@ -68,7 +68,78 @@ const ProjectManagementPage = () => {
         }
     }, [userInfo]);
 
-    const handleComplete = async (projectId) => {
+    const handleAccept = async (projectId, project_publisher) => {
+        //accept the project
+        try {
+            const response = await axios.patch(`http://localhost:5050/projects/${projectId}`, {
+                project_status: 3,
+                userId: userInfo._id
+            });
+            console.log(`Project ${projectId} completed:`, response.data);
+            alert(`Project ${projectId} accepted`);
+            setProjects(projects.map(project => project._id === projectId ? { ...project, project_status: 5 } : project));
+        } catch (error) {
+            console.error('Error accepting project:', error);
+            alert('Error accepting project');
+        }
+        // add mesage
+        try {
+            const postResponse = await axios.post('/message/addNewMessage', {
+                project_id: projectId,
+                message_to: project_publisher,
+                message_type: 3,
+                unread: 1
+            });
+            console.log('Add message successful:', postResponse.data);
+        } catch (error) {
+            console.error('Error adding message:', error);
+            alert('Error adding message');
+        }
+    };
+
+    const handleReject = async (projectId, project_publisher) => {
+        //reject the project
+        try {
+            const response = await axios.patch(`http://localhost:5050/projects/${projectId}`, {
+                project_status: 1,
+                userId: userInfo._id
+            });
+            console.log(`Project ${projectId} completed:`, response.data);
+            alert(`Project ${projectId} rejected`);
+            setProjects(projects.map(project => project._id === projectId ? { ...project, project_status: 5 } : project));
+        } catch (error) {
+            console.error('Error rejecting project:', error);
+            alert('Error rejecting project');
+        }
+        // add mesage
+        try {
+            const postResponse = await axios.post('/message/addNewMessage', {
+                project_id: projectId,
+                message_to: project_publisher,
+                message_type: 2,
+                unread: 1
+            });
+            console.log('Add message successful:', postResponse.data);
+        } catch (error) {
+            console.error('Error adding message:', error);
+            alert('Error adding message');
+        }
+    };
+
+    const handleWithdraw = async (projectId) => {
+        try {
+            const response = await axios.patch(`/projects/withdraw/${projectId}`, {
+                applicantId: currentUser.id
+            });
+            alert('Withdraw successfully');
+            console.log('Updated Project:', response.data);
+        } catch (error) {
+            console.error('Error withdrawing applicant:', error);
+            alert('Failed to withdraw applicant');
+        }
+    };
+
+    const handleComplete = async (projectId, project_publisher) => {
         try {
             const response = await axios.patch(`http://localhost:5050/projects/${projectId}`, {
                 project_status: 5,
@@ -81,6 +152,21 @@ const ProjectManagementPage = () => {
             console.error('Error completing project:', error);
             alert('Error completing project');
         }
+
+        // add mesage
+        try {
+            const postResponse = await axios.post('/message/addNewMessage', {
+                project_id: projectId,
+                message_to: project_publisher,
+                message_type: 4,
+                unread: 1
+            });
+            console.log('Add message successful:', postResponse.data);
+        } catch (error) {
+            console.error('Error adding message:', error);
+            alert('Error adding message');
+        }
+
     };
 
     const handleSeeMore = (projectId) => {
@@ -170,7 +256,7 @@ const ProjectManagementPage = () => {
                                     <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
                                     <span className="complete-before">Complete before: {new Date(project.project_deadline).toLocaleDateString()}</span>
                                     <button className="see-more" onClick={() => handleSeeMore(project._id)}>See More</button>
-                                    <button className="complete" onClick={() => handleComplete(project._id)}>Complete</button>
+                                    <button className="complete" onClick={() => handleComplete(project._id, project.project_publisher)}>Complete</button>
                                 </div>
                             ))}
                         </div>
@@ -183,8 +269,8 @@ const ProjectManagementPage = () => {
                                     <h3>{project.project_name}</h3>
                                     <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
                                     <span className="response-before">Response before: {new Date(project.project_deadline).toLocaleDateString()}</span>
-                                    <button className="accept">Accept</button>
-                                    <button className="reject">Reject</button>
+                                    <button className="accept" onClick={() => handleAccept(project._id, project.project_publisher)}>Accept</button>
+                                    <button className="reject" onClick={() => handleReject(project._id, project.project_publisher)}>Reject</button>
                                 </div>
                             ))}
                         </div>
@@ -198,7 +284,7 @@ const ProjectManagementPage = () => {
                                     <span className="company">Company: {project.project_publisher || 'Unknown'}</span>
                                     <span className="complete-before">Complete before: {new Date(project.project_deadline).toLocaleDateString()}</span>
                                     <button className="see-more" onClick={() => handleSeeMore(project._id)}>See More</button>
-                                    <button className="withdraw">Withdraw</button>
+                                    <button className="withdraw" onClick={() => handleWithdraw(project._id)}>Withdraw</button>
                                 </div>
                             ))}
                         </div>

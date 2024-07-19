@@ -61,4 +61,34 @@ router.patch('/:id', async (req, res) => {
     }
 });
 
+// delete an applicant
+router.patch('/withdraw/:id', async (req, res) => {
+    const projectId = req.params.id;
+    const { applicantId } = req.body;
+
+    if (!ObjectId.isValid(applicantId) || !ObjectId.isValid(projectId)) {
+        console.error('Invalid ID format:', applicantId, projectId);
+        return res.status(400).send('Invalid ID format');
+    }
+
+    try {
+        const db = getDB();
+        const result = await db.collection('projects').updateOne(
+            { _id: new ObjectId(projectId) },
+            { $pull: { applicants: { applicantId: new ObjectId(applicantId) } } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).send('Project not found');
+        }
+
+        const updatedProject = await db.collection('projects').findOne({ _id: new ObjectId(projectId) });
+        res.json(updatedProject);
+    } catch (err) {
+        console.error('Error withdrawing applicant:', err);
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 export default router;
