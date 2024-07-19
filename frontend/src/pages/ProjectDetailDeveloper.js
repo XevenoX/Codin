@@ -94,7 +94,7 @@ export default function ProjectDetailDeveloper() {
       noValidate
       autoComplete="off"
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ mb: 10, mt: 5 }}>
         <Grid item xs={12} md={6}>
           <Stack direction="row" spacing={2} alignItems="center" mt={2}>
             <Avatar
@@ -158,34 +158,36 @@ export default function ProjectDetailDeveloper() {
             <ApplyContactButton user={user} projectDetails={projectDetails} />
           </Stack>
         </Grid>
-        <Grid>
-          <Stack direction="column" spacing={2}>
-            <Paper elevation={0}>
-              <Typography noWrap variant="h5">
-                Your Task
-              </Typography>
-              <Typography sx={{ marginLeft: '2em' }}>
-                task details: Use the elevation prop to establish hierarchy
-                through the use of shadows. The Paper component's default
-                elevation level is 1. The prop accepts values from 0 to 24. The
-                higher the number, the further away the Paper appears to be from
-                its background.
-              </Typography>
-            </Paper>
-            <Paper elevation={0}>
-              <Typography noWrap variant="h5">
-                Skills required
-              </Typography>
-              <Typography sx={{ marginLeft: '2em' }}>
-                task details: Use the elevation prop to establish hierarchy
-                through the use of shadows. The Paper component's default
-                elevation level is 1. The prop accepts values from 0 to 24. The
-                higher the number, the further away the Paper appears to be from
-                its background.
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
+        <Box sx={{ mt: 10 }}>
+          <Grid>
+            <Stack direction="column" spacing={10}>
+              <Box>
+                <Box>
+                  <Paper elevation={0}>
+                    <Typography noWrap variant="h5">
+                      Your Task
+                    </Typography>
+                    <Typography sx={{ marginLeft: '2em' }}>
+                      {projectDetails.project_description}
+                    </Typography>
+                  </Paper>
+                </Box>
+              </Box>
+              <Box>
+                <Box>
+                  <Paper elevation={0}>
+                    <Typography noWrap variant="h5">
+                      Skills required
+                    </Typography>
+                    <Typography sx={{ marginLeft: '2em' }}>
+                      {projectDetails.project_skills}
+                    </Typography>
+                  </Paper>
+                </Box>
+              </Box>
+            </Stack>
+          </Grid>
+        </Box>
       </Grid>
     </Box>
   );
