@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { Chart } from 'react-google-charts';
-import '../styles/ProjectManagementPage.css';
+import '../styles/DeveloperProjectManagementPage.css';
 import RatingDialog from '../components/RatingDialog';
 
-const ProjectManagementPage = () => {
+const DeveloperProjectManagementPage = () => {
     const navigate = useNavigate();
     const [cookie] = useCookies(['user']);
     const currentUser = cookie.user;
@@ -175,7 +175,7 @@ const ProjectManagementPage = () => {
             setProjects(
                 projects.map((project) =>
                     project._id === projectId
-                        ? { ...project, project_status: 5 }
+                        ? { ...project, project_status: 4 }
                         : project
                 )
             );
@@ -455,4 +455,4 @@ const ProjectManagementPage = () => {
     );
 };
 
-export default ProjectManagementPage;
+export default DeveloperProjectManagementPage;

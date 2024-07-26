@@ -10,7 +10,7 @@ import ProjectCreate from './pages/ProjectCreate';
 import ProjectDetailPublisher from './pages/ProjectDetailPublisher';
 import ProjectDetailDeveloper from './pages/ProjectDetailDeveloper';
 import { CookiesProvider, useCookies } from 'react-cookie';
-import ProjectManagementPage from './pages/ProjectManagementPage';
+import DeveloperProjectManagementPage from './pages/DeveloperProjectManagementPage';
 import CompanyProjectManagementPage from './pages/CompanyProjectManagementPage';
 import GanttChartPage from './pages/GanttChartPage';
 import Navigation from './components/Navigation';
@@ -50,7 +50,7 @@ function App() {
             <Route path="/project" element={<ProjectCreate />} />
             <Route
               path="/project-management"
-              element={<ProjectManagementPage />}
+              element={<DeveloperProjectManagementPage />}
             />{' '}
             <Route
               path="/company-project-management"

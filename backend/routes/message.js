@@ -28,7 +28,10 @@ router.get("/findUnreadMessage", async (req, res) => {
                 }
             },
             {
-                $unwind: "$project_info"
+                $unwind: {
+                    path: "$project_info",
+                    preserveNullAndEmptyArrays: true
+                }
             },
             {
                 $lookup: {
@@ -39,7 +42,10 @@ router.get("/findUnreadMessage", async (req, res) => {
                 }
             },
             {
-                $unwind: "$publisher_info"
+                $unwind: {
+                    path: "$publisher_info",
+                    preserveNullAndEmptyArrays: true
+                }
             },
             {
                 $lookup: {
@@ -50,7 +56,10 @@ router.get("/findUnreadMessage", async (req, res) => {
                 }
             },
             {
-                $unwind: "$applicants_info"
+                $unwind: {
+                    path: "$applicants_info",
+                    preserveNullAndEmptyArrays: true
+                }
             },
             {
                 $project: {
@@ -122,7 +131,7 @@ router.post("/addNewMessage", async (req, res) => {
         };
         const result = await messagesCollection.insertOne(newMessage);
         if (result.insertedId) {
-            res.status(201).send("Message added successfully");
+            res.status(201).send(result);
         } else {
             res.status(500).send("Failed to add message");
         }

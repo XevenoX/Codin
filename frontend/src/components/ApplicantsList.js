@@ -1,36 +1,23 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import { FixedSizeList } from 'react-window';
-import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import ButtonBase from '@mui/material/ButtonBase';
-import BusinessIcon from '@mui/icons-material/Business';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import HourglassTopIcon from '@mui/icons-material/HourglassTop';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { Link, useNavigate } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -41,8 +28,9 @@ import { FUNDING } from '@paypal/react-paypal-js';
 import {
   PayPalScriptProvider,
   PayPalButtons,
-  usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import axios from 'axios';
+
 
 const initialOptions = {
   clientId:
@@ -166,6 +154,22 @@ export default function ApplicantsList({ data, budget }) {
     // todo: Add more sorting options
     return 0;
   });
+
+  const handleOfferSent = async (projectId) => {
+    try {
+      //add message
+      const postResponse = await axios.post('/message/addNewMessage', {
+        project_id: projectId,
+        message_to: selectedApplicant._id,
+        message_type: 1,
+        unread: 1,
+      });
+      console.log('Add message successful:', postResponse.data);
+    } catch (error) {
+      console.error('Error adding message:', error);
+      alert('Error adding message');
+    }
+  };
 
   const selectedData = data.filter((item) => selectedItems.includes(item._id));
   const selectedApplicant = selectedData[0];
@@ -360,110 +364,82 @@ export default function ApplicantsList({ data, budget }) {
                       'http://localhost:5050/paypal/orders',
                       {
                         method: 'POST',
-
                         headers: {
                           'Content-Type': 'application/json',
                         },
-
                         // use the "body" param to optionally pass additional order information
-
                         // like product ids and quantities
-
                         body: JSON.stringify({
                           cart: [
                             {
                               id: 'Project',
-
                               quantity: Math.round(offerAmount),
                             },
                           ],
                         }),
                       }
                     );
-
                     const orderData = await response.json();
                     console.log(orderData);
-
                     if (orderData.id) {
                       return orderData.id;
                     } else {
                       const errorDetail = orderData?.details?.[0];
-
                       const errorMessage = errorDetail
                         ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
                         : JSON.stringify(orderData);
-
                       throw new Error(errorMessage);
                     }
                   } catch (error) {
                     console.error(error);
-
                     setMessage(`Could not initiate PayPal Checkout...${error}`);
                   }
                 }}
                 onApprove={async (
                   data,
-
                   actions
                 ) => {
                   try {
                     const response = await fetch(
                       `http://localhost:5050/paypal/orders/${data.orderID}/capture`,
-
                       {
                         method: 'POST',
-
                         headers: {
                           'Content-Type': 'application/json',
                         },
                       }
                     );
-
                     const orderData = await response.json();
-
                     // Three cases to handle:
-
                     //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-
                     //   (2) Other non-recoverable errors -> Show a failure message
-
                     //   (3) Successful transaction -> Show confirmation or thank you message
-
                     const errorDetail = orderData?.details?.[0];
-
                     if (errorDetail?.issue === 'INSTRUMENT_DECLINED') {
                       // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-
                       // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-
                       return actions.restart();
                     } else if (errorDetail) {
                       // (2) Other non-recoverable errors -> Show a failure message
-
                       throw new Error(
                         `${errorDetail.description} (${orderData.debug_id})`
                       );
                     } else {
                       // (3) Successful transaction -> Show confirmation or thank you message
-
                       // Or go to another URL:  actions.redirect('thank_you.html');
-
                       const transaction =
                         orderData.purchase_units[0].payments.captures[0];
-
                       setMessage(
                         `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
                       );
-
                       console.log(
                         'Capture result',
-
                         orderData,
-
                         JSON.stringify(orderData, null, 2)
                       );
                       handlePayed(orderData);
                     }
+                    handleOfferSent(id);
                   } catch (error) {
                     console.error(error);
 

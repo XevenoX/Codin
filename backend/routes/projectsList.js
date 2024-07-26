@@ -128,23 +128,6 @@ router.get("/byDeveloper/past", async (req, res) => {
     console.error("Error fetching past projects:", error);
     res.status(500).send("Internal server error");
   }
-
-
-
-
-
-  //   const pastProjects = await collection
-  //     .find({
-  //       chosen_applicants: new ObjectId(chosen_applicants),
-  //       project_status: { $in: [5] }, // contain more items to also select projects in other status
-  //     })
-  //     .sort({ project_completetime: -1 })
-  //     .toArray();
-  //   res.status(200).json(pastProjects);
-  // } catch (error) {
-  //   console.error("Error fetching ongoing projects:", error);
-  //   res.status(500).send("Internal server error");
-  // }
 });
 
 export default router;
